@@ -13,6 +13,7 @@ generic module FloodingP{
         interface Receive;
         interface Timer<TMilli>; 
         interface Random;
+        interface LinkLayer;
     }
 }
 
@@ -28,13 +29,14 @@ implementation {
         return msg; // Return the message
     }
 
-    // ICE NOTES FOR MORNING: 
+    // Create Node Table for duplicate detection
+    // Use LinkLayer to avoid sending message back to source nodes
+
+
+
+    // ICE NOTES as we go: 
     // - make sure interface uses are correct
     // - Add error fommand to interface 
     // - add accessibility to structure in Flooding.h 
     // - worry about logic once things are created and actually wired/connected stop worrying about that please
-
-    // Node Table
-
-
 }

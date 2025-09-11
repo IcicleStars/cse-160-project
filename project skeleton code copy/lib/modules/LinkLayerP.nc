@@ -1,3 +1,5 @@
+#include "../../includes/LinkLayerHdr.h"
+
 generic module LinkLayerP{ 
     provides interface LinkLayer;
 }
