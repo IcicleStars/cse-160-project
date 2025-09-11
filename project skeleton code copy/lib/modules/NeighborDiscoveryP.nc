@@ -27,14 +27,17 @@ implementation{
         // logic: search for the neighbors send the message, if somone responds, save its id inside table
         // find a good place to put this message because we need to find nodes periodically
         call neighborTimer.startPeriodic(100+ (call Random.rand16() %300)); 
+
     }
 
+    // Timer fired event for neighbor discovery
     event void sendTimer.fired(){
       post search();
    }
 
+    // print the list of active neighbors
     command void NeighborDiscovery.printNeighbors(){
-        
     }
+
    
 }

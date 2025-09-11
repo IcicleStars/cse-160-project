@@ -15,7 +15,7 @@
 
 module Node{
    uses interface Boot;
-
+   
    uses interface SplitControl as AMControl;
    uses interface Receive;
 
