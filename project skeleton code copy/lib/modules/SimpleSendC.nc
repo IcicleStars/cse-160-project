@@ -5,9 +5,11 @@ generic configuration SimpleSendC(int channel){
 }
 
 implementation{
+   // Instantiate the SimpleSendP module
    components new SimpleSendP();
    SimpleSend = SimpleSendP.SimpleSend;
 
+   // Radio components
    components new TimerMilliC() as sendTimer;
    components RandomC as Random;
    components new AMSenderC(channel);
