@@ -30,10 +30,7 @@ implementation {
 
     components CommandHandlerC;
     Node.CommandHandler -> CommandHandlerC;
-
-    components new NeighborDiscoveryC(); 
-    Node.NeighborDiscovery -> NeighborDiscoveryC;
-
-    components new FloodingC(AM_PACK);
-    Node.Flooding -> FloodingC;
+    // allows Node to use neighbor discovery 
+    components new NeighborDiscoveryC() as NeighborDiscovery; 
+    Node.NeighborDiscovery -> NeighborDiscovery;
 }
