@@ -32,5 +32,5 @@ implementation {
     Node.CommandHandler -> CommandHandlerC;
     // allows Node to use neighbor discovery 
     components NeighborDiscoveryC; 
-    Node.NeighborDiscovery -> NeighborDiscovery;
+    Node.NeighborDiscovery -> NeighborDiscoveryC;
 }

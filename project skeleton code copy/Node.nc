@@ -15,13 +15,14 @@
 
 module Node{
    uses interface Boot;
+   uses interface NeighborDiscovery;
    
    uses interface SplitControl as AMControl;
    uses interface Receive;
 
    uses interface SimpleSend as Sender;
 
-   //uses interface CommandHandler;
+   uses interface CommandHandler;
 }
 
 implementation{
@@ -59,27 +60,27 @@ implementation{
    }
 
 
-   // event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-   //    dbg(GENERAL_CHANNEL, "PING EVENT \n");
-   //    makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-   //    call Sender.send(sendPackage, destination);
-   // }
+   event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+      dbg(GENERAL_CHANNEL, "PING EVENT \n");
+      makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+      call Sender.send(sendPackage, destination);
+   }
 
-   // event void CommandHandler.printNeighbors(){}
+   event void CommandHandler.printNeighbors(){}
 
-   // event void CommandHandler.printRouteTable(){}
+   event void CommandHandler.printRouteTable(){}
 
-   // event void CommandHandler.printLinkState(){}
+   event void CommandHandler.printLinkState(){}
 
-   // event void CommandHandler.printDistanceVector(){}
+   event void CommandHandler.printDistanceVector(){}
 
-   // event void CommandHandler.setTestServer(){}
+   event void CommandHandler.setTestServer(){}
 
-   // event void CommandHandler.setTestClient(){}
+   event void CommandHandler.setTestClient(){}
 
-   // event void CommandHandler.setAppServer(){}
+   event void CommandHandler.setAppServer(){}
 
-   // event void CommandHandler.setAppClient(){}
+   event void CommandHandler.setAppClient(){}
 
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
       Package->src = src;
