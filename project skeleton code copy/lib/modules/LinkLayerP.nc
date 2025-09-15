@@ -2,9 +2,15 @@
 
 generic module LinkLayerP{ 
     provides interface LinkLayer;
+    uses interface SimpleSend;
+    uses interface Timer<TMilli>;
+    uses interface Random;
 }
 
 implementation { 
-    // Implement source and destination addresses
-    
+
+    LinkLayerHdr hdr;
+    hdr.src = get_local_address();
+    hdr.dest = get_remote_address();
+
 }
