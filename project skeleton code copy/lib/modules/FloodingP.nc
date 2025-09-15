@@ -43,9 +43,9 @@ implementation {
     }
 
     // Create Node Table
-    #define MAX_NODES 100
-    uint16_t nodeTable[MAX_NODES];
-    uint8_t nodeCount = 0;
+    #define MAX_NODES 20                // Max number of nodes in network
+    uint16_t nodeTable[MAX_NODES];      // Node Table as Array
+    uint8_t nodeCount = 0;              // CURRENT number of nodes in table
 
     // FUNCTION to check if a node is already in the table
     bool isNodeInTable(uint16_t nodeID) {
@@ -63,17 +63,21 @@ implementation {
         // Add node to table
         if (nodeCount < MAX_NODES) {
             if(!isNodeInTable(nodeID)) { 
-                nodeTable[nodeCount++] = nodeID;
+                nodeTable[nodeCount++] = nodeID;    // Increases node count while adding it to table.
             }
         }
     }
+
+
+
 
     // ICE NOTES as we go: 
     // - make sure interface uses are correct
     // - Add error fommand to interface 
     // - worry about logic once things are created and actually wired/connected stop worrying about that please
     // - make timer fire event
-    
+    // - Add random 
+    // - 
 
     // Questions to ask: 
     // - Where to make node table? 
