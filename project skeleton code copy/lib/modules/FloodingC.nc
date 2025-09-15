@@ -17,8 +17,8 @@ implementation{
    FloodingP.Receive -> Receiver.Receive;
 
    // Allows/wires use of timer
-   components new TimerMilliC as myTimerC;
-   FloodingP.Timer -> myTimerC;
+   components new TimerMilliC as FloodingTimerC;
+   FloodingP.Timer -> FloodingTimerC;
    
    // Allows/wires Random
    components RandomC as random; 
