@@ -9,7 +9,7 @@
 #include "../../includes/sendInfo.h"
 #include "../../includes/channels.h"
 
-generic module NeighborDiscoveryP(){
+module NeighborDiscoveryP{
     provides interface NeighborDiscovery;
 
     uses interface Timer<TMilli> as neighborTimer;
@@ -31,7 +31,7 @@ implementation{
     }
 
     // Timer fired event for neighbor discovery
-    event void sendTimer.fired(){
+    event void neighborTimer.fired(){
       post search();
    }
 
