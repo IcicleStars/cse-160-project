@@ -1,15 +1,22 @@
-generic configuration LinkLayer(int channel){
+#include "../../includes/am_types.h"
+configuration LinkLayerC{ 
    provides interface LinkLayer;
 }
 
-implementation{
-   components new LinkLayerP();
-   LinkLayer = SimpleSendP.SimpleSend;
+implementation { 
 
-   components new TimerMilliC() as linkLayerTimer;
-   LinkLayerP.linkLayerTimer -> linkLayerTimer; 
+   // Instantiate LinkLayerP
+   components LinkLayerP;
+   LinkLayer = LinkLayerP;
 
-   components RandomC as Random; 
-   LinkLayerP.Random -> Random; 
+   // Create Receiver
+   components new AMReceiverC(AM_LINKLAYER) as Receiver;
+   LinkLayerP.Receive -> Receiver;
+
+   components new SimpleSendC(AM_LINKLAYER) as Sender;
+   LinkLayerP.SimpleSend -> Sender.SimpleSend;
+
+   components ActiveMessageC;
+   LinkLayerP.AMControl -> ActiveMessageC;
 
 }

@@ -5,68 +5,58 @@ to broadcast to all nodes, use AM_BROADCAST_ADDR
 **/
 
 #include "../../includes/FloodingHdr.h"
+#include "../../includes/packet.h"
 
-generic module FloodingP{ 
+module FloodingP{ 
     provides interface Flooding; 
     uses { 
-        interface SimpleSend;
-        interface Receive;
         interface Timer<TMilli>; 
         interface Random;
         interface LinkLayer;
+
     }
 }
 
 implementation { 
+    
+    event void LinkLayer.receive(pack* msg, uint16_t src) { 
 
-    // Access Flooding Header
-    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-        FloodingHdr* header = (FloodingHdr*)payload; // typecast
+    }
 
-        // Detect if message is new or is duplicate
+    command error_t Flooding.send(pack msg, uint16_t dest) { 
+        return call LinkLayer.send(msg, dest);
+    }   
+    
+    // Timer fired event
+    event void Timer.fired() {
+        // Logic for handling timer events can be added here
+    }
+
+    // // Create Node Table
+    // #define MAX_NODES 20                // constant max number of nodes in network
+    // uint16_t nodeTable[MAX_NODES];      // Node Table as Array
+    // uint8_t nodeCount = 0;              // CURRENT number of nodes in table
+
+    // // FUNCTION to check if a node is already in the table
+    // bool isNodeInTable(uint16_t nodeID) {
+    //     for (uint8_t i = 0; i < nodeCount; i++) {
+    //         if (nodeTable[i] == nodeID) {
+    //             return TRUE;
+    //         }
+    //     }
+    //     return FALSE;
+    // }
+
+    // // FUNCTION to add node to the table
+    // void addNode(uint16_t nodeID){
         
-
-        return msg; // Return the message
-    }
-
-    // Send a message using SimpleSend
-    command error_t Flooding.send(uint16_t dest, message_t* msg, uint8_t len) {
-        FloodingHdr* header = (FloodingHdr*)call LinkLayer.getPayload(msg, len);
-
-        // Initialize the header
-        header->src = TOS_NODE_ID;
-        header->seq = call Random.rand16();
-        header->hop = 0;
-
-        // Send the message
-        return call SimpleSend.send(msg, dest);
-    }
-
-    // Create Node Table
-    #define MAX_NODES 20                // Max number of nodes in network
-    uint16_t nodeTable[MAX_NODES];      // Node Table as Array
-    uint8_t nodeCount = 0;              // CURRENT number of nodes in table
-
-    // FUNCTION to check if a node is already in the table
-    bool isNodeInTable(uint16_t nodeID) {
-        for (uint8_t i = 0; i < nodeCount; i++) {
-            if (nodeTable[i] == nodeID) {
-                return TRUE;
-            }
-        }
-        return FALSE;
-    }
-
-    // FUNCTION to add node to the table
-    void addNode(uint16_t nodeID){
-        
-        // Add node to table
-        if (nodeCount < MAX_NODES) {
-            if(!isNodeInTable(nodeID)) { 
-                nodeTable[nodeCount++] = nodeID;    // Increases node count while adding it to table.
-            }
-        }
-    }
+    //     // Add node to table
+    //     if (nodeCount < MAX_NODES) {
+    //         if(!isNodeInTable(nodeID)) { 
+    //             nodeTable[nodeCount++] = nodeID;    // Increases node count while adding it to table.
+    //         }
+    //     }
+    // }
 
 
 
@@ -82,5 +72,5 @@ implementation {
     // Questions to ask: 
     // - Where to make node table? 
     // - makefile errors
-    // 
+    // - IF IT TAKES INPUT, use simplesend as template for flooding
 }

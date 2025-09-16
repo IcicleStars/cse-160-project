@@ -16,6 +16,8 @@
 module Node{
    uses interface Boot;
    uses interface NeighborDiscovery;
+   uses interface Flooding;
+   // uses interface LinkLayer;
    
    uses interface SplitControl as AMControl;
    uses interface Receive;
@@ -90,4 +92,11 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
+
+   // PLACEHOLDER SKELETON TO BYPASS ERROR :)
+   event void Flooding.receive(pack* msg, uint16_t src) {
+    
+   }
+
+
 }

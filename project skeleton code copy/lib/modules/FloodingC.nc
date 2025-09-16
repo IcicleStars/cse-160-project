@@ -1,31 +1,24 @@
 #include "../../includes/am_types.h"
 
-generic configuration Flooding(int channel){
+configuration FloodingC{
    provides interface Flooding;
 }
 
 implementation{
-   components new FloodingP(channel);
+   // AM_FLOODING = 10 based on am_types
+   components FloodingP as FloodingP;
    Flooding = FloodingP;
 
-   // AM_FLOODING = 10 based on am_types
-   components new AMReceiverC(AM_FLOODING) as Receiver;     
-   components new SimpleSendC(AM_FLOODING) as Sender;
+   // Create Timer
+   components new TimerMilliC() as FloodingTimer;
+   FloodingP.Timer -> FloodingTimer.Timer;
 
-   // Wire components
-   FloodingP.SimpleSend -> Sender.SimpleSend;
-   FloodingP.Receive -> Receiver.Receive;
+   // Random number generator
+   components RandomC as Random;
+   FloodingP.Random -> Random;
 
-   // Allows/wires use of timer
-   components new TimerMilliC as FloodingTimerC;
-   FloodingP.Timer -> FloodingTimerC;
-   
-   // Allows/wires Random
-   components RandomC as random; 
-    FloodingP.Random -> random;
+   // Use LinkLayer
+   components LinkLayerC;
+   FloodingP.LinkLayer -> LinkLayerC;
 
-   // allows/wires the floodingP module to use the LinkLayer module
-   components new LinkLayerC() as LinkLayer; 
-    FloodingP.LinkLayer -> LinkLayer;
-   
 }
