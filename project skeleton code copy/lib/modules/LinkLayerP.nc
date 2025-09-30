@@ -13,12 +13,16 @@ module LinkLayerP{
 implementation { 
 
     // Send message
-    command error_t LinkLayer.send(pack msg, uint16_t dest) { 
-        return call SimpleSend.send(msg, dest);
+    command error_t LinkLayer.send(pack *msg, uint16_t dest) { 
+        dbg(GENERAL_CHANNEL, "Link Layer sending packet right now");
+        return call SimpleSend.send(*msg, dest);
     }
 
     // Notify of received message
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) { 
+        pack* incoming = (pack*)payload;
+
+        signal LinkLayer.receive(incoming, incoming->src);
         return msg;
     }
 

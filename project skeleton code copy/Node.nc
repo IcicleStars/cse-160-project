@@ -37,6 +37,9 @@ implementation{
       call AMControl.start();
 
       dbg(GENERAL_CHANNEL, "Booted\n");
+      call NeighborDiscovery.findNeighbors();
+      // call neighborTimer.startOneShot(100 + (call Random.rand16() % 300));
+
    }
 
    event void AMControl.startDone(error_t err){

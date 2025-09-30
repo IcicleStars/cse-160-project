@@ -18,7 +18,7 @@ implementation {
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
 
-    Node -> MainC.Boot;
+    Node.Boot -> MainC.Boot;
 
     Node.Receive -> GeneralReceive;
 
@@ -34,6 +34,7 @@ implementation {
     // allows Node to use neighbor discovery 
     components NeighborDiscoveryC; 
     Node.NeighborDiscovery -> NeighborDiscoveryC;
+    // MainC.Boot -> NeighborDiscoveryC.Boot;
 
     // Allow node to use flooding
     components FloodingC as Flooding;

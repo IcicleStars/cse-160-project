@@ -7,6 +7,9 @@ INCLUDE+=-Ilib/interfaces -Ilib/modules
 CFLAGS += -DTOSH_DATA_LENGTH=28
 CFLAGS+=$(INCLUDE)
 
+CFLAGS += -DDBG_GENERAL_CHANNEL
+PFLAGS+=$(INCLUDE)
+
 include $(TINYOS_ROOT_DIR)/Makefile.include
 
 CommandMsg.py: CommandMsg.h

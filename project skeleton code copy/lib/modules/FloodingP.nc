@@ -10,67 +10,58 @@ to broadcast to all nodes, use AM_BROADCAST_ADDR
 module FloodingP{ 
     provides interface Flooding; 
     uses { 
-        interface Timer<TMilli>; 
-        interface Random;
         interface LinkLayer;
 
     }
 }
 
 implementation { 
+    #define MAX_CACHE = 20;         // Macro to define cache max
+    static uint16_t localSeq = 0;
     
+    command error_t Flooding.send(pack *msg, uint16_t dest) { 
+
+        pack out;
+        FloodingHdr* fh;
+        uint8_t floodingHeaderSize = sizeof(FloodingHdr);
+        dbg(FLOODING_CHANNEL, "flooding send start");
+
+        memset(&out, 0, sizeof(pack));
+
+        fh = (FloodingHdr*)out.payload;
+        fh->source = TOS_NODE_ID;
+        fh->seq_num = localSeq++;
+        fh->ttl = MAX_TTL;
+
+        memcpy(fh->payload, msg->payload, PACKET_MAX_PAYLOAD_SIZE);
+
+        out.src = TOS_NODE_ID;
+        out.dest = dest;
+        out.protocol = msg->protocol;
+
+        return call LinkLayer.send(&out, dest);
+    }
+
     event void LinkLayer.receive(pack* msg, uint16_t src) { 
+        FloodingHdr* fh = (FloodingHdr*) msg->payload;
+
+        signal Flooding.receive(msg, fh->source);
+
+        if(fh->ttl > 1) { 
+            pack fwdPack;
+            FloodingHdr* fwdFH;
+
+            memcpy(&fwdPack, msg, sizeof(pack));
+            fwdFH = (FloodingHdr*)fwdPack.payload;
+
+            fwdFH->ttl--;
+            fwdPack.src = TOS_NODE_ID;
+            fwdPack.TTL = fwdFH->ttl;
+
+            dbg(FLOODING_CHANNEL, "Node %hu: forwarding flood from %hu with new TTL: %hhu\n", TOS_NODE_ID, fwdFH->source, fwdFH->ttl);
+            call LinkLayer.send(&fwdPack, AM_BROADCAST_ADDR);
+        }
 
     }
-
-    command error_t Flooding.send(pack msg, uint16_t dest) { 
-        return call LinkLayer.send(msg, dest);
-    }   
-    
-    // Timer fired event
-    event void Timer.fired() {
-        // Logic for handling timer events can be added here
-    }
-
-    // // Create Node Table
-    // #define MAX_NODES 20                // constant max number of nodes in network
-    // uint16_t nodeTable[MAX_NODES];      // Node Table as Array
-    // uint8_t nodeCount = 0;              // CURRENT number of nodes in table
-
-    // // FUNCTION to check if a node is already in the table
-    // bool isNodeInTable(uint16_t nodeID) {
-    //     for (uint8_t i = 0; i < nodeCount; i++) {
-    //         if (nodeTable[i] == nodeID) {
-    //             return TRUE;
-    //         }
-    //     }
-    //     return FALSE;
-    // }
-
-    // // FUNCTION to add node to the table
-    // void addNode(uint16_t nodeID){
-        
-    //     // Add node to table
-    //     if (nodeCount < MAX_NODES) {
-    //         if(!isNodeInTable(nodeID)) { 
-    //             nodeTable[nodeCount++] = nodeID;    // Increases node count while adding it to table.
-    //         }
-    //     }
-    // }
-
-
-
-
-    // ICE NOTES as we go: 
-    // - make sure interface uses are correct
-    // - Add error fommand to interface 
-    // - worry about logic once things are created and actually wired/connected stop worrying about that please
-    // - make timer fire event
-    // - Add random 
-    // - 
-
-    // Questions to ask: 
-    // - Where to make node table? 
-    // - makefile errors
-    // - IF IT TAKES INPUT, use simplesend as template for flooding
+ 
 }
