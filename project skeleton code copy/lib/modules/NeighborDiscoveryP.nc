@@ -40,7 +40,7 @@ implementation{
         uint16_t last_seq_num_heard;
         uint32_t total_packets_received;
         uint32_t total_packets_expected;
-        uint8_t consecutive misses;
+        uint8_t consecutive_misses;
 
     } NeighborEntry;
     // creates neighbor table
@@ -228,8 +228,25 @@ event void neighborTimer.fired(){
         }
         // if neighbor does exist but not in table
         if (neighbor_i < MAX_NEIGHBORS) { 
+            uint16_t last_seq;
+            uint16_t current_seq;
+
+
+            last_seq = neighbor_table[neighbor_i].last_seq_num_heard;
+            current_seq = nd_payload->sequence_num;
+
+            // update expected total for node
+            if(neighbor_table[neighbor_i].total_packets_received == 0) { 
+                // first packet
+                neighbor_table[neighbor_i].total_packets_expected = 1;
+            } else if (current_seq > last_seq) { 
+                // update expected total
+                neighbor_table[neighbor_i].total_packets_expected += (current_seq - last_seq);
+            }
+
+            neighbor_table[neighbor_i].consecutive_misses = 0;
             neighbor_table[neighbor_i].total_packets_received++;
-            neighbor_table[neighbor_i].last_seq_num_heard = nd_payload->sequence_num;
+            neighbor_table[neighbor_i].last_seq_num_heard = current_seq;
 
             // send reply if incoming message was a request
             if (nd_payload->messageType == NEIGHBOR_DISCOVERY_REQUEST) { 
