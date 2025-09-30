@@ -1,67 +1,137 @@
-/** 
-Notes:
-to broadcast to all nodes, use AM_BROADCAST_ADDR
-
-**/
-
+#include "../../includes/am_types.h"
 #include "../../includes/FloodingHdr.h"
 #include "../../includes/packet.h"
+#include "../../includes/protocol.h"
 
 module FloodingP{ 
     provides interface Flooding; 
-    uses { 
-        interface LinkLayer;
-
-    }
+    uses interface LinkLayer;
 }
-
 implementation { 
-    #define MAX_CACHE = 20;         // Macro to define cache max
-    static uint16_t localSeq = 0;
+    #define MAX_SEEN 20
     
-    command error_t Flooding.send(pack *msg, uint16_t dest) { 
+    uint8_t seenCount = 0;
+    static uint16_t localSeq = 0;   
 
-        pack out;
+    struct seenMessages {
+        uint16_t source;
+        uint16_t seq_num;
+    } seenMessages[MAX_SEEN];
+
+    // detect if node is already seen
+    bool alreadySeen(uint16_t source, uint16_t seq_num) {
+        uint8_t i;
+        for (i = 0; i < seenCount; i++) {
+            if (seenMessages[i].source == source && seenMessages[i].seq_num == seq_num) {
+                // dbg(FLOODING_CHANNEL, "FP: This node has been seen already!\n");
+                return TRUE;
+            }
+            // dbg(FLOODING_CHANNEL, "FP: This node has not been seen yet ");
+        }
+        return FALSE;
+    }
+
+    // add most recent seen node to table
+    void addSeen(uint16_t source, uint8_t seq_num) {
+        if (seenCount < MAX_SEEN) {
+            seenMessages[seenCount].source = source;
+            seenMessages[seenCount].seq_num = seq_num;
+            seenCount++;
+        } else {
+            uint8_t insert = seq_num % MAX_SEEN; 
+            seenMessages[insert].source = source;
+            seenMessages[insert].seq_num = seq_num;
+        }
+    }
+    
+    // Send
+    command error_t Flooding.send(pack *msg, uint16_t dest, uint8_t payload_length) { 
+        // declarations
+        pack out; 
         FloodingHdr* fh;
         uint8_t floodingHeaderSize = sizeof(FloodingHdr);
-        dbg(FLOODING_CHANNEL, "flooding send start");
+        // dbg(FLOODING_CHANNEL, "flooding send start\n");
 
+        // set the contents of memory
         memset(&out, 0, sizeof(pack));
 
+        // build header inside packet's payload area.
         fh = (FloodingHdr*)out.payload;
         fh->source = TOS_NODE_ID;
-        fh->seq_num = localSeq++;
+        fh->seq_num = localSeq;
         fh->ttl = MAX_TTL;
 
-        memcpy(fh->payload, msg->payload, PACKET_MAX_PAYLOAD_SIZE);
-
+        // Copy the application payload after the header.
+        memcpy(fh->payload, msg->payload, payload_length);
+        
+        // build header inside new packet
         out.src = TOS_NODE_ID;
         out.dest = dest;
         out.protocol = msg->protocol;
 
-        return call LinkLayer.send(&out, dest);
+        // Add packet to seen cache
+        addSeen(fh->source, fh->seq_num);
+        localSeq++;
+
+        // detect if destination node already has 
+        dbg(FLOODING_CHANNEL, "Node %hu is starting flood\n", TOS_NODE_ID);
+        return call LinkLayer.send(&out, AM_BROADCAST_ADDR);
     }
 
-    event void LinkLayer.receive(pack* msg, uint16_t src) { 
-        FloodingHdr* fh = (FloodingHdr*) msg->payload;
+    event void LinkLayer.receive(pack* msg, uint16_t src, uint8_t payload_length) {
+        FloodingHdr* fh = (FloodingHdr*)msg->payload;
+        pack reply;
+        // dbg(FLOODING_CHANNEL, "FP: receive starts\n");
 
-        signal Flooding.receive(msg, fh->source);
+        // Basic checks
+        if (alreadySeen(fh->source, fh->seq_num)) { 
+            return; 
+        }
 
-        if(fh->ttl > 1) { 
-            pack fwdPack;
-            FloodingHdr* fwdFH;
+        // Process the packet: add to cache and signal the application layer
+        addSeen(fh->source, fh->seq_num);
+        dbg(FLOODING_CHANNEL, "Node %hu: Received flood from Node %hu (seq %hu, TTL %hhu)\n", TOS_NODE_ID, fh->source, fh->seq_num, fh->ttl);
 
-            memcpy(&fwdPack, msg, sizeof(pack));
-            fwdFH = (FloodingHdr*)fwdPack.payload;
+        // Check if node is the destination
+        if(msg->dest == TOS_NODE_ID) { 
+            dbg(GENERAL_CHANNEL, "Packet reached destination. Processing ping from %hu\n", fh->source);
 
-            fwdFH->ttl--;
-            fwdPack.src = TOS_NODE_ID;
-            fwdPack.TTL = fwdFH->ttl;
+            if(msg->protocol == PROTOCOL_PING) { 
+                dbg(GENERAL_CHANNEL, "PING Received from %hu. Sending PINGREPLY\n", fh->source);
 
-            dbg(FLOODING_CHANNEL, "Node %hu: forwarding flood from %hu with new TTL: %hhu\n", TOS_NODE_ID, fwdFH->source, fwdFH->ttl);
-            call LinkLayer.send(&fwdPack, AM_BROADCAST_ADDR);
+                memset(&reply, 0, sizeof(pack));
+                reply.dest = fh->source;
+                reply.src = TOS_NODE_ID;
+                reply.protocol = PROTOCOL_PINGREPLY;
+
+                call Flooding.send(&reply, reply.dest, 0);
+            }
+
+            signal Flooding.receive(msg, fh->source);
+            return;
+
+        } else { 
+
+            // Forward the packet if TTL allows
+            if (fh->ttl > 1) {
+                pack fwdPack; 
+                FloodingHdr* fwdFH;
+                
+                // add packet contents to packet being forwarded
+                memcpy(&fwdPack, msg, sizeof(pack));
+                fwdFH = (FloodingHdr*)fwdPack.payload;
+                fwdFH->ttl--;
+                fwdPack.src = TOS_NODE_ID; 
+                fwdPack.TTL = fwdFH->ttl;   // update the outer TTL 
+                
+                // send next packet
+                dbg(FLOODING_CHANNEL, "Forwarding flood from %hu. New TTL: %hhu\n", fwdFH->source, fwdFH->ttl);
+                call LinkLayer.send(&fwdPack, AM_BROADCAST_ADDR);
+            } else { 
+                dbg(FLOODING_CHANNEL, "At Node %hu, TTL reached zero. Flooding ended.\n", TOS_NODE_ID);
+            }
+
         }
 
     }
- 
 }

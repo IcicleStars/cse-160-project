@@ -12,10 +12,10 @@ implementation {
    // Create Receiver
    components new AMReceiverC(AM_LINKLAYER) as Receiver;
    LinkLayerP.Receive -> Receiver;
-
+   // Create Sender
    components new SimpleSendC(AM_LINKLAYER) as Sender;
    LinkLayerP.SimpleSend -> Sender.SimpleSend;
-
+   // Create Active Message
    components ActiveMessageC;
    LinkLayerP.AMControl -> ActiveMessageC;
 

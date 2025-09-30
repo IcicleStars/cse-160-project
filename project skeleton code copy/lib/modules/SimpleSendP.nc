@@ -39,6 +39,7 @@ implementation{
       // If a task already exist, we don't want to overwrite the clock, so
       // we can ignore it.
       if(call sendTimer.isRunning() == FALSE){
+         // dbg(FLOODING_CHANNEL, "Sender: sendTimer is running\n");
           // A random element of delay is included to prevent congestion.
          call sendTimer.startOneShot( (call Random.rand16() %300));
       }
@@ -46,22 +47,26 @@ implementation{
 
    // This is a wrapper around the am sender, that adds queuing and delayed
    // sending
-   command error_t SimpleSend.send(pack msg, uint16_t dest) {
+   command error_t SimpleSend.send(pack* msg, uint16_t dest) {
        // First we check to see if we have room in our queue. Since TinyOS is
        // designed for embedded systems, there is no dynamic memory. This forces
        // us to allocate space in a pool where pointers can be retrieved. See
        // SimpleSendC to see where we allocate space. Be sure to put the values
        // back into the queue once you are done.
+      // dbg(FLOODING_CHANNEL, "this is touched\n");
       if(!call Pool.empty()){
          sendInfo *input;
+         // dbg(FLOODING_CHANNEL, "this is touched\n");
 
          input = call Pool.get();
-         input->packet = msg;
+         input->packet = *msg;
          input->dest = dest;
+         // dbg(FLOODING_CHANNEL, "this is touched\n");
 
          // Now that we have a value from the pool we can put it into our queue.
          // This is a FIFO queue.
          call Queue.enqueue(input);
+         // dbg(FLOODING_CHANNEL, "this is touched\n");
 
          // Start a send task which will be delayed.
          postSendTask();

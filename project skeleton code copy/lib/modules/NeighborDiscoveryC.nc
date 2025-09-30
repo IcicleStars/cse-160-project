@@ -12,6 +12,10 @@ implementation{
    components new TimerMilliC() as neighborTimer;
    //NeighborDiscoveryP.neighborTimer -> neighborTimer; 
 
+   components new TimerMilliC() as qualityCheckTimer;
+   
+   
+
    components RandomC as Random; 
    //NeighborDiscoveryP.Random -> Random; 
 
@@ -23,6 +27,7 @@ implementation{
    // Wire the components
    // NeighborDiscoveryP -> MainC;
    NeighborDiscoveryP.neighborTimer -> neighborTimer; 
+   NeighborDiscoveryP.qualityCheckTimer -> qualityCheckTimer;
    NeighborDiscoveryP.Random -> Random;
    NeighborDiscoveryP.Packet -> AmSend;
 

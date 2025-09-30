@@ -34,7 +34,6 @@ implementation {
     // allows Node to use neighbor discovery 
     components NeighborDiscoveryC; 
     Node.NeighborDiscovery -> NeighborDiscoveryC;
-    // MainC.Boot -> NeighborDiscoveryC.Boot;
 
     // Allow node to use flooding
     components FloodingC as Flooding;

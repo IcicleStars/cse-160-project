@@ -12,6 +12,8 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
+#include "includes/FloodingHdr.h"
+#include <string.h>
 
 module Node{
    uses interface Boot;
@@ -54,21 +56,34 @@ implementation{
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      dbg(GENERAL_CHANNEL, "Packet Received\n");
+      dbg(NEIGHBOR_CHANNEL, "Packet Received\n");
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+         dbg(NEIGHBOR_CHANNEL, "Package Payload: %s\n", myMsg->payload);
          return msg;
       }
-      dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
+      dbg(NEIGHBOR_CHANNEL, "Unknown Packet Type %d\n", len);
       return msg;
    }
 
 
-   event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+   // event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+   //    dbg(GENERAL_CHANNEL, "PING EVENT \n");
+   //    makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+   //    call Sender.send(sendPackage, destination);
+   // }
+
+    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+      uint8_t payload_length = strlen((char*)payload);
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
-      makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-      call Sender.send(sendPackage, destination);
+
+      // create pack to hold payload
+      makePack(&sendPackage, TOS_NODE_ID, destination, MAX_TTL, PROTOCOL_PING, 0, payload, payload_length); 
+      // call Sender.send(sendPackage, destination);
+      if (call Flooding.send(&sendPackage, destination, payload_length) != SUCCESS) { 
+         dbg(GENERAL_CHANNEL, "Failed to send flood packet.\n");
+      }
+
    }
 
    event void CommandHandler.printNeighbors(){}
@@ -98,7 +113,19 @@ implementation{
 
    // PLACEHOLDER SKELETON TO BYPASS ERROR :)
    event void Flooding.receive(pack* msg, uint16_t src) {
-    
+      // Access payload for printing
+      FloodingHdr* fh = (FloodingHdr*)msg->payload;
+      char* str_payload = (char*)fh->payload;
+
+      // Print message!
+      dbg(FLOODING_CHANNEL, "flooding message received from node %u\n", src);
+      if(msg->protocol == PROTOCOL_PINGREPLY) { 
+         dbg(GENERAL_CHANNEL, "Received PINGREPLY from Node %hu\n", src);
+      } else { 
+         dbg(GENERAL_CHANNEL, "Received PING from Node %hu with payload: \"%s\"\n", src, str_payload);
+      }
+
+
    }
 
 
