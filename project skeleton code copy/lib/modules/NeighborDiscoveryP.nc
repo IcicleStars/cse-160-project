@@ -39,6 +39,7 @@ implementation{
 
         uint16_t last_seq_num_heard;
         uint32_t total_packets_received;
+        uint32_t total_packets_expected;
         uint8_t consecutive misses;
 
     } NeighborEntry;
