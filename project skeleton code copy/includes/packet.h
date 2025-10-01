@@ -44,8 +44,8 @@ typedef nx_struct nd_payload_t {
  * 		pack *input = pack to be printed.
  */
 void logPack(pack *input){
-	dbg(GENERAL_CHANNEL, "Src: %hhu Dest: %hhu Seq: %hhu TTL: %hhu Protocol:%hhu  Payload: %s\n",
-	input->src, input->dest, input->seq, input->TTL, input->protocol, input->payload);
+	// dbg(GENERAL_CHANNEL, "Src: %hhu Dest: %hhu Seq: %hhu TTL: %hhu Protocol:%hhu  Payload: %s\n",
+	// input->src, input->dest, input->seq, input->TTL, input->protocol, input->payload);
 
     if (input->protocol == NEIGHBOR_DISCOVERY_PROTOCOL) {
         // Cast the payload to the specific nd_payload_t struct

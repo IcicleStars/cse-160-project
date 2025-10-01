@@ -15,9 +15,6 @@ implementation {
     // Send message
     command error_t LinkLayer.send(pack *msg, uint16_t dest) { 
         
-
-        // dbg(GENERAL_CHANNEL, "Link Layer sending packet from %hu to %hu\n", (unsigned short)msg->src, AM_BROADCAST_ADDR);
-
         return call SimpleSend.send(msg, dest);
 
     }
@@ -25,16 +22,18 @@ implementation {
     // Notify of received message
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) { 
 
-        // Cast the payload to a pack structure
+        // cast payload to a pack
         pack* incoming = (pack*) payload; 
 
-        // Signal the higher layer that a packet has been received, passing the packet and its source
+        // signal higher layer that a packet is received
         signal LinkLayer.receive(incoming, incoming->src, len);
 
-        // Return the original message
+        // return original message
         return msg;
     }
 
+
+// Ensure radio turns on
     event void AMControl.startDone(error_t err) { 
         if (err == SUCCESS) {
             dbg(GENERAL_CHANNEL, "Linklayer AM started\n");

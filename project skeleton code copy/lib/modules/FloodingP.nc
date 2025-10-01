@@ -13,16 +13,17 @@ implementation {
     uint8_t seenCount = 0;
     static uint16_t localSeq = 0;   
 
-    struct seenMessages {
+    // Create seen table
+    struct seen {
         uint16_t source;
         uint16_t seq_num;
-    } seenMessages[MAX_SEEN];
+    } seen[MAX_SEEN];
 
     // detect if node is already seen
     bool alreadySeen(uint16_t source, uint16_t seq_num) {
         uint8_t i;
         for (i = 0; i < seenCount; i++) {
-            if (seenMessages[i].source == source && seenMessages[i].seq_num == seq_num) {
+            if (seen[i].source == source && seen[i].seq_num == seq_num) {
                 // dbg(FLOODING_CHANNEL, "FP: This node has been seen already!\n");
                 return TRUE;
             }
@@ -34,13 +35,13 @@ implementation {
     // add most recent seen node to table
     void addSeen(uint16_t source, uint8_t seq_num) {
         if (seenCount < MAX_SEEN) {
-            seenMessages[seenCount].source = source;
-            seenMessages[seenCount].seq_num = seq_num;
+            seen[seenCount].source = source;
+            seen[seenCount].seq_num = seq_num;
             seenCount++;
         } else {
             uint8_t insert = seq_num % MAX_SEEN; 
-            seenMessages[insert].source = source;
-            seenMessages[insert].seq_num = seq_num;
+            seen[insert].source = source;
+            seen[insert].seq_num = seq_num;
         }
     }
     
