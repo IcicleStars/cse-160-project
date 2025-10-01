@@ -6538,11 +6538,8 @@ static inline error_t LinkLayerP__LinkLayer__send(pack *msg, uint16_t dest);
 
 
 
-
-
-
 static inline message_t *LinkLayerP__Receive__receive(message_t *msg, void *payload, uint8_t len);
-#line 38
+#line 37
 static inline void LinkLayerP__AMControl__startDone(error_t err);
 
 
@@ -7447,9 +7444,6 @@ static inline error_t LinkLayerP__LinkLayer__send(pack *msg, uint16_t dest)
 #line 16
 {
 
-
-
-
   return LinkLayerP__SimpleSend__send(msg, dest);
 }
 
@@ -7583,9 +7577,9 @@ inline static void LinkLayerP__LinkLayer__receive(pack *msg, uint16_t src, uint8
 #line 3
 }
 #line 3
-# 26 "lib/modules/LinkLayerP.nc"
+# 23 "lib/modules/LinkLayerP.nc"
 static inline message_t *LinkLayerP__Receive__receive(message_t *msg, void *payload, uint8_t len)
-#line 26
+#line 23
 {
 
 
@@ -8105,15 +8099,15 @@ static inline void Node__AMControl__startDone(error_t err)
     }
 }
 
-# 38 "lib/modules/LinkLayerP.nc"
+# 37 "lib/modules/LinkLayerP.nc"
 static inline void LinkLayerP__AMControl__startDone(error_t err)
-#line 38
+#line 37
 {
   if (err == SUCCESS) {
       sim_log_debug(214U, GENERAL_CHANNEL, "Linklayer AM started\n");
     }
   else 
-#line 41
+#line 40
     {
       sim_log_debug(215U, GENERAL_CHANNEL, "Linklayer AM not started\n");
     }
@@ -8142,15 +8136,15 @@ static inline void Node__AMControl__stopDone(error_t err)
 {
 }
 
-# 46 "lib/modules/LinkLayerP.nc"
+# 45 "lib/modules/LinkLayerP.nc"
 static inline void LinkLayerP__AMControl__stopDone(error_t err)
-#line 46
+#line 45
 {
   if (err == SUCCESS) {
       sim_log_debug(216U, GENERAL_CHANNEL, "Linklayer AM stopped\n");
     }
   else 
-#line 49
+#line 48
     {
       sim_log_debug(217U, GENERAL_CHANNEL, "Linklayer AM not stopped");
     }
