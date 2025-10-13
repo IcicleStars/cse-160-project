@@ -91,7 +91,7 @@ implementation {
 
         // Process the packet: add to cache and signal the application layer
         addSeen(fh->source, fh->seq_num);
-        dbg(FLOODING_CHANNEL, "Node %hu: Received flood from Node %hu (seq %hu, TTL %hhu)\n", TOS_NODE_ID, fh->source, fh->seq_num, fh->ttl);
+        // dbg(FLOODING_CHANNEL, "Node %hu: Received flood from Node %hu (seq %hu, TTL %hhu)\n", TOS_NODE_ID, fh->source, fh->seq_num, fh->ttl);
 
         // Check if node is the destination
         if(msg->dest == TOS_NODE_ID) { 

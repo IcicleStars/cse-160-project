@@ -51,7 +51,7 @@ implementation{
         event void Boot.booted() {
         // Initialize the sequence number based on the node's ID to ensure it is unique
         // next_seq = (uint16_t)TOS_NODE_ID * 1000;
-        dbg(NEIGHBOR_CHANNEL, "Upon booting, next_seq:%hu", next_seq);
+        // dbg(NEIGHBOR_CHANNEL, "Upon booting, next_seq:%hu", next_seq);
         // actually call Neighbor Discovery
         // call NeighborDiscovery.findNeighbors();
         call neighborTimer.startOneShot(100 + (call Random.rand16() % 300));
@@ -68,7 +68,7 @@ implementation{
         nd_payload_t* nd_payload;
         
 
-        dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: search task started.\n");
+        // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: search task started.\n");
 
         
 
@@ -93,17 +93,17 @@ implementation{
 
             logPack(packet_payload);
             // print payload details to dbg
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Package Payload: ND_REQUEST, sequence_num=%u\n", nd_payload->sequence_num);
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Package Payload: ND_REQUEST, sequence_num=%u\n", nd_payload->sequence_num);
             // Send the packet over the air
             result = call AMSend.send(AM_BROADCAST_ADDR, &send_buffer, sizeof(pack));
             
             if (result == SUCCESS) {
                 // Packet sent successfully
                 // You can add debug statements here to confirm
-                dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Packet successfully sent.\n");
+                // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Packet successfully sent.\n");
 
             }else {
-                dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to send packet with error: %d\n", result);
+                // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to send packet with error: %d\n", result);
                 }
         }   
     
@@ -136,11 +136,11 @@ implementation{
         // Set a new timer to send the next discovery packet
         // This creates the periodic behavior
         if(err == SUCCESS){
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Packet successfully sent. Restarting timer.\n");
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Packet successfully sent. Restarting timer.\n");
             call neighborTimer.startOneShot(30000);
             call qualityCheckTimer.startPeriodic(10000);
         }else {
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to send packet with error: %d\n", err);
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to send packet with error: %d\n", err);
         }
         
         
@@ -156,7 +156,7 @@ implementation{
     // quality timer
     event void qualityCheckTimer.fired() {
         int i;
-        dbg(NEIGHBOR_CHANNEL, "Quality check timer fired.\n");
+        // dbg(NEIGHBOR_CHANNEL, "Quality check timer fired.\n");
         for (i = 0; i < MAX_NEIGHBORS; i++) {
             // Only check active neighbors
             if (neighbor_table[i].is_active) {
@@ -165,7 +165,7 @@ implementation{
                 // Check if link quality is below the threshold OR has too many consecutive misses
                 if (neighbor_table[i].link_quality <= 30 || neighbor_table[i].consecutive_misses > 5) {
                     // Drop the neighbor by resetting the entry
-                    dbg(NEIGHBOR_CHANNEL, "Neighbor %hu dropped due to low link quality (%hu%%)\n", neighbor_table[i].node_id, neighbor_table[i].link_quality);
+                    dbg(NEIGHBOR_CHANNEL, "Neighbor %hu dropped due to low link quality or consecutive misses (%hu%% LQ, %u consecutive misses)\n", neighbor_table[i].node_id, neighbor_table[i].link_quality, neighbor_table[i].consecutive_misses);
                     neighbor_table[i].is_active = FALSE;
                     neighbor_table[i].link_quality = 0;
                     neighbor_table[i].node_id = 0;
@@ -175,7 +175,7 @@ implementation{
                     neighbor_table[i].last_seq_num_heard = 0;
 
                 } else { 
-                    dbg(NEIGHBOR_CHANNEL, "Neighbor %hu still has good link quality and will not be dropped\n", neighbor_table[i].node_id);
+                    // dbg(NEIGHBOR_CHANNEL, "Neighbor %hu still has good link quality and will not be dropped\n", neighbor_table[i].node_id);
                 }
             }
         }
@@ -190,14 +190,14 @@ implementation{
 
 
         // print reply message
-        dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Replying to node %u\n", reply_dest);
+        // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Replying to node %u\n", reply_dest);
 
         // get payload pointer
         packet_payload = (pack*)call Packet.getPayload(&send_buffer, sizeof(pack));
 
         // Check if payload actually exists
         if(packet_payload == NULL) { 
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to get payload for reply\n");
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to get payload for reply\n");
             return;
         }    
 
@@ -218,10 +218,10 @@ implementation{
         result = call AMSend.send(reply_dest, &send_buffer, sizeof(pack));
 
         if (result != SUCCESS) { 
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: failed to send reply with error: %d\n", result);
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: failed to send reply with error: %d\n", result);
 
         } else { 
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Reply packet send to %u\n", reply_dest);
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Reply packet send to %u\n", reply_dest);
         }
 
     }
@@ -245,13 +245,13 @@ implementation{
 
         // receive packet
         nd_payload = (nd_payload_t*)received_pack->payload;
-        dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Received packet from %u\n", received_pack->src);
+        // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Received packet from %u\n", received_pack->src);
 
         // See if active neighbor already exists in table
         for(i = 0; i < MAX_NEIGHBORS; i++) { 
             if (neighbor_table[i].is_active && neighbor_table[i].node_id == received_pack->src) { 
                 neighbor_i = i;
-                dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Found existing neighbor %u\n", received_pack->src);
+                // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Found existing neighbor %u\n", received_pack->src);
                 break;
             }
         }
@@ -300,18 +300,18 @@ implementation{
             // Calculate link quality
             neighbor_table[neighbor_i].link_quality = 
             (uint8_t)(((float)neighbor_table[neighbor_i].total_packets_received / (float)neighbor_table[neighbor_i].total_packets_expected) * 100);
-            dbg(NEIGHBOR_CHANNEL, "Link quality with neighbor %d: %d.\n", neighbor_table[neighbor_i].node_id, neighbor_table[neighbor_i].link_quality);
+            // dbg(NEIGHBOR_CHANNEL, "Link quality with neighbor %d: %d.\n", neighbor_table[neighbor_i].node_id, neighbor_table[neighbor_i].link_quality);
 
             // send reply if incoming message was a request
             if (nd_payload->messageType == NEIGHBOR_DISCOVERY_REQUEST) { 
-                dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Received Request from %u, posting sendReply\n", received_pack->src);
+                // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Received Request from %u, posting sendReply\n", received_pack->src);
                 reply_dest = received_pack->src;
                 post sendReply(); 
             } else if (nd_payload->messageType == NEIGHBOR_DISCOVERY_REPLY) {  // if incoming message was a request
-                dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Received Reply from %u\n", received_pack->src);
+                // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Received Reply from %u\n", received_pack->src);
             }
         }else { 
-            dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Neighbor Table full\n");
+            // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Neighbor Table full\n");
         }
 
         return buf;

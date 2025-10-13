@@ -1,5 +1,6 @@
 #include "../../includes/packet.h"
 #include "../../includes/LinkLayerHdr.h"
+#include "../../includes/protocol.h"
 
 module LinkLayerP{ 
     provides interface LinkLayer;

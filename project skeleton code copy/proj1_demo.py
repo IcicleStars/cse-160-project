@@ -1,7 +1,6 @@
 from TestSim import TestSim
 
 def main():
-    # Get simulation ready to run.
     s = TestSim();
 
     # Before we do anything, lets simulate the network off.
@@ -20,26 +19,24 @@ def main():
     s.addChannel(s.COMMAND_CHANNEL);
     s.addChannel(s.GENERAL_CHANNEL);
     s.addChannel(s.FLOODING_CHANNEL);
+    s.addChannel(s.NEIGHBOR_CHANNEL);
 
-    # After sending a ping, simulate a little to prevent collision.
+    s.runTime(10);
+    s.neighborDMP(5);
+
     s.runTime(1);
-    s.ping(2, 3, "Hello, World");
-    s.runTime(1);
+    s.ping(3, 18, "Test1");
 
-
-
-    s.ping(1, 9, "Hi!");
-    s.runTime(1);
-
+    s.runTime(2);
     s.moteOff(5);
 
-    s.ping(1, 9, "How are you?");
     s.runTime(1);
+    s.ping(4, 7, "Test2");
 
-    s.moteOn(5);
+    s.runTime(100);
+    s.neighborDMP(6);
+    s.runTime(50);
 
-    s.ping(1, 9, "Goodbye!");
-    s.runTime(1);
 
 if __name__ == '__main__':
     main()

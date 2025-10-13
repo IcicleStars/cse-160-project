@@ -52,11 +52,11 @@ void logPack(pack *input){
         nd_payload_t* nd_payload = (nd_payload_t*)input->payload;
 
         // Log the neighbor discovery payload details
-        dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Payload: Type: %hhu, Seq: %hhu\n",
-        nd_payload->messageType, nd_payload->sequence_num);
+        // dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Payload: Type: %hhu, Seq: %hhu\n",
+        // nd_payload->messageType, nd_payload->sequence_num);
     } else {
         // Log the payload as a string for other packet types
-        dbg(NEIGHBOR_CHANNEL, "Payload: %s\n", input->payload);
+        // dbg(NEIGHBOR_CHANNEL, "Payload: %s\n", input->payload);
     }
 }
 

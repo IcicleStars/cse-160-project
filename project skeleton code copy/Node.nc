@@ -56,13 +56,13 @@ implementation{
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      dbg(NEIGHBOR_CHANNEL, "Packet Received\n");
+      // dbg(NEIGHBOR_CHANNEL, "Packet Received\n");
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         dbg(NEIGHBOR_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+         // dbg(NEIGHBOR_CHANNEL, "Package Payload: %s\n", myMsg->payload);
          return msg;
       }
-      dbg(NEIGHBOR_CHANNEL, "Unknown Packet Type %d\n", len);
+      // dbg(NEIGHBOR_CHANNEL, "Unknown Packet Type %d\n", len);
       return msg;
    }
 
@@ -86,7 +86,7 @@ implementation{
 
    }
 
-   event void CommandHandler.printNeighbors(){}
+   event void CommandHandler.printNeighbors(){ call NeighborDiscovery.printNeighbors(); }
 
    event void CommandHandler.printRouteTable(){}
 
@@ -118,7 +118,7 @@ implementation{
       char* str_payload = (char*)fh->payload;
 
       // Print message!
-      dbg(FLOODING_CHANNEL, "flooding message received from node %u\n", src);
+      dbg(FLOODING_CHANNEL, "Flooding message received from node %u: ", src);
       if(msg->protocol == PROTOCOL_PINGREPLY) { 
          dbg(GENERAL_CHANNEL, "Received PINGREPLY from Node %hu\n", src);
       } else { 
