@@ -39,4 +39,12 @@ implementation {
     components FloodingC as Flooding;
     Node.Flooding -> Flooding;
 
+    // Allow node to use Link State Routing
+    components LinkStateC as LinkState;
+    Node.LinkState -> LinkState;
+
+    // Allow node to use IP 
+    components IPC as IP;
+    Node.IP -> IP;
+
 }
