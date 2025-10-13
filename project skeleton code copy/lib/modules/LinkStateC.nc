@@ -5,8 +5,6 @@ configuration LinkStateC{
 }
 
 implementation{
-   // AM_FLOODING = 10 based on am_types
-
     components LinkStateP as LinkStateP;
     LinkState = LinkStateP;
 
