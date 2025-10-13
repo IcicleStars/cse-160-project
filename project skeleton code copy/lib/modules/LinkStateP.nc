@@ -4,10 +4,9 @@
 
 module LinkStateP{ 
     provides interface LinkState; 
-    
+
     uses interface Flooding;
     uses interface NeighborDiscovery;
-    // uses interface LinkLayer;
 }
 
 implementation { 
