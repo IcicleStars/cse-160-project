@@ -108,7 +108,7 @@
         <short>&#10; The virtualized millisecond timer abstraction.</short>
         <long>&#10; The virtualized millisecond timer abstraction. Instantiating this &#10; component gives an independent millisecond granularity timer.&#10;&#10; @author Philip Levis&#10; @date   January 16 2006&#10; @see    TEP 102: Timers&#10;</long>
       </documentation>
-      <instance number="2">
+      <instance number="3">
         <component-ref qname="TimerMilliC"/>
       </instance>
       <configuration/>
@@ -204,7 +204,7 @@
           <type-tag size="I:4" alignment="I:4"><struct-ref ref="0x7ffffad89b40"/>
             <typename><typedef-ref name="TMilli" ref="0x7ffffad88020"/></typename>
           </type-tag>
-          <value cst="I:4">
+          <value cst="I:5">
             <type-int cname="unsigned int" unsigned="" size="I:4" alignment="I:4"></type-int>
           </value>
         </arguments>
@@ -599,7 +599,7 @@
         <short>&#10; The virtualized millisecond timer abstraction.</short>
         <long>&#10; The virtualized millisecond timer abstraction. Instantiating this &#10; component gives an independent millisecond granularity timer.&#10;&#10; @author Philip Levis&#10; @date   January 16 2006&#10; @see    TEP 102: Timers&#10;</long>
       </documentation>
-      <instance number="3">
+      <instance number="4">
         <component-ref qname="TimerMilliC"/>
       </instance>
       <configuration/>
@@ -715,8 +715,18 @@
     <component qname="LinkStateP" loc="5:lib/modules/LinkStateP.nc">
       <module/>
     </component>
+    <component qname="LinkStateC.linkStateTimer" loc="44(LinkStateC.linkStateTimer):/opt/tinyos-main/tos/system/TimerMilliC.nc">
+      <documentation loc="33:/opt/tinyos-main/tos/system/TimerMilliC.nc">
+        <short>&#10; The virtualized millisecond timer abstraction.</short>
+        <long>&#10; The virtualized millisecond timer abstraction. Instantiating this &#10; component gives an independent millisecond granularity timer.&#10;&#10; @author Philip Levis&#10; @date   January 16 2006&#10; @see    TEP 102: Timers&#10;</long>
+      </documentation>
+      <instance number="2">
+        <component-ref qname="TimerMilliC"/>
+      </instance>
+      <configuration/>
+    </component>
     <component qname="IPC" loc="3:lib/modules/IPC.nc">
-      <documentation loc="72:lib/modules/LinkStateP.nc">
+      <documentation loc="89:lib/modules/LinkStateP.nc">
         <short> &#10;- Timer will wait for before sending out initial LSA (Command)&#10;- Create and send LSA (Link State Advertisement) to all neighbors (Command)&#10;- Receive LSA from neighbors (Event)&#10;- Perform Dijkstra's algorithm to find shortest path (make its own function probably) (Command)&#10;- Need a way to detect that you know neighbors of all nodes in topology (Event)&#10;- Event that listens for changes in Neighbor Discovery  (Event)&#10;- Then Floods new LSA (Command)&#10;- Event that listens for IP packets  (Event)&#10;- Remove data when Link fails (Event)&#10;*</short>
       </documentation>
       <configuration/>
@@ -6864,48 +6874,48 @@
         </type-int>
       </field>
     </struct>
-    <struct loc="31:lib/modules/LinkStateP.nc" ref="0x7ffffa3a2020" defined="" scoped="" size="I:4" alignment="I:2">
+    <struct loc="32:lib/modules/LinkStateP.nc" ref="0x7ffffa39d700" defined="" scoped="" size="I:4" alignment="I:2">
       <component-ref qname="LinkStateP"/>
-      <field name="neighbor" ref="0x7ffffa3a2230" bit-offset="I:0" size="I:2">
+      <field name="neighbor" ref="0x7ffffa39d910" bit-offset="I:0" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
-      <field name="cost" ref="0x7ffffa3a22e0" bit-offset="I:16" size="I:2">
+      <field name="cost" ref="0x7ffffa39d9c0" bit-offset="I:16" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
     </struct>
-    <struct loc="19:lib/modules/LinkStateP.nc" ref="0x7ffffa3a4930" defined="" scoped="" size="I:6" alignment="I:2">
+    <struct loc="20:lib/modules/LinkStateP.nc" ref="0x7ffffa39e020" defined="" scoped="" size="I:6" alignment="I:2">
       <component-ref qname="LinkStateP"/>
-      <field name="dest" ref="0x7ffffa3a4b40" bit-offset="I:0" size="I:2">
+      <field name="dest" ref="0x7ffffa39e230" bit-offset="I:0" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
-      <field name="next_hop" ref="0x7ffffa3a4bf0" bit-offset="I:16" size="I:2">
+      <field name="next_hop" ref="0x7ffffa39e2e0" bit-offset="I:16" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
-      <field name="cost" ref="0x7ffffa3a4ca0" bit-offset="I:32" size="I:1">
+      <field name="cost" ref="0x7ffffa39e390" bit-offset="I:32" size="I:1">
         <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
           <typename><typedef-ref name="uint8_t" ref="0x7ffffb67f920"/></typename>
         </type-int>
       </field>
     </struct>
-    <struct loc="36:lib/modules/LinkStateP.nc" ref="0x7ffffa3a2c70" defined="" scoped="" size="I:82" alignment="I:2">
+    <struct loc="37:lib/modules/LinkStateP.nc" ref="0x7ffffa39c390" defined="" scoped="" size="I:82" alignment="I:2">
       <component-ref qname="LinkStateP"/>
-      <field name="num_neighbors" ref="0x7ffffa3a2e80" bit-offset="I:0" size="I:2">
+      <field name="num_neighbors" ref="0x7ffffa39c5a0" bit-offset="I:0" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
-      <field name="links" ref="0x7ffffa3a2f30" bit-offset="I:16" size="I:80">
+      <field name="links" ref="0x7ffffa39c650" bit-offset="I:16" size="I:80">
         <type-array elements="I:20" size="I:80" alignment="I:2">
-          <type-tag size="I:4" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa3a2020"/>
-            <typename><typedef-ref name="link_t" scoped="" ref="0x7ffffa3a2440"/></typename>
+          <type-tag size="I:4" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa39d700"/>
+            <typename><typedef-ref name="link_t" scoped="" ref="0x7ffffa39db20"/></typename>
           </type-tag>
         </type-array>
       </field>
@@ -7898,7 +7908,7 @@
         <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
       </type-int>
     </variable>
-    <variable name="lsa_cache" ref="0x7ffffa3a3840" loc="28:lib/modules/LinkStateP.nc">
+    <variable name="lsa_cache" ref="0x7ffffa39d020" loc="29:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
       <type-array elements="I:20" size="I:40" alignment="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
@@ -7906,19 +7916,19 @@
         </type-int>
       </type-array>
     </variable>
-    <variable name="network_topology" ref="0x7ffffa3a1610" loc="42:lib/modules/LinkStateP.nc">
+    <variable name="network_topology" ref="0x7ffffa39ccf0" loc="43:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
       <type-array elements="I:20" size="I:1640" alignment="I:2">
-        <type-tag size="I:82" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa3a2c70"/>
-          <typename><typedef-ref name="topo_node_t" scoped="" ref="0x7ffffa3a10d0"/></typename>
+        <type-tag size="I:82" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa39c390"/>
+          <typename><typedef-ref name="topo_node_t" scoped="" ref="0x7ffffa39c7b0"/></typename>
         </type-tag>
       </type-array>
     </variable>
-    <variable name="routing_table" ref="0x7ffffa3a3360" loc="25:lib/modules/LinkStateP.nc">
+    <variable name="routing_table" ref="0x7ffffa39ea20" loc="26:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
       <type-array elements="I:20" size="I:120" alignment="I:2">
-        <type-tag size="I:6" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa3a4930"/>
-          <typename><typedef-ref name="routing_entry_t" scoped="" ref="0x7ffffa3a4e00"/></typename>
+        <type-tag size="I:6" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa39e020"/>
+          <typename><typedef-ref name="routing_entry_t" scoped="" ref="0x7ffffa39e4f0"/></typename>
         </type-tag>
       </type-array>
     </variable>
@@ -12678,22 +12688,22 @@
         <type-int cname="int" size="I:4" alignment="I:4"></type-int>
       </type-array>
     </typedef>
-    <typedef name="routing_entry_t" ref="0x7ffffa3a4e00" loc="23:lib/modules/LinkStateP.nc">
+    <typedef name="routing_entry_t" ref="0x7ffffa39e4f0" loc="24:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
-      <type-tag size="I:6" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa3a4930"/>
-        <typename><typedef-ref name="routing_entry_t" scoped="" ref="0x7ffffa3a4e00"/></typename>
+      <type-tag size="I:6" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa39e020"/>
+        <typename><typedef-ref name="routing_entry_t" scoped="" ref="0x7ffffa39e4f0"/></typename>
       </type-tag>
     </typedef>
-    <typedef name="topo_node_t" ref="0x7ffffa3a10d0" loc="39:lib/modules/LinkStateP.nc">
+    <typedef name="topo_node_t" ref="0x7ffffa39c7b0" loc="40:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
-      <type-tag size="I:82" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa3a2c70"/>
-        <typename><typedef-ref name="topo_node_t" scoped="" ref="0x7ffffa3a10d0"/></typename>
+      <type-tag size="I:82" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa39c390"/>
+        <typename><typedef-ref name="topo_node_t" scoped="" ref="0x7ffffa39c7b0"/></typename>
       </type-tag>
     </typedef>
-    <typedef name="link_t" ref="0x7ffffa3a2440" loc="34:lib/modules/LinkStateP.nc">
+    <typedef name="link_t" ref="0x7ffffa39db20" loc="35:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
-      <type-tag size="I:4" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa3a2020"/>
-        <typename><typedef-ref name="link_t" scoped="" ref="0x7ffffa3a2440"/></typename>
+      <type-tag size="I:4" alignment="I:2"><struct-ref scoped="" ref="0x7ffffa39d700"/>
+        <typename><typedef-ref name="link_t" scoped="" ref="0x7ffffa39db20"/></typename>
       </type-tag>
     </typedef>
   </typedefs>

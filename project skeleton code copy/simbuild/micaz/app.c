@@ -4210,6 +4210,7 @@ typedef /*LinkLayerC.Sender.PoolC*/PoolC__2__pool_t /*LinkLayerC.Sender.PoolC.Po
 typedef /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__2__pool_t /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__2__Pool__t;
 typedef sendInfo */*LinkLayerC.Sender.QueueC*/QueueC__2__queue_t;
 typedef /*LinkLayerC.Sender.QueueC*/QueueC__2__queue_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__t;
+typedef TMilli LinkStateP__linkStateTimer__precision_tag;
 # 62 "/opt/tinyos-main/tos/interfaces/Init.nc"
 static error_t PlatformC__Init__init(void );
 # 67 "/opt/tinyos-main/tos/interfaces/TaskBasic.nc"
@@ -4896,6 +4897,8 @@ static uint8_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__size(void );
 static void LinkStateP__LinkState__initialize(void );
 # 5 "lib/interfaces/Flooding.nc"
 static void LinkStateP__Flooding__receive(pack *msg, uint16_t src);
+# 83 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
+static void LinkStateP__linkStateTimer__fired(void );
 # 3 "lib/interfaces/LinkLayer.nc"
 static void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len);
 # 45 "/opt/tinyos-main/tos/lib/tossim/PlatformC.nc"
@@ -6000,7 +6003,7 @@ typedef int /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0____nesc_silly
 #line 53
 enum /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0____nesc_unnamed4346 {
 
-  VirtualizeTimerC__0__NUM_TIMERS = 4U, 
+  VirtualizeTimerC__0__NUM_TIMERS = 5U, 
   VirtualizeTimerC__0__END_OF_LIST = 255
 };
 
@@ -6759,8 +6762,8 @@ static void /*LinkLayerC.Sender.QueueC*/QueueC__2__printQueue(void );
 static inline /*LinkLayerC.Sender.QueueC*/QueueC__2__queue_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__dequeue(void );
 #line 101
 static inline error_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__enqueue(/*LinkLayerC.Sender.QueueC*/QueueC__2__queue_t newVal);
-# 23 "lib/modules/LinkStateP.nc"
-#line 19
+# 24 "lib/modules/LinkStateP.nc"
+#line 20
 typedef struct LinkStateP____nesc_unnamed4356 {
   uint16_t dest;
   uint16_t next_hop;
@@ -6776,7 +6779,7 @@ uint16_t LinkStateP__lsa_cache[1000][20];
 
 
 
-#line 31
+#line 32
 typedef struct LinkStateP____nesc_unnamed4357 {
   uint16_t neighbor;
   uint16_t cost;
@@ -6785,7 +6788,7 @@ typedef struct LinkStateP____nesc_unnamed4357 {
 
 
 
-#line 36
+#line 37
 typedef struct LinkStateP____nesc_unnamed4358 {
   uint16_t num_neighbors;
   LinkStateP__link_t links[20];
@@ -6793,13 +6796,21 @@ typedef struct LinkStateP____nesc_unnamed4358 {
 
 
 LinkStateP__topo_node_t LinkStateP__network_topology[1000][20];
-
-
-
-
+#line 58
 static inline void LinkStateP__LinkState__initialize(void );
-#line 60
+#line 71
 static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src);
+
+
+
+
+
+
+
+
+
+
+static inline void LinkStateP__linkStateTimer__fired(void );
 # 21 "lib/modules/IPP.nc"
 static inline void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len);
 # 80 "/opt/tinyos-main/tos/lib/tossim/heap.c"
@@ -7535,9 +7546,9 @@ static inline void Node__Flooding__receive(pack *msg, uint16_t src)
     }
 }
 
-# 60 "lib/modules/LinkStateP.nc"
+# 71 "lib/modules/LinkStateP.nc"
 static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src)
-#line 60
+#line 71
 {
 }
 
@@ -10768,6 +10779,12 @@ static inline void /*LinkLayerC.Sender.SimpleSendP*/SimpleSendP__1__sendTimer__f
   /*LinkLayerC.Sender.SimpleSendP*/SimpleSendP__1__sendBufferTask__postTask();
 }
 
+# 82 "lib/modules/LinkStateP.nc"
+static inline void LinkStateP__linkStateTimer__fired(void )
+#line 82
+{
+}
+
 # 204 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
 static inline void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(uint8_t num)
 {
@@ -10799,6 +10816,12 @@ inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
     case 3U:
 #line 83
       /*LinkLayerC.Sender.SimpleSendP*/SimpleSendP__1__sendTimer__fired();
+#line 83
+      break;
+#line 83
+    case 4U:
+#line 83
+      LinkStateP__linkStateTimer__fired();
 #line 83
       break;
 #line 83
@@ -11372,17 +11395,17 @@ inline static error_t SimMainP__SoftwareInit__init(void ){
 #line 62
 }
 #line 62
-# 47 "lib/modules/LinkStateP.nc"
+# 58 "lib/modules/LinkStateP.nc"
 static inline void LinkStateP__LinkState__initialize(void )
-#line 47
+#line 58
 {
   uint8_t i;
 
-#line 49
+#line 60
   sim_log_debug(207U, ROUTING_CHANNEL, "LinkState: Initializing Link State Routing...\n");
   for (i = 0; i < 20; i++) {
       LinkStateP__routing_table[sim_node()][i].cost = __builtin_inff();
-      LinkStateP__routing_table[sim_node()][i].next_hop = 0xFFFF;
+      LinkStateP__routing_table[sim_node()][i].next_hop = AM_BROADCAST_ADDR;
       LinkStateP__lsa_cache[sim_node()][i] = 0;
       LinkStateP__network_topology[sim_node()][i].num_neighbors = 0;
     }
