@@ -1,23 +1,24 @@
 #include "../../includes/am_types.h"
 
 configuration LinkStateC{
-   provides interface Flooding;
+   provides interface LinkState;
 }
 
 implementation{
     components LinkStateP as LinkStateP;
     LinkState = LinkStateP;
 
-    // Use Flooding
+    // use Flooding
     components FloodingC;
     LinkStateP.Flooding -> FloodingC;
 
-    // Use NeighborDiscovery
+    // use NeighborDiscovery
     components NeighborDiscoveryC;
     LinkStateP.NeighborDiscovery -> NeighborDiscoveryC;
 
-    // Use LinkLayer
-    // components LinkLayerC;
-    // LinkStateP.LinkLayer -> LinkLayerC;
+    // Use Timer
+    components new TimerMilliC() as linkStateTimer;
+    LinkStateP.linkStateTimer -> linkStateTimer;
+
 
 }

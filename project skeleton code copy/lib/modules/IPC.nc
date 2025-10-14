@@ -1,19 +1,19 @@
 #include "../../includes/am_types.h"
 
-configuration LinkStateC{
-   provides interface Flooding;
+configuration IPC{
+   provides interface IP;
 }
 
 implementation{
-    // Create IP
+    // create IP
     components IPP as IPP;
     IP = IPP;
 
-    // Use LinkState
+    // use LinkState
     components LinkStateC;
-    IPP.LinkState = LinkStateC;
+    IPP.LinkState -> LinkStateC;
 
-    // Use LinkLayer
+    // use LinkLayer
     components LinkLayerC;
     IPP.LinkLayer -> LinkLayerC;
 

@@ -1258,7 +1258,7 @@ typedef struct sim_log_channel {
 } sim_log_channel_t;
 
 enum __nesc_unnamed4272 {
-  SIM_LOG_OUTPUT_COUNT = 207U
+  SIM_LOG_OUTPUT_COUNT = 208U
 };
 
 sim_log_output_t outputs[SIM_LOG_OUTPUT_COUNT];
@@ -2281,6 +2281,9 @@ char GENERAL_CHANNEL[8] = "general";
 
 char NEIGHBOR_CHANNEL[9] = "neighbor";
 char FLOODING_CHANNEL[9] = "flooding";
+
+
+char ROUTING_CHANNEL[8] = "routing";
 # 12 "includes/packet.h"
 enum __nesc_unnamed4287 {
   PACKET_HEADER_LENGTH = 8, 
@@ -4550,15 +4553,15 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__TimerFrom__f
 #line 83
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa63e950);
+uint8_t arg_0x7ffffa63a950);
 # 92 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 static bool /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__isRunning(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa63e950);
+uint8_t arg_0x7ffffa63a950);
 # 64 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__startPeriodic(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa63e950, 
+uint8_t arg_0x7ffffa63a950, 
 # 64 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 uint32_t dt);
 
@@ -4571,7 +4574,7 @@ uint32_t dt);
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__startOneShot(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa63e950, 
+uint8_t arg_0x7ffffa63a950, 
 # 73 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 uint32_t dt);
 # 82 "/opt/tinyos-main/tos/lib/timer/Counter.nc"
@@ -4606,7 +4609,7 @@ error_t error);
 # 110 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__sendDone(
 # 48 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x7ffffa58bb60, 
+am_id_t arg_0x7ffffa588b60, 
 # 103 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 message_t * msg, 
 
@@ -4619,7 +4622,7 @@ error_t error);
 # 75 "/opt/tinyos-main/tos/interfaces/Send.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__send(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa58d940, 
+uint8_t arg_0x7ffffa589940, 
 # 67 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4633,7 +4636,7 @@ uint8_t len);
 #line 100
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa58d940, 
+uint8_t arg_0x7ffffa589940, 
 # 96 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4889,6 +4892,12 @@ static
 static bool /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__empty(void );
 #line 65
 static uint8_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__size(void );
+# 3 "lib/interfaces/LinkState.nc"
+static void LinkStateP__LinkState__initialize(void );
+# 5 "lib/interfaces/Flooding.nc"
+static void LinkStateP__Flooding__receive(pack *msg, uint16_t src);
+# 3 "lib/interfaces/LinkLayer.nc"
+static void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len);
 # 45 "/opt/tinyos-main/tos/lib/tossim/PlatformC.nc"
 static inline error_t PlatformC__Init__init(void );
 # 62 "/opt/tinyos-main/tos/interfaces/Init.nc"
@@ -5518,27 +5527,22 @@ static am_addr_t ActiveMessageAddressC__ActiveMessageAddress__amAddress(void );
 static inline am_addr_t ActiveMessageAddressC__amAddress(void );
 # 104 "/opt/tinyos-main/tos/interfaces/SplitControl.nc"
 static error_t Node__AMControl__start(void );
+# 3 "lib/interfaces/LinkState.nc"
+static void Node__LinkState__initialize(void );
 # 8 "lib/interfaces/NeighborDiscovery.nc"
 static void Node__NeighborDiscovery__printNeighbors(void );
 #line 5
 static void Node__NeighborDiscovery__findNeighbors(void );
 # 4 "lib/interfaces/Flooding.nc"
 static error_t Node__Flooding__send(pack *msg, uint16_t dest, uint8_t payload_length);
-# 33 "Node.nc"
+# 35 "Node.nc"
 pack Node__sendPackage[1000];
 
 
 static inline void Node__makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
 
 static inline void Node__Boot__booted(void );
-
-
-
-
-
-
-
-
+#line 52
 static inline void Node__AMControl__startDone(error_t err);
 
 
@@ -5551,9 +5555,9 @@ static inline void Node__AMControl__startDone(error_t err);
 static inline void Node__AMControl__stopDone(error_t err);
 
 static inline message_t *Node__Receive__receive(message_t *msg, void *payload, uint8_t len);
-#line 76
+#line 81
 static inline void Node__CommandHandler__ping(uint16_t destination, uint8_t *payload);
-#line 89
+#line 94
 static inline void Node__CommandHandler__printNeighbors(void );
 
 static inline void Node__CommandHandler__printRouteTable(void );
@@ -5571,7 +5575,6 @@ static inline void Node__CommandHandler__setTestClient(void );
 
 
 static inline void Node__makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-
 
 
 
@@ -5986,7 +5989,7 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__TimerFrom__s
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa63e950);
+uint8_t arg_0x7ffffa63a950);
 #line 71
 enum /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0____nesc_unnamed4345 {
 #line 71
@@ -6127,7 +6130,7 @@ static inline void /*NodeC.SimpleSendC.AMSenderC.SenderC.AMQueueEntryP*/AMQueueE
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(
 # 48 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x7ffffa58bb60, 
+am_id_t arg_0x7ffffa588b60, 
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 am_addr_t addr, 
 #line 71
@@ -6144,7 +6147,7 @@ uint8_t len);
 # 100 "/opt/tinyos-main/tos/interfaces/Send.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa58d940, 
+uint8_t arg_0x7ffffa589940, 
 # 96 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -6756,6 +6759,49 @@ static void /*LinkLayerC.Sender.QueueC*/QueueC__2__printQueue(void );
 static inline /*LinkLayerC.Sender.QueueC*/QueueC__2__queue_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__dequeue(void );
 #line 101
 static inline error_t /*LinkLayerC.Sender.QueueC*/QueueC__2__Queue__enqueue(/*LinkLayerC.Sender.QueueC*/QueueC__2__queue_t newVal);
+# 23 "lib/modules/LinkStateP.nc"
+#line 19
+typedef struct LinkStateP____nesc_unnamed4356 {
+  uint16_t dest;
+  uint16_t next_hop;
+  uint8_t cost;
+} LinkStateP__routing_entry_t;
+
+LinkStateP__routing_entry_t LinkStateP__routing_table[1000][20];
+
+
+uint16_t LinkStateP__lsa_cache[1000][20];
+
+
+
+
+
+#line 31
+typedef struct LinkStateP____nesc_unnamed4357 {
+  uint16_t neighbor;
+  uint16_t cost;
+} LinkStateP__link_t;
+
+
+
+
+#line 36
+typedef struct LinkStateP____nesc_unnamed4358 {
+  uint16_t num_neighbors;
+  LinkStateP__link_t links[20];
+} LinkStateP__topo_node_t;
+
+
+LinkStateP__topo_node_t LinkStateP__network_topology[1000][20];
+
+
+
+
+static inline void LinkStateP__LinkState__initialize(void );
+#line 60
+static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src);
+# 21 "lib/modules/IPP.nc"
+static inline void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len);
 # 80 "/opt/tinyos-main/tos/lib/tossim/heap.c"
 static inline void init_heap(heap_t *heap)
 #line 80
@@ -7122,9 +7168,9 @@ static inline bool TossimActiveMessageC__AMPacket__isForMe(message_t *amsg)
   TossimActiveMessageC__AMPacket__destination(amsg) == AM_BROADCAST_ADDR;
 }
 
-# 58 "Node.nc"
+# 63 "Node.nc"
 static inline message_t *Node__Receive__receive(message_t *msg, void *payload, uint8_t len)
-#line 58
+#line 63
 {
 
   if (len == sizeof(pack )) {
@@ -7469,9 +7515,9 @@ inline static error_t FloodingP__LinkLayer__send(pack *msg, uint16_t dest){
 #line 2
 }
 #line 2
-# 115 "Node.nc"
+# 119 "Node.nc"
 static inline void Node__Flooding__receive(pack *msg, uint16_t src)
-#line 115
+#line 119
 {
 
   FloodingHdr *fh = (FloodingHdr *)msg->payload;
@@ -7483,14 +7529,22 @@ static inline void Node__Flooding__receive(pack *msg, uint16_t src)
       sim_log_debug(112U, GENERAL_CHANNEL, "Received PINGREPLY from Node %hu\n", src);
     }
   else 
-#line 124
+#line 128
     {
       sim_log_debug(113U, GENERAL_CHANNEL, "Received PING from Node %hu with payload: \"%s\"\n", src, str_payload);
     }
 }
 
+# 60 "lib/modules/LinkStateP.nc"
+static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src)
+#line 60
+{
+}
+
 # 5 "lib/interfaces/Flooding.nc"
 inline static void FloodingP__Flooding__receive(pack *msg, uint16_t src){
+#line 5
+  LinkStateP__Flooding__receive(msg, src);
 #line 5
   Node__Flooding__receive(msg, src);
 #line 5
@@ -7577,8 +7631,16 @@ static inline void FloodingP__LinkLayer__receive(pack *msg, uint16_t src, uint8_
     }
 }
 
+# 21 "lib/modules/IPP.nc"
+static inline void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len)
+#line 21
+{
+}
+
 # 3 "lib/interfaces/LinkLayer.nc"
 inline static void LinkLayerP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len){
+#line 3
+  IPP__LinkLayer__receive(msg, src, len);
 #line 3
   FloodingP__LinkLayer__receive(msg, src, len);
 #line 3
@@ -8091,15 +8153,15 @@ inline static error_t Node__AMControl__start(void ){
 #line 104
 }
 #line 104
-# 47 "Node.nc"
+# 52 "Node.nc"
 static inline void Node__AMControl__startDone(error_t err)
-#line 47
+#line 52
 {
   if (err == SUCCESS) {
       sim_log_debug(108U, GENERAL_CHANNEL, "Radio On\n");
     }
   else 
-#line 50
+#line 55
     {
 
       Node__AMControl__start();
@@ -8137,9 +8199,9 @@ static inline void TossimPacketModelC__startDoneTask__runTask(void )
   TossimPacketModelC__Control__startDone(SUCCESS);
 }
 
-# 56 "Node.nc"
+# 61 "Node.nc"
 static inline void Node__AMControl__stopDone(error_t err)
-#line 56
+#line 61
 {
 }
 
@@ -8811,9 +8873,9 @@ static inline void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__send
 }
 
 # 100 "/opt/tinyos-main/tos/interfaces/Send.nc"
-inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint8_t arg_0x7ffffa58d940, message_t * msg, error_t error){
+inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint8_t arg_0x7ffffa589940, message_t * msg, error_t error){
 #line 100
-  switch (arg_0x7ffffa58d940) {
+  switch (arg_0x7ffffa589940) {
 #line 100
     case 0U:
 #line 100
@@ -8835,7 +8897,7 @@ inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint
 #line 100
     default:
 #line 100
-      /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(arg_0x7ffffa58d940, msg, error);
+      /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(arg_0x7ffffa589940, msg, error);
 #line 100
       break;
 #line 100
@@ -8925,9 +8987,9 @@ inline static error_t CommandHandlerP__Pool__put(CommandHandlerP__Pool__t * newV
 #line 89
 }
 #line 89
-# 97 "Node.nc"
+# 102 "Node.nc"
 static inline void Node__CommandHandler__setTestServer(void )
-#line 97
+#line 102
 {
 }
 
@@ -8938,9 +9000,9 @@ inline static void CommandHandlerP__CommandHandler__setTestServer(void ){
 #line 8
 }
 #line 8
-# 99 "Node.nc"
+# 104 "Node.nc"
 static inline void Node__CommandHandler__setTestClient(void )
-#line 99
+#line 104
 {
 }
 
@@ -8951,9 +9013,9 @@ inline static void CommandHandlerP__CommandHandler__setTestClient(void ){
 #line 9
 }
 #line 9
-# 91 "Node.nc"
+# 96 "Node.nc"
 static inline void Node__CommandHandler__printRouteTable(void )
-#line 91
+#line 96
 {
 }
 
@@ -8964,9 +9026,9 @@ inline static void CommandHandlerP__CommandHandler__printRouteTable(void ){
 #line 5
 }
 #line 5
-# 93 "Node.nc"
+# 98 "Node.nc"
 static inline void Node__CommandHandler__printLinkState(void )
-#line 93
+#line 98
 {
 }
 
@@ -9001,11 +9063,11 @@ inline static void Node__NeighborDiscovery__printNeighbors(void ){
 #line 8
 }
 #line 8
-# 89 "Node.nc"
+# 94 "Node.nc"
 static inline void Node__CommandHandler__printNeighbors(void )
-#line 89
+#line 94
 {
-#line 89
+#line 94
   Node__NeighborDiscovery__printNeighbors();
 }
 
@@ -9031,9 +9093,9 @@ inline static error_t Node__Flooding__send(pack *msg, uint16_t dest, uint8_t pay
 #line 4
 }
 #line 4
-# 105 "Node.nc"
+# 110 "Node.nc"
 static inline void Node__makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t *payload, uint8_t length)
-#line 105
+#line 110
 {
   __nesc_hton_uint16(Package->src.nxdata, src);
   __nesc_hton_uint16(Package->dest.nxdata, dest);
@@ -9043,13 +9105,13 @@ static inline void Node__makePack(pack *Package, uint16_t src, uint16_t dest, ui
   memcpy(Package->payload, payload, length);
 }
 
-#line 76
+#line 81
 static inline void Node__CommandHandler__ping(uint16_t destination, uint8_t *payload)
-#line 76
+#line 81
 {
   uint8_t payload_length = strlen((char *)payload);
 
-#line 78
+#line 83
   sim_log_debug(109U, GENERAL_CHANNEL, "PING EVENT \n");
 
 
@@ -9750,13 +9812,13 @@ inline static am_addr_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMPacket__dest
 }
 #line 78
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
-inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(am_id_t arg_0x7ffffa58bb60, am_addr_t addr, message_t * msg, uint8_t len){
+inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(am_id_t arg_0x7ffffa588b60, am_addr_t addr, message_t * msg, uint8_t len){
 #line 80
   unsigned char __nesc_result;
 #line 80
 
 #line 80
-  __nesc_result = TossimActiveMessageC__AMSend__send(arg_0x7ffffa58bb60, addr, msg, len);
+  __nesc_result = TossimActiveMessageC__AMSend__send(arg_0x7ffffa588b60, addr, msg, len);
 #line 80
 
 #line 80
@@ -10712,9 +10774,9 @@ static inline void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
 }
 
 # 83 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
-inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(uint8_t arg_0x7ffffa63e950){
+inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(uint8_t arg_0x7ffffa63a950){
 #line 83
-  switch (arg_0x7ffffa63e950) {
+  switch (arg_0x7ffffa63a950) {
 #line 83
     case 0U:
 #line 83
@@ -10742,7 +10804,7 @@ inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
 #line 83
     default:
 #line 83
-      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(arg_0x7ffffa63e950);
+      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(arg_0x7ffffa63a950);
 #line 83
       break;
 #line 83
@@ -11310,6 +11372,29 @@ inline static error_t SimMainP__SoftwareInit__init(void ){
 #line 62
 }
 #line 62
+# 47 "lib/modules/LinkStateP.nc"
+static inline void LinkStateP__LinkState__initialize(void )
+#line 47
+{
+  uint8_t i;
+
+#line 49
+  sim_log_debug(207U, ROUTING_CHANNEL, "LinkState: Initializing Link State Routing...\n");
+  for (i = 0; i < 20; i++) {
+      LinkStateP__routing_table[sim_node()][i].cost = __builtin_inff();
+      LinkStateP__routing_table[sim_node()][i].next_hop = 0xFFFF;
+      LinkStateP__lsa_cache[sim_node()][i] = 0;
+      LinkStateP__network_topology[sim_node()][i].num_neighbors = 0;
+    }
+}
+
+# 3 "lib/interfaces/LinkState.nc"
+inline static void Node__LinkState__initialize(void ){
+#line 3
+  LinkStateP__LinkState__initialize();
+#line 3
+}
+#line 3
 # 52 "/opt/tinyos-main/tos/interfaces/Random.nc"
 inline static uint16_t NeighborDiscoveryP__Random__rand16(void ){
 #line 52
@@ -11355,14 +11440,18 @@ inline static void Node__NeighborDiscovery__findNeighbors(void ){
 #line 5
 }
 #line 5
-# 38 "Node.nc"
+# 40 "Node.nc"
 static inline void Node__Boot__booted(void )
-#line 38
+#line 40
 {
   Node__AMControl__start();
 
   sim_log_debug(107U, GENERAL_CHANNEL, "Booted\n");
   Node__NeighborDiscovery__findNeighbors();
+
+
+
+  Node__LinkState__initialize();
 }
 
 # 60 "/opt/tinyos-main/tos/interfaces/Boot.nc"
@@ -14771,6 +14860,28 @@ static int __nesc_nido_resolve(int __nesc_mote,
     return 0;
   }
 
+  /* Module LinkStateP */
+  if (!strcmp(varname, "LinkStateP__routing_table"))
+  {
+    *addr = (uintptr_t)&LinkStateP__routing_table[__nesc_mote];
+    *size = sizeof(LinkStateP__routing_table[__nesc_mote]);
+    return 0;
+  }
+  if (!strcmp(varname, "LinkStateP__lsa_cache"))
+  {
+    *addr = (uintptr_t)&LinkStateP__lsa_cache[__nesc_mote];
+    *size = sizeof(LinkStateP__lsa_cache[__nesc_mote]);
+    return 0;
+  }
+  if (!strcmp(varname, "LinkStateP__network_topology"))
+  {
+    *addr = (uintptr_t)&LinkStateP__network_topology[__nesc_mote];
+    *size = sizeof(LinkStateP__network_topology[__nesc_mote]);
+    return 0;
+  }
+
+  /* Module IPP */
+
   return -1;
 }
 /* Invoke static initialisers for mote '__nesc_mote' */
@@ -14922,5 +15033,12 @@ static void __nesc_nido_initialise(int __nesc_mote)
   /*LinkLayerC.Sender.QueueC*/QueueC__2__head[__nesc_mote] = 0;
   /*LinkLayerC.Sender.QueueC*/QueueC__2__tail[__nesc_mote] = 0;
   /*LinkLayerC.Sender.QueueC*/QueueC__2__size[__nesc_mote] = 0;
+
+  /* Module LinkStateP */
+  memset((void *)&LinkStateP__routing_table[__nesc_mote], 0, sizeof LinkStateP__routing_table[__nesc_mote]);
+  memset((void *)&LinkStateP__lsa_cache[__nesc_mote], 0, sizeof LinkStateP__lsa_cache[__nesc_mote]);
+  memset((void *)&LinkStateP__network_topology[__nesc_mote], 0, sizeof LinkStateP__network_topology[__nesc_mote]);
+
+  /* Module IPP */
 
 }

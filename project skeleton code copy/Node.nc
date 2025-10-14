@@ -19,6 +19,8 @@ module Node{
    uses interface Boot;
    uses interface NeighborDiscovery;
    uses interface Flooding;
+   uses interface IP;
+   uses interface LinkState;
    // uses interface LinkLayer;
    
    uses interface SplitControl as AMControl;
@@ -41,6 +43,9 @@ implementation{
       dbg(GENERAL_CHANNEL, "Booted\n");
       call NeighborDiscovery.findNeighbors();
       // call neighborTimer.startOneShot(100 + (call Random.rand16() % 300));
+
+      // initialize link state
+      call LinkState.initialize();
 
    }
 
@@ -111,7 +116,6 @@ implementation{
       memcpy(Package->payload, payload, length);
    }
 
-   // PLACEHOLDER SKELETON TO BYPASS ERROR :)
    event void Flooding.receive(pack* msg, uint16_t src) {
       // Access payload for printing
       FloodingHdr* fh = (FloodingHdr*)msg->payload;
@@ -124,8 +128,6 @@ implementation{
       } else { 
          dbg(GENERAL_CHANNEL, "Received PING from Node %hu with payload: \"%s\"\n", src, str_payload);
       }
-
-
    }
 
 
