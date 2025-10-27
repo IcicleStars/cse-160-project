@@ -9,7 +9,7 @@ module FloodingP{
 }
 implementation { 
     #define MAX_SEEN 20
-    
+    pack floodingForwardBuffer;
     uint8_t seenCount = 0;
     static uint16_t localSeq = 0;   
 
@@ -33,7 +33,7 @@ implementation {
     }
 
     // add most recent seen node to table
-    void addSeen(uint16_t source, uint8_t seq_num) {
+    void addSeen(uint16_t source, uint16_t seq_num) {
         if (seenCount < MAX_SEEN) {
             seen[seenCount].source = source;
             seen[seenCount].seq_num = seq_num;
@@ -93,41 +93,43 @@ implementation {
         addSeen(fh->source, fh->seq_num);
         // dbg(FLOODING_CHANNEL, "Node %hu: Received flood from Node %hu (seq %hu, TTL %hhu)\n", TOS_NODE_ID, fh->source, fh->seq_num, fh->ttl);
 
+        // tell LinkState
+        signal Flooding.receive(msg, fh->source);
+
         // Check if node is the destination
         if(msg->dest == TOS_NODE_ID) { 
-            dbg(GENERAL_CHANNEL, "Packet reached destination. Processing ping from %hu\n", fh->source);
+            dbg(FLOODING_CHANNEL, "Packet reached destination. Processing ping from %hu\n", fh->source);
 
-            if(msg->protocol == PROTOCOL_PING) { 
-                dbg(GENERAL_CHANNEL, "PING Received from %hu. Sending PINGREPLY\n", fh->source);
+            // if(msg->protocol == PROTOCOL_PING) { 
+            //     dbg(FLOODING_CHANNEL, "PING Received from %hu. Sending PINGREPLY\n", fh->source);
 
-                memset(&reply, 0, sizeof(pack));
-                reply.dest = fh->source;
-                reply.src = TOS_NODE_ID;
-                reply.protocol = PROTOCOL_PINGREPLY;
+            //     memset(&reply, 0, sizeof(pack));
+            //     reply.dest = fh->source;
+            //     reply.src = TOS_NODE_ID;
+            //     reply.protocol = PROTOCOL_PINGREPLY;
 
-                call Flooding.send(&reply, reply.dest, 0);
-            }
+            //     call Flooding.send(&reply, reply.dest, 0);
+            // }
 
-            signal Flooding.receive(msg, fh->source);
+            // signal Flooding.receive(msg, fh->source);
             return;
 
         } else { 
 
             // Forward the packet if TTL allows
             if (fh->ttl > 1) {
-                pack fwdPack; 
                 FloodingHdr* fwdFH;
                 
                 // add packet contents to packet being forwarded
-                memcpy(&fwdPack, msg, sizeof(pack));
-                fwdFH = (FloodingHdr*)fwdPack.payload;
+                memcpy(&floodingForwardBuffer, msg, sizeof(pack));
+                fwdFH = (FloodingHdr*)floodingForwardBuffer.payload;
                 fwdFH->ttl--;
-                fwdPack.src = TOS_NODE_ID; 
-                fwdPack.TTL = fwdFH->ttl;   // update the outer TTL 
-                
+                floodingForwardBuffer.src = TOS_NODE_ID; 
+                floodingForwardBuffer.TTL = fwdFH->ttl;   // update the outer TTL 
+
                 // send next packet
                 dbg(FLOODING_CHANNEL, "Forwarding flood from %hu. New TTL: %hhu\n", fwdFH->source, fwdFH->ttl);
-                call LinkLayer.send(&fwdPack, AM_BROADCAST_ADDR);
+                call LinkLayer.send(&floodingForwardBuffer, AM_BROADCAST_ADDR);
             } else { 
                 dbg(FLOODING_CHANNEL, "At Node %hu, TTL reached zero. Flooding ended.\n", TOS_NODE_ID);
             }

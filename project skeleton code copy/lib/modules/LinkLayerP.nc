@@ -24,7 +24,8 @@ implementation {
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) { 
 
         // cast payload to a pack
-        pack* incoming = (pack*) payload; 
+        pack* incoming = (pack*) payload;
+
 
         // signal higher layer that a packet is received
         signal LinkLayer.receive(incoming, incoming->src, len);

@@ -16,17 +16,17 @@ configuration NodeC{
 implementation {
     components MainC;
     components Node;
-    components new AMReceiverC(AM_PACK) as GeneralReceive;
+    // components new AMReceiverC(AM_PACK) as GeneralReceive;
 
     Node.Boot -> MainC.Boot;
 
-    Node.Receive -> GeneralReceive;
+    // Node.Receive -> GeneralReceive;
 
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
 
-    components new SimpleSendC(AM_PACK);
-    Node.Sender -> SimpleSendC;
+    // components new SimpleSendC(AM_PACK);
+    // Node.Sender -> SimpleSendC;
 
     components CommandHandlerC;
     Node.CommandHandler -> CommandHandlerC;
@@ -36,8 +36,8 @@ implementation {
     Node.NeighborDiscovery -> NeighborDiscoveryC;
 
     // Allow node to use flooding
-    components FloodingC as Flooding;
-    Node.Flooding -> Flooding;
+    // components FloodingC as Flooding;
+    // Node.Flooding -> Flooding;
 
     // Allow node to use Link State Routing
     components LinkStateC as LinkState;
@@ -46,5 +46,7 @@ implementation {
     // Allow node to use IP 
     components IPC as IP;
     Node.IP -> IP;
+    Node.Receive -> IP.Receive[PROTOCOL_PING];
+    Node.Receive -> IP.Receive[PROTOCOL_PINGREPLY];
 
 }

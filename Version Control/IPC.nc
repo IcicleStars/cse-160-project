@@ -2,14 +2,12 @@
 
 configuration IPC{
    provides interface IP;
-   provides interface Receive[uint8_t protocol_id];
 }
 
 implementation{
     // create IP
     components IPP as IPP;
     IP = IPP;
-    Receive = IPP;
 
     // use LinkState
     components LinkStateC;

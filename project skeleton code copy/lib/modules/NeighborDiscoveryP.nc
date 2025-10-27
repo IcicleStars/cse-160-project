@@ -8,6 +8,7 @@
 #include "../../includes/packet.h"
 #include "../../includes/sendInfo.h"
 #include "../../includes/channels.h"
+#include "../../includes/LSA.h"
 
 module NeighborDiscoveryP{
     provides interface NeighborDiscovery;
@@ -34,17 +35,17 @@ implementation{
     uint16_t reply_dest;
 
     // This struct defines the entry for a neighbor
-    typedef struct { 
-        uint16_t node_id;     
-        uint8_t link_quality;   
-        bool is_active;
+    // typedef struct { 
+    //     uint16_t node_id;     
+    //     uint8_t link_quality;   
+    //     bool is_active;
 
-        uint16_t last_seq_num_heard;
-        uint32_t total_packets_received;
-        uint32_t total_packets_expected;
-        uint8_t consecutive_misses;
+    //     uint16_t last_seq_num_heard;
+    //     uint32_t total_packets_received;
+    //     uint32_t total_packets_expected;
+    //     uint8_t consecutive_misses;
 
-    } NeighborEntry;
+    // } NeighborEntry;
     // creates neighbor table
     NeighborEntry neighbor_table[MAX_NEIGHBORS];
 
@@ -55,7 +56,7 @@ implementation{
         // actually call Neighbor Discovery
         // call NeighborDiscovery.findNeighbors();
         call neighborTimer.startOneShot(100 + (call Random.rand16() % 300));
-        call qualityCheckTimer.startPeriodic(5000);
+        call qualityCheckTimer.startPeriodic(30000);
     }
    
 
@@ -123,7 +124,7 @@ implementation{
             call neighborTimer.startOneShot(100 + (call Random.rand16() %300));
 
             // quality check
-            call qualityCheckTimer.startPeriodic(10000);
+            call qualityCheckTimer.startPeriodic(30000);
 
         } else { 
             call neighborTimer.startOneShot(100 + (call Random.rand16() %300));
@@ -138,7 +139,7 @@ implementation{
         if(err == SUCCESS){
             // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Packet successfully sent. Restarting timer.\n");
             call neighborTimer.startOneShot(30000);
-            call qualityCheckTimer.startPeriodic(10000);
+            call qualityCheckTimer.startPeriodic(30000);
         }else {
             // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to send packet with error: %d\n", err);
         }
@@ -163,7 +164,7 @@ implementation{
                 // increment consecutive misses. Will be set back to zero if packet is sent.
                 neighbor_table[i].consecutive_misses++;
                 // Check if link quality is below the threshold OR has too many consecutive misses
-                if (neighbor_table[i].link_quality <= 30 || neighbor_table[i].consecutive_misses > 5) {
+                if (neighbor_table[i].link_quality <= 25 || neighbor_table[i].consecutive_misses > 8) {
                     // Drop the neighbor by resetting the entry
                     dbg(NEIGHBOR_CHANNEL, "Neighbor %hu dropped due to low link quality or consecutive misses (%hu%% LQ, %u consecutive misses)\n", neighbor_table[i].node_id, neighbor_table[i].link_quality, neighbor_table[i].consecutive_misses);
                     neighbor_table[i].is_active = FALSE;
@@ -174,11 +175,22 @@ implementation{
                     neighbor_table[i].total_packets_received = 0;
                     neighbor_table[i].last_seq_num_heard = 0;
 
+                    signal NeighborDiscovery.neighborTableUpdated();
+
                 } else { 
                     // dbg(NEIGHBOR_CHANNEL, "Neighbor %hu still has good link quality and will not be dropped\n", neighbor_table[i].node_id);
                 }
             }
         }
+    }
+
+        command NeighborEntry* NeighborDiscovery.getNeighbors(uint16_t* count) {
+        // Return the actual size of the table, as defined by the macro.
+        *count = MAX_NEIGHBORS; 
+        
+        // Return a pointer to the start of the table.
+        // The calling module (LinkStateP) will need to filter for active neighbors.
+        return neighbor_table; 
     }
 
     // TASK SENDS REPLY PACKET FOR RECEIVE
@@ -268,6 +280,7 @@ implementation{
                     neighbor_table[i].total_packets_received = 0;
                     neighbor_table[i].last_seq_num_heard = nd_payload->sequence_num - 1;
 
+                    signal NeighborDiscovery.neighborTableUpdated();
                     dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Added new neighbor %u\n", received_pack->src);
                     break;
                 }

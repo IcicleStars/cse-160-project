@@ -17,10 +17,8 @@ implementation{
     LinkStateP.NeighborDiscovery -> NeighborDiscoveryC;
 
     // Use Timer
-    components new TimerMilliC() as initialDijkstraTimer;
-    components new TimerMilliC() as lsaTimer;
-    LinkStateP.initialDijkstraTimer -> initialDijkstraTimer;
-    LinkStateP.lsaTimer -> lsaTimer;
+    components new TimerMilliC() as linkStateTimer;
+    LinkStateP.linkStateTimer -> linkStateTimer;
 
 
 }
