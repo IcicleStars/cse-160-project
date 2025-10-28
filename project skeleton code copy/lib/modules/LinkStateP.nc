@@ -48,31 +48,32 @@ implementation {
 
     // === HELPER FUNCTIONS ===
     // checks if both nodes consider each other neighbors.
-    // bool isBidirectional(uint16_t node1, uint16_t node2) {
-    //     uint8_t i;
-    //     bool node2_sees_node1 = FALSE;
+    bool isBidirectional(uint16_t node1, uint16_t node2) {
+        uint8_t i;
+        bool node2_sees_node1 = FALSE;
 
-    //     // check bounds
-    //     if (node1 >= NODES || node2 >= NODES) {
-    //          dbg(ROUTING_CHANNEL,"isBidirectional: Invalid node ID (%hu or %hu)\n", node1, node2);
-    //          return FALSE;
-    //     }
+        // check bounds
+        if (node1 >= NODES || node2 >= NODES) {
+            dbg(ROUTING_CHANNEL,"isBidirectional: Invalid node ID (%hu or %hu)\n", node1, node2);
+            return FALSE;
+        }
 
-    //     // check if node2's topology lists node1 as a neighbor
-    //     for (i = 0; i < network_topology[node2].num_neighbors; i++) {
-    //         if (network_topology[node2].links[i].neighbor == node1) {
-    //             node2_sees_node1 = TRUE;
-    //             break; // Found it
-    //         }
-    //     }
+        // check if node2's topology lists node1 as a neighbor
+        for (i = 0; i < network_topology[node2].num_neighbors; i++) {
+            if (network_topology[node2].links[i].neighbor == node1) {
+                node2_sees_node1 = TRUE;
+                // dbg(ROUTING_CHANNEL,"isBidirectional: Check PASSED for %hu -> %hu\n", node1, node2);
+                break; // Found it
+            }
+        }
 
-    //     // debugging output
-    //     if (!node2_sees_node1) {
-    //          dbg(ROUTING_CHANNEL,"isBidirectional: Check FAILED for %hu -> %hu (Node %hu doesn't see %hu)\n", node1, node2, node2, node1);
-    //     }
+        // debugging output
+        if (!node2_sees_node1) {
+            //  dbg(ROUTING_CHANNEL,"isBidirectional: Check FAILED for %hu -> %hu (Node %hu doesn't see %hu)\n", node1, node2, node2, node1);
+        }
 
-    //     return node2_sees_node1; // Return TRUE only if node2 sees node1
-    // }
+        return node2_sees_node1; // Return TRUE only if node2 sees node1
+    }
 
     void printRoutingTable() {
         uint8_t i;
@@ -85,6 +86,19 @@ implementation {
                      i,
                      routing_table[i].next_hop,
                      routing_table[i].cost);
+            }
+        }
+    }
+
+    void printTopology() { 
+        uint8_t i, j;
+        dbg(ROUTING_CHANNEL, "Node %hu Network Topology:\n", TOS_NODE_ID);
+        for (i = 0; i < NODES; i++) {
+            dbg(ROUTING_CHANNEL, "\nNode %2hu: ", i);
+            for (j = 0; j < network_topology[i].num_neighbors; j++) {
+                dbg(ROUTING_CHANNEL, " -> (N:%2hu, C:%hu)",
+                    network_topology[i].links[j].neighbor,
+                    network_topology[i].links[j].cost);
             }
         }
     }
@@ -136,8 +150,8 @@ implementation {
 
                 // check for bidirectional link
                 // check if neighbor has been visited
-                // if (!visited[v] && isBidirectional(u, v)) { 
-                if (!visited[v]) {
+                if (!visited[v] && isBidirectional(u, v)) { 
+                // if (!visited[v]) {
                     uint32_t alt = dist[u] + cost;
                     if (alt < dist[v]) { 
                         dist[v] = alt;
@@ -233,9 +247,6 @@ implementation {
                         tempNeighbors[activeNeighbors].cost = 10000 / (ndTable[i].link_quality * ndTable[i].link_quality);
                     }
 
-                    if(tempNeighbors[activeNeighbors].cost < 1) {
-                        tempNeighbors[activeNeighbors].cost = 1; // minimum cost is 1
-                    }
                     activeNeighbors++;
                 }
             }
@@ -396,6 +407,11 @@ implementation {
                      routing_table[i].cost);
             }
         }
+    }
+
+    command void LinkState.printLSA() { 
+        printTopology();
+        printRoutingTable();
     }
 
 

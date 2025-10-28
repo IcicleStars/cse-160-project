@@ -116,6 +116,8 @@ implementation{
             myMsg->payload,    // payload
             payload_len // length
          );
+
+         call LinkState.printTable();
          
          // send it back via the IP layer
          call IP.send(&sendPackage, sendPackage.dest); 
@@ -139,6 +141,8 @@ implementation{
 
       // call Sender.send(sendPackage, destination);
       if (call IP.send(&sendPackage, destination) != SUCCESS) { 
+         // call LinkState.printTable();
+         call LinkState.printLSA();
          dbg(GENERAL_CHANNEL, "Failed to send IP packet.\n");
       }
 
@@ -148,7 +152,7 @@ implementation{
 
    event void CommandHandler.printRouteTable(){ call LinkState.printTable(); }
 
-   event void CommandHandler.printLinkState(){}
+   event void CommandHandler.printLinkState(){ call LinkState.printLSA(); }
 
    event void CommandHandler.printDistanceVector(){}
 

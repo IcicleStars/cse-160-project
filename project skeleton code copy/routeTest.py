@@ -8,7 +8,7 @@ def main():
     s.runTime(1);
 
     # Load the the layout of the network.
-    s.loadTopo("long_line.topo");
+    s.loadTopo("circle.topo");
 
     # Add a noise model to all of the motes.
     s.loadNoise("no_noise.txt");
@@ -30,9 +30,12 @@ def main():
     s.runTime(20);
 
     s.ping(1, 10, "Hi!");
-    s.runTime(20);
+    s.runTime(120);
 
-    s.ping(1, 1, "Hi again!");
+    s.moteOff(6);
+
+    s.runTime(220);
+    s.ping(1, 10, "Hi!");
     s.runTime(20);
 
 if __name__ == '__main__':

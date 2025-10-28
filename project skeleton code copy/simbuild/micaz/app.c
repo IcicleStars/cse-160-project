@@ -1258,7 +1258,7 @@ typedef struct sim_log_channel {
 } sim_log_channel_t;
 
 enum __nesc_unnamed4272 {
-  SIM_LOG_OUTPUT_COUNT = 202U
+  SIM_LOG_OUTPUT_COUNT = 206U
 };
 
 sim_log_output_t outputs[SIM_LOG_OUTPUT_COUNT];
@@ -4670,15 +4670,15 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__TimerFrom__f
 #line 83
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa58e950);
+uint8_t arg_0x7ffffa58c950);
 # 92 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 static bool /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__isRunning(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa58e950);
+uint8_t arg_0x7ffffa58c950);
 # 64 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__startPeriodic(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa58e950, 
+uint8_t arg_0x7ffffa58c950, 
 # 64 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 uint32_t dt);
 
@@ -4691,7 +4691,7 @@ uint32_t dt);
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__startOneShot(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa58e950, 
+uint8_t arg_0x7ffffa58c950, 
 # 73 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 uint32_t dt);
 # 82 "/opt/tinyos-main/tos/lib/timer/Counter.nc"
@@ -4726,7 +4726,7 @@ error_t error);
 # 110 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__sendDone(
 # 48 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x7ffffa4d34d0, 
+am_id_t arg_0x7ffffa4d14d0, 
 # 103 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 message_t * msg, 
 
@@ -4739,7 +4739,7 @@ error_t error);
 # 75 "/opt/tinyos-main/tos/interfaces/Send.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__send(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa4d52a0, 
+uint8_t arg_0x7ffffa4d32a0, 
 # 67 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4753,7 +4753,7 @@ uint8_t len);
 #line 100
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa4d52a0, 
+uint8_t arg_0x7ffffa4d32a0, 
 # 96 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4774,6 +4774,9 @@ static void LinkStateP__LinkState__printTable(void );
 static uint16_t LinkStateP__LinkState__getNextHop(uint16_t dest);
 #line 3
 static void LinkStateP__LinkState__initialize(void );
+
+
+static void LinkStateP__LinkState__printLSA(void );
 # 5 "lib/interfaces/Flooding.nc"
 static void LinkStateP__Flooding__receive(pack *msg, uint16_t src);
 # 16 "lib/interfaces/NeighborDiscovery.nc"
@@ -4893,7 +4896,7 @@ message_t *
 
 IPP__Receive__default__receive(
 # 7 "lib/modules/IPP.nc"
-uint8_t arg_0x7ffffa31f290, 
+uint8_t arg_0x7ffffa30c370, 
 # 71 "/opt/tinyos-main/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -5538,6 +5541,9 @@ static error_t Node__AMControl__start(void );
 static void Node__LinkState__printTable(void );
 #line 3
 static void Node__LinkState__initialize(void );
+
+
+static void Node__LinkState__printLSA(void );
 # 10 "lib/interfaces/NeighborDiscovery.nc"
 static void Node__NeighborDiscovery__printNeighbors(void );
 #line 7
@@ -5569,9 +5575,9 @@ static inline void Node__NeighborDiscovery__neighborTableUpdated(void );
 
 
 static message_t *Node__Receive__receive(message_t *msg, void *payload, uint8_t len);
-#line 133
+#line 135
 static inline void Node__CommandHandler__ping(uint16_t destination, uint8_t *payload);
-#line 147
+#line 151
 static inline void Node__CommandHandler__printNeighbors(void );
 
 static inline void Node__CommandHandler__printRouteTable(void );
@@ -6121,7 +6127,7 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__TimerFrom__s
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa58e950);
+uint8_t arg_0x7ffffa58c950);
 #line 71
 enum /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0____nesc_unnamed4348 {
 #line 71
@@ -6262,7 +6268,7 @@ static inline void /*NeighborDiscoveryC.AmSend.SenderC.AMQueueEntryP*/AMQueueEnt
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(
 # 48 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x7ffffa4d34d0, 
+am_id_t arg_0x7ffffa4d14d0, 
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 am_addr_t addr, 
 #line 71
@@ -6279,7 +6285,7 @@ uint8_t len);
 # 100 "/opt/tinyos-main/tos/interfaces/Send.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa4d52a0, 
+uint8_t arg_0x7ffffa4d32a0, 
 # 96 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -6374,12 +6380,12 @@ static error_t LinkStateP__Flooding__send(pack *msg, uint16_t dest, uint8_t payl
 static NeighborEntry *LinkStateP__NeighborDiscovery__getNeighbors(uint16_t *count);
 # 67 "/opt/tinyos-main/tos/interfaces/TaskBasic.nc"
 static error_t LinkStateP__sendLSA__postTask(void );
-# 201 "lib/modules/LinkStateP.nc"
+# 215 "lib/modules/LinkStateP.nc"
 enum LinkStateP____nesc_unnamed4354 {
-#line 201
+#line 215
   LinkStateP__sendLSA = 11U
 };
-#line 201
+#line 215
 typedef int LinkStateP____nesc_sillytask_sendLSA[LinkStateP__sendLSA];
 #line 21
 bool LinkStateP__initialLSAPhase[1000];
@@ -6422,15 +6428,23 @@ typedef struct LinkStateP____nesc_unnamed4357 {
 
 
 LinkStateP__topo_node_t LinkStateP__network_topology[1000][20];
+
+
+
+static inline bool LinkStateP__isBidirectional(uint16_t node1, uint16_t node2);
+#line 78
+static void LinkStateP__printRoutingTable(void );
 #line 93
+static void LinkStateP__printTopology(void );
+#line 107
 static void LinkStateP__dijkstra(void );
-#line 201
+#line 215
 static inline void LinkStateP__sendLSA__runTask(void );
-#line 281
+#line 292
 static inline void LinkStateP__LinkState__initialize(void );
-#line 299
+#line 310
 static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src);
-#line 356
+#line 367
 static uint16_t LinkStateP__LinkState__getNextHop(uint16_t dest);
 
 
@@ -6462,6 +6476,8 @@ static inline void LinkStateP__NeighborDiscovery__neighborTableUpdated(void );
 
 
 static void LinkStateP__LinkState__printTable(void );
+#line 412
+static inline void LinkStateP__LinkState__printLSA(void );
 # 2 "lib/interfaces/LinkLayer.nc"
 static error_t FloodingP__LinkLayer__send(pack *msg, uint16_t dest);
 # 5 "lib/interfaces/Flooding.nc"
@@ -6724,7 +6740,7 @@ message_t *
 
 IPP__Receive__receive(
 # 7 "lib/modules/IPP.nc"
-uint8_t arg_0x7ffffa31f290, 
+uint8_t arg_0x7ffffa30c370, 
 # 71 "/opt/tinyos-main/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -7280,44 +7296,6 @@ inline static error_t NeighborDiscoveryP__sendReply__postTask(void ){
 #line 67
 }
 #line 67
-# 64 "Node.nc"
-static inline void Node__NeighborDiscovery__neighborTableUpdated(void )
-#line 64
-{
-}
-
-# 67 "/opt/tinyos-main/tos/interfaces/TaskBasic.nc"
-inline static error_t LinkStateP__sendLSA__postTask(void ){
-#line 67
-  unsigned char __nesc_result;
-#line 67
-
-#line 67
-  __nesc_result = SimSchedulerBasicP__TaskBasic__postTask(LinkStateP__sendLSA);
-#line 67
-
-#line 67
-  return __nesc_result;
-#line 67
-}
-#line 67
-# 381 "lib/modules/LinkStateP.nc"
-static inline void LinkStateP__NeighborDiscovery__neighborTableUpdated(void )
-#line 381
-{
-
-  LinkStateP__sendLSA__postTask();
-}
-
-# 16 "lib/interfaces/NeighborDiscovery.nc"
-inline static void NeighborDiscoveryP__NeighborDiscovery__neighborTableUpdated(void ){
-#line 16
-  LinkStateP__NeighborDiscovery__neighborTableUpdated();
-#line 16
-  Node__NeighborDiscovery__neighborTableUpdated();
-#line 16
-}
-#line 16
 # 243 "lib/modules/NeighborDiscoveryP.nc"
 static inline message_t *NeighborDiscoveryP__Receive__receive(message_t *buf, void *payload, uint8_t len)
 #line 243
@@ -7361,7 +7339,7 @@ static inline message_t *NeighborDiscoveryP__Receive__receive(message_t *buf, vo
               NeighborDiscoveryP__neighbor_table[sim_node()][i].total_packets_received = 0;
               NeighborDiscoveryP__neighbor_table[sim_node()][i].last_seq_num_heard = __nesc_ntoh_uint16(nd_payload->sequence_num.nxdata) - 1;
 
-              NeighborDiscoveryP__NeighborDiscovery__neighborTableUpdated();
+
               sim_log_debug(134U, NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Added new neighbor %u\n", __nesc_ntoh_uint16(received_pack->src.nxdata));
               break;
             }
@@ -7481,9 +7459,9 @@ inline static error_t FloodingP__LinkLayer__send(pack *msg, uint16_t dest){
 #line 2
 }
 #line 2
-# 299 "lib/modules/LinkStateP.nc"
+# 310 "lib/modules/LinkStateP.nc"
 static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src)
-#line 299
+#line 310
 {
 
 
@@ -7518,7 +7496,7 @@ static inline void LinkStateP__Flooding__receive(pack *msg, uint16_t src)
                   LinkStateP__network_topology[sim_node()][src].links[i].cost = __nesc_ntoh_uint16(lsa->neighbors[i].cost.nxdata);
                 }
               else 
-#line 331
+#line 342
                 {
 
                   break;
@@ -7589,7 +7567,7 @@ static inline void FloodingP__LinkLayer__receive(pack *msg, uint16_t src, uint8_
 
 
   if (__nesc_ntoh_uint16(msg->dest.nxdata) == TOS_NODE_ID) {
-      sim_log_debug(178U, FLOODING_CHANNEL, "Packet reached destination. Processing ping from %hu\n", __nesc_ntoh_uint16(fh->source.nxdata));
+      sim_log_debug(182U, FLOODING_CHANNEL, "Packet reached destination. Processing ping from %hu\n", __nesc_ntoh_uint16(fh->source.nxdata));
 #line 115
       return;
     }
@@ -7607,13 +7585,13 @@ static inline void FloodingP__LinkLayer__receive(pack *msg, uint16_t src, uint8_
           __nesc_hton_uint8(FloodingP__floodingForwardBuffer[sim_node()].TTL.nxdata, __nesc_ntoh_uint8(fwdFH->ttl.nxdata));
 
 
-          sim_log_debug(179U, FLOODING_CHANNEL, "Forwarding flood from %hu. New TTL: %hhu\n", __nesc_ntoh_uint16(fwdFH->source.nxdata), __nesc_ntoh_uint8(fwdFH->ttl.nxdata));
+          sim_log_debug(183U, FLOODING_CHANNEL, "Forwarding flood from %hu. New TTL: %hhu\n", __nesc_ntoh_uint16(fwdFH->source.nxdata), __nesc_ntoh_uint8(fwdFH->ttl.nxdata));
           FloodingP__LinkLayer__send(&FloodingP__floodingForwardBuffer[sim_node()], AM_BROADCAST_ADDR);
         }
       else 
 #line 133
         {
-          sim_log_debug(180U, FLOODING_CHANNEL, "At Node %hu, TTL reached zero. Flooding ended.\n", TOS_NODE_ID);
+          sim_log_debug(184U, FLOODING_CHANNEL, "At Node %hu, TTL reached zero. Flooding ended.\n", TOS_NODE_ID);
         }
     }
 }
@@ -7656,13 +7634,13 @@ static inline message_t *IPP__Receive__default__receive(uint8_t protocol_id, mes
 }
 
 # 78 "/opt/tinyos-main/tos/interfaces/Receive.nc"
-inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa31f290, message_t * msg, void * payload, uint8_t len){
+inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa30c370, message_t * msg, void * payload, uint8_t len){
 #line 78
   nx_struct message_t *__nesc_result;
 #line 78
 
 #line 78
-  switch (arg_0x7ffffa31f290) {
+  switch (arg_0x7ffffa30c370) {
 #line 78
     case PROTOCOL_PING:
 #line 78
@@ -7678,7 +7656,7 @@ inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa31f290, mess
 #line 78
     default:
 #line 78
-      __nesc_result = IPP__Receive__default__receive(arg_0x7ffffa31f290, msg, payload, len);
+      __nesc_result = IPP__Receive__default__receive(arg_0x7ffffa30c370, msg, payload, len);
 #line 78
       break;
 #line 78
@@ -7706,7 +7684,7 @@ static inline void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len)
 
   if (__nesc_ntoh_uint16(msg->dest.nxdata) == TOS_NODE_ID) {
 
-      sim_log_debug(200U, ROUTING_CHANNEL, "IPP: Packet received for me at Node %d from Node %d\n", TOS_NODE_ID, src);
+      sim_log_debug(204U, ROUTING_CHANNEL, "IPP: Packet received for me at Node %d from Node %d\n", TOS_NODE_ID, src);
       IPP__Receive__receive(__nesc_ntoh_uint8(msg->protocol.nxdata), (void *)0, msg, len);
     }
   else 
@@ -7714,14 +7692,14 @@ static inline void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len)
     {
 
 
-      sim_log_debug(201U, ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d\n", TOS_NODE_ID, src, __nesc_ntoh_uint16(msg->dest.nxdata));
       if (__nesc_ntoh_uint8(msg->TTL.nxdata) > 0) {
 
           uint16_t next_hop = IPP__LinkState__getNextHop(__nesc_ntoh_uint16(msg->dest.nxdata));
 
-#line 49
+#line 48
           memcpy(&IPP__forwardBuffer[sim_node()], msg, sizeof(pack ));
           (__nesc_temp48 = IPP__forwardBuffer[sim_node()].TTL.nxdata, __nesc_hton_uint8(__nesc_temp48, (__nesc_temp49 = __nesc_ntoh_uint8(__nesc_temp48)) - 1), __nesc_temp49);
+          sim_log_debug(205U, ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d via next hop %d\n", TOS_NODE_ID, src, __nesc_ntoh_uint16(msg->dest.nxdata), next_hop);
 
           (__nesc_temp50 = msg->TTL.nxdata, __nesc_hton_uint8(__nesc_temp50, (__nesc_temp51 = __nesc_ntoh_uint8(__nesc_temp50)) - 1), __nesc_temp51);
 
@@ -7810,7 +7788,7 @@ inline static message_t * TossimActiveMessageC__Receive__receive(am_id_t arg_0x7
 static inline bool /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__Pool__empty(void )
 #line 75
 {
-  sim_log_debug(188U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]);
+  sim_log_debug(192U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]);
   return /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()] == 0;
 }
 
@@ -7843,7 +7821,7 @@ static inline /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__pool_t */*LinkLayerC.Se
       if (/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__index[sim_node()] == 20) {
           /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__index[sim_node()] = 0;
         }
-      sim_log_debug(190U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]);
+      sim_log_debug(194U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]);
       return rval;
     }
   return (void *)0;
@@ -7883,7 +7861,7 @@ static inline error_t /*LinkLayerC.Sender.QueueC*/QueueC__1__Queue__enqueue(/*Li
 #line 101
 {
   if (/*LinkLayerC.Sender.QueueC*/QueueC__1__Queue__size() < /*LinkLayerC.Sender.QueueC*/QueueC__1__Queue__maxSize()) {
-      sim_log_debug(198U, "QueueC", "%s: size is %hhu\n", __FUNCTION__, /*LinkLayerC.Sender.QueueC*/QueueC__1__size[sim_node()]);
+      sim_log_debug(202U, "QueueC", "%s: size is %hhu\n", __FUNCTION__, /*LinkLayerC.Sender.QueueC*/QueueC__1__size[sim_node()]);
       /*LinkLayerC.Sender.QueueC*/QueueC__1__queue[sim_node()][/*LinkLayerC.Sender.QueueC*/QueueC__1__tail[sim_node()]] = newVal;
       /*LinkLayerC.Sender.QueueC*/QueueC__1__tail[sim_node()]++;
       if (/*LinkLayerC.Sender.QueueC*/QueueC__1__tail[sim_node()] == 20) {
@@ -8111,6 +8089,36 @@ inline static void IPP__LinkState__printTable(void ){
 #line 5
 }
 #line 5
+# 51 "lib/modules/LinkStateP.nc"
+static inline bool LinkStateP__isBidirectional(uint16_t node1, uint16_t node2)
+#line 51
+{
+  uint8_t i;
+  bool node2_sees_node1 = FALSE;
+
+
+  if (node1 >= 20 || node2 >= 20) {
+      sim_log_debug(169U, ROUTING_CHANNEL, "isBidirectional: Invalid node ID (%hu or %hu)\n", node1, node2);
+      return FALSE;
+    }
+
+
+  for (i = 0; i < LinkStateP__network_topology[sim_node()][node2].num_neighbors; i++) {
+      if (LinkStateP__network_topology[sim_node()][node2].links[i].neighbor == node1) {
+          node2_sees_node1 = TRUE;
+
+          break;
+        }
+    }
+
+
+  if (!node2_sees_node1) {
+    }
+
+
+  return node2_sees_node1;
+}
+
 # 216 "/opt/tinyos-main/tos/lib/tossim/TossimActiveMessageC.nc"
 static inline message_t *TossimActiveMessageC__Snoop__default__receive(am_id_t id, message_t *msg, void *payload, uint8_t len)
 #line 216
@@ -8275,12 +8283,12 @@ static inline void LinkLayerP__AMControl__startDone(error_t err)
 #line 39
 {
   if (err == SUCCESS) {
-      sim_log_debug(181U, GENERAL_CHANNEL, "Linklayer AM started\n");
+      sim_log_debug(185U, GENERAL_CHANNEL, "Linklayer AM started\n");
     }
   else 
 #line 42
     {
-      sim_log_debug(182U, GENERAL_CHANNEL, "Linklayer AM not started\n");
+      sim_log_debug(186U, GENERAL_CHANNEL, "Linklayer AM not started\n");
     }
 }
 
@@ -8312,12 +8320,12 @@ static inline void LinkLayerP__AMControl__stopDone(error_t err)
 #line 47
 {
   if (err == SUCCESS) {
-      sim_log_debug(183U, GENERAL_CHANNEL, "Linklayer AM stopped\n");
+      sim_log_debug(187U, GENERAL_CHANNEL, "Linklayer AM stopped\n");
     }
   else 
 #line 50
     {
-      sim_log_debug(184U, GENERAL_CHANNEL, "Linklayer AM not stopped");
+      sim_log_debug(188U, GENERAL_CHANNEL, "Linklayer AM not stopped");
     }
 }
 
@@ -8454,9 +8462,9 @@ inline static error_t CommandHandlerP__Pool__put(CommandHandlerP__Pool__t * newV
 #line 89
 }
 #line 89
-# 155 "Node.nc"
+# 159 "Node.nc"
 static inline void Node__CommandHandler__setTestServer(void )
-#line 155
+#line 159
 {
 }
 
@@ -8467,9 +8475,9 @@ inline static void CommandHandlerP__CommandHandler__setTestServer(void ){
 #line 8
 }
 #line 8
-# 157 "Node.nc"
+# 161 "Node.nc"
 static inline void Node__CommandHandler__setTestClient(void )
-#line 157
+#line 161
 {
 }
 
@@ -8487,11 +8495,11 @@ inline static void Node__LinkState__printTable(void ){
 #line 5
 }
 #line 5
-# 149 "Node.nc"
+# 153 "Node.nc"
 static inline void Node__CommandHandler__printRouteTable(void )
-#line 149
+#line 153
 {
-#line 149
+#line 153
   Node__LinkState__printTable();
 }
 
@@ -8502,10 +8510,27 @@ inline static void CommandHandlerP__CommandHandler__printRouteTable(void ){
 #line 5
 }
 #line 5
-# 151 "Node.nc"
-static inline void Node__CommandHandler__printLinkState(void )
-#line 151
+# 412 "lib/modules/LinkStateP.nc"
+static inline void LinkStateP__LinkState__printLSA(void )
+#line 412
 {
+  LinkStateP__printTopology();
+  LinkStateP__printRoutingTable();
+}
+
+# 6 "lib/interfaces/LinkState.nc"
+inline static void Node__LinkState__printLSA(void ){
+#line 6
+  LinkStateP__LinkState__printLSA();
+#line 6
+}
+#line 6
+# 155 "Node.nc"
+static inline void Node__CommandHandler__printLinkState(void )
+#line 155
+{
+#line 155
+  Node__LinkState__printLSA();
 }
 
 # 6 "lib/interfaces/CommandHandler.nc"
@@ -8539,11 +8564,11 @@ inline static void Node__NeighborDiscovery__printNeighbors(void ){
 #line 10
 }
 #line 10
-# 147 "Node.nc"
+# 151 "Node.nc"
 static inline void Node__CommandHandler__printNeighbors(void )
-#line 147
+#line 151
 {
-#line 147
+#line 151
   Node__NeighborDiscovery__printNeighbors();
 }
 
@@ -8569,13 +8594,13 @@ inline static error_t Node__IP__send(pack *msg, uint16_t dest){
 #line 3
 }
 #line 3
-# 133 "Node.nc"
+# 135 "Node.nc"
 static inline void Node__CommandHandler__ping(uint16_t destination, uint8_t *payload)
-#line 133
+#line 135
 {
   uint8_t payload_length = strlen((char *)payload);
 
-#line 135
+#line 137
   sim_log_debug(111U, GENERAL_CHANNEL, "PING EVENT \n");
 
 
@@ -8583,6 +8608,8 @@ static inline void Node__CommandHandler__ping(uint16_t destination, uint8_t *pay
 
 
   if (Node__IP__send(&Node__sendPackage[sim_node()], destination) != SUCCESS) {
+
+      Node__LinkState__printLSA();
       sim_log_debug(112U, GENERAL_CHANNEL, "Failed to send IP packet.\n");
     }
 }
@@ -9126,9 +9153,9 @@ static inline void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__send
 }
 
 # 100 "/opt/tinyos-main/tos/interfaces/Send.nc"
-inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint8_t arg_0x7ffffa4d52a0, message_t * msg, error_t error){
+inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint8_t arg_0x7ffffa4d32a0, message_t * msg, error_t error){
 #line 100
-  switch (arg_0x7ffffa4d52a0) {
+  switch (arg_0x7ffffa4d32a0) {
 #line 100
     case 0U:
 #line 100
@@ -9144,7 +9171,7 @@ inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint
 #line 100
     default:
 #line 100
-      /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(arg_0x7ffffa4d52a0, msg, error);
+      /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(arg_0x7ffffa4d32a0, msg, error);
 #line 100
       break;
 #line 100
@@ -9229,7 +9256,7 @@ static inline error_t FloodingP__Flooding__send(pack *msg, uint16_t dest, uint8_
   FloodingP__localSeq[sim_node()]++;
 
 
-  sim_log_debug(177U, FLOODING_CHANNEL, "Node %hu is starting flood\n", TOS_NODE_ID);
+  sim_log_debug(181U, FLOODING_CHANNEL, "Node %hu is starting flood\n", TOS_NODE_ID);
   return FloodingP__LinkLayer__send(&out, AM_BROADCAST_ADDR);
 }
 
@@ -9275,9 +9302,9 @@ inline static NeighborEntry *LinkStateP__NeighborDiscovery__getNeighbors(uint16_
 #line 13
 }
 #line 13
-# 201 "lib/modules/LinkStateP.nc"
+# 215 "lib/modules/LinkStateP.nc"
 static inline void LinkStateP__sendLSA__runTask(void )
-#line 201
+#line 215
 {
   pack lsaPack;
   LSAHdr *lsaHdr;
@@ -9311,14 +9338,11 @@ static inline void LinkStateP__sendLSA__runTask(void )
                   __nesc_hton_uint16(tempNeighbors[activeNeighbors].cost.nxdata, 0xFF);
                 }
               else 
-#line 232
+#line 246
                 {
                   __nesc_hton_uint16(tempNeighbors[activeNeighbors].cost.nxdata, 10000 / (ndTable[i].link_quality * ndTable[i].link_quality));
                 }
 
-              if (__nesc_ntoh_uint16(tempNeighbors[activeNeighbors].cost.nxdata) < 1) {
-                  __nesc_hton_uint16(tempNeighbors[activeNeighbors].cost.nxdata, 1);
-                }
               activeNeighbors++;
             }
         }
@@ -9349,10 +9373,10 @@ static inline void LinkStateP__sendLSA__runTask(void )
 
 
   if (LinkStateP__Flooding__send(&lsaPack, AM_BROADCAST_ADDR, total_payload_length) != SUCCESS) {
-      sim_log_debug(172U, ROUTING_CHANNEL, "LinkState: Failed to send LSA flood packet.\n");
+      sim_log_debug(176U, ROUTING_CHANNEL, "LinkState: Failed to send LSA flood packet.\n");
     }
   else 
-#line 270
+#line 281
     {
     }
 }
@@ -9395,7 +9419,7 @@ static inline error_t /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__Pool__put(/*Lin
         }
       /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__queue[sim_node()][emptyIndex] = newVal;
       /*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]++;
-      sim_log_debug(191U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]);
+      sim_log_debug(195U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*LinkLayerC.Sender.PoolC.PoolP*/PoolP__1__free[sim_node()]);
       return SUCCESS;
     }
 }
@@ -9429,7 +9453,7 @@ static inline /*LinkLayerC.Sender.QueueC*/QueueC__1__queue_t /*LinkLayerC.Sender
   /*LinkLayerC.Sender.QueueC*/QueueC__1__queue_t t = /*LinkLayerC.Sender.QueueC*/QueueC__1__Queue__head();
 
 #line 91
-  sim_log_debug(197U, "QueueC", "%s: size is %hhu\n", __FUNCTION__, /*LinkLayerC.Sender.QueueC*/QueueC__1__size[sim_node()]);
+  sim_log_debug(201U, "QueueC", "%s: size is %hhu\n", __FUNCTION__, /*LinkLayerC.Sender.QueueC*/QueueC__1__size[sim_node()]);
   if (!/*LinkLayerC.Sender.QueueC*/QueueC__1__Queue__empty()) {
       /*LinkLayerC.Sender.QueueC*/QueueC__1__head[sim_node()]++;
       if (/*LinkLayerC.Sender.QueueC*/QueueC__1__head[sim_node()] == 20) {
@@ -9551,19 +9575,19 @@ static inline error_t /*LinkLayerC.Sender.SimpleSendP*/SimpleSendP__0__send(uint
 #line 138
         {
 
-          sim_log_debug(185U, GENERAL_CHANNEL, "The radio is busy, or something\n");
+          sim_log_debug(189U, GENERAL_CHANNEL, "The radio is busy, or something\n");
           return FAIL;
         }
     }
   else 
 #line 143
     {
-      sim_log_debug(186U, GENERAL_CHANNEL, "The radio is busy");
+      sim_log_debug(190U, GENERAL_CHANNEL, "The radio is busy");
       return EBUSY;
     }
 
 
-  sim_log_debug(187U, GENERAL_CHANNEL, "FAILED!?");
+  sim_log_debug(191U, GENERAL_CHANNEL, "FAILED!?");
   return FAIL;
 }
 
@@ -9762,13 +9786,13 @@ inline static am_addr_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMPacket__dest
 }
 #line 78
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
-inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(am_id_t arg_0x7ffffa4d34d0, am_addr_t addr, message_t * msg, uint8_t len){
+inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(am_id_t arg_0x7ffffa4d14d0, am_addr_t addr, message_t * msg, uint8_t len){
 #line 80
   unsigned char __nesc_result;
 #line 80
 
 #line 80
-  __nesc_result = TossimActiveMessageC__AMSend__send(arg_0x7ffffa4d34d0, addr, msg, len);
+  __nesc_result = TossimActiveMessageC__AMSend__send(arg_0x7ffffa4d14d0, addr, msg, len);
 #line 80
 
 #line 80
@@ -10579,7 +10603,45 @@ static inline void NeighborDiscoveryP__neighborTimer__fired(void )
   NeighborDiscoveryP__search__postTask();
 }
 
+# 64 "Node.nc"
+static inline void Node__NeighborDiscovery__neighborTableUpdated(void )
+#line 64
+{
+}
 
+# 67 "/opt/tinyos-main/tos/interfaces/TaskBasic.nc"
+inline static error_t LinkStateP__sendLSA__postTask(void ){
+#line 67
+  unsigned char __nesc_result;
+#line 67
+
+#line 67
+  __nesc_result = SimSchedulerBasicP__TaskBasic__postTask(LinkStateP__sendLSA);
+#line 67
+
+#line 67
+  return __nesc_result;
+#line 67
+}
+#line 67
+# 392 "lib/modules/LinkStateP.nc"
+static inline void LinkStateP__NeighborDiscovery__neighborTableUpdated(void )
+#line 392
+{
+
+  LinkStateP__sendLSA__postTask();
+}
+
+# 16 "lib/interfaces/NeighborDiscovery.nc"
+inline static void NeighborDiscoveryP__NeighborDiscovery__neighborTableUpdated(void ){
+#line 16
+  LinkStateP__NeighborDiscovery__neighborTableUpdated();
+#line 16
+  Node__NeighborDiscovery__neighborTableUpdated();
+#line 16
+}
+#line 16
+# 158 "lib/modules/NeighborDiscoveryP.nc"
 static inline void NeighborDiscoveryP__qualityCheckTimer__fired(void )
 #line 158
 {
@@ -10632,9 +10694,9 @@ static inline void /*LinkLayerC.Sender.SimpleSendP*/SimpleSendP__0__sendTimer__f
   /*LinkLayerC.Sender.SimpleSendP*/SimpleSendP__0__sendBufferTask__postTask();
 }
 
-# 365 "lib/modules/LinkStateP.nc"
+# 376 "lib/modules/LinkStateP.nc"
 static inline void LinkStateP__initialDijkstraTimer__fired(void )
-#line 365
+#line 376
 {
   if (LinkStateP__initialLSAPhase[sim_node()]) {
       LinkStateP__initialLSAPhase[sim_node()] = FALSE;
@@ -10644,7 +10706,7 @@ static inline void LinkStateP__initialDijkstraTimer__fired(void )
 }
 
 static inline void LinkStateP__lsaTimer__fired(void )
-#line 373
+#line 384
 {
 
   LinkStateP__sendLSA__postTask();
@@ -10656,9 +10718,9 @@ static inline void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
 }
 
 # 83 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
-inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(uint8_t arg_0x7ffffa58e950){
+inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(uint8_t arg_0x7ffffa58c950){
 #line 83
-  switch (arg_0x7ffffa58e950) {
+  switch (arg_0x7ffffa58c950) {
 #line 83
     case 0U:
 #line 83
@@ -10692,7 +10754,7 @@ inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
 #line 83
     default:
 #line 83
-      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(arg_0x7ffffa58e950);
+      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(arg_0x7ffffa58c950);
 #line 83
       break;
 #line 83
@@ -11294,14 +11356,14 @@ inline static void LinkStateP__initialDijkstraTimer__startOneShot(uint32_t dt){
 #line 73
 }
 #line 73
-# 281 "lib/modules/LinkStateP.nc"
+# 292 "lib/modules/LinkStateP.nc"
 static inline void LinkStateP__LinkState__initialize(void )
-#line 281
+#line 292
 {
   uint8_t i;
 
-#line 283
-  sim_log_debug(173U, ROUTING_CHANNEL, "LinkState: Initializing Link State Routing \n");
+#line 294
+  sim_log_debug(177U, ROUTING_CHANNEL, "LinkState: Initializing Link State Routing \n");
   for (i = 0; i < 20; i++) {
       LinkStateP__routing_table[sim_node()][i].cost = 0xFF;
       LinkStateP__routing_table[sim_node()][i].next_hop = AM_BROADCAST_ADDR;
@@ -13023,17 +13085,19 @@ static message_t *Node__Receive__receive(message_t *msg, void *payload, uint8_t 
         payload_len);
 
 
+        Node__LinkState__printTable();
+
 
         Node__IP__send(&Node__sendPackage[sim_node()], __nesc_ntoh_uint16(Node__sendPackage[sim_node()].dest.nxdata));
       }
     }
-#line 123
+#line 125
   return msg;
 }
 
-#line 163
+#line 167
 static void Node__makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t *payload, uint8_t length)
-#line 163
+#line 167
 {
   __nesc_hton_uint16(Package->src.nxdata, src);
   __nesc_hton_uint16(Package->dest.nxdata, dest);
@@ -13041,6 +13105,23 @@ static void Node__makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t 
   __nesc_hton_uint16(Package->seq.nxdata, seq);
   __nesc_hton_uint8(Package->protocol.nxdata, protocol);
   memcpy(Package->payload, payload, length);
+}
+
+# 397 "lib/modules/LinkStateP.nc"
+static void LinkStateP__LinkState__printTable(void )
+#line 397
+{
+  uint8_t i;
+
+#line 399
+  sim_log_debug(178U, ROUTING_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
+  sim_log_debug(179U, ROUTING_CHANNEL, " Dest | Next Hop | Cost\n");
+  for (i = 0; i < 20; i++) {
+
+      if (LinkStateP__routing_table[sim_node()][i].next_hop != AM_BROADCAST_ADDR && i != TOS_NODE_ID) {
+          sim_log_debug(180U, ROUTING_CHANNEL, "   %2hhu |   %4hu | %3hhu\n", i, LinkStateP__routing_table[sim_node()][i].next_hop, LinkStateP__routing_table[sim_node()][i].cost);
+        }
+    }
 }
 
 # 18 "lib/modules/IPP.nc"
@@ -13051,7 +13132,7 @@ static error_t IPP__IP__send(pack *msg, uint16_t dest)
   uint16_t next_hop = IPP__LinkState__getNextHop(dest);
 
 #line 21
-  sim_log_debug(199U, ROUTING_CHANNEL, "IPP: Sending packet at Node %d to Node %d via Next Hop %d\n", TOS_NODE_ID, dest, next_hop);
+  sim_log_debug(203U, ROUTING_CHANNEL, "IPP: Sending packet at Node %d to Node %d via Next Hop %d\n", TOS_NODE_ID, dest, next_hop);
 
   if (next_hop != AM_BROADCAST_ADDR) {
       return IPP__LinkLayer__send(msg, next_hop);
@@ -13061,9 +13142,9 @@ static error_t IPP__IP__send(pack *msg, uint16_t dest)
   return FAIL;
 }
 
-# 356 "lib/modules/LinkStateP.nc"
+# 367 "lib/modules/LinkStateP.nc"
 static uint16_t LinkStateP__LinkState__getNextHop(uint16_t dest)
-#line 356
+#line 367
 {
   if (dest < 20) {
       return LinkStateP__routing_table[sim_node()][dest].next_hop;
@@ -13114,18 +13195,18 @@ static void /*LinkLayerC.Sender.QueueC*/QueueC__1__printQueue(void )
   int j;
 
 #line 76
-  sim_log_debug(192U, "QueueC", "head <-");
+  sim_log_debug(196U, "QueueC", "head <-");
   for (i = /*LinkLayerC.Sender.QueueC*/QueueC__1__head[sim_node()]; i < /*LinkLayerC.Sender.QueueC*/QueueC__1__head[sim_node()] + /*LinkLayerC.Sender.QueueC*/QueueC__1__size[sim_node()]; i++) {
-      sim_log_debug_clear(193U, "QueueC", "[");
+      sim_log_debug_clear(197U, "QueueC", "[");
       for (j = 0; j < sizeof(/*LinkLayerC.Sender.QueueC*/QueueC__1__queue_t ); j++) {
           uint8_t v = ((uint8_t *)&/*LinkLayerC.Sender.QueueC*/QueueC__1__queue[sim_node()][i % 20])[j];
 
 #line 81
-          sim_log_debug_clear(194U, "QueueC", "%0.2hhx", v);
+          sim_log_debug_clear(198U, "QueueC", "%0.2hhx", v);
         }
-      sim_log_debug_clear(195U, "QueueC", "] ");
+      sim_log_debug_clear(199U, "QueueC", "] ");
     }
-  sim_log_debug_clear(196U, "QueueC", "<- tail\n");
+  sim_log_debug_clear(200U, "QueueC", "<- tail\n");
 }
 
 # 38 "lib/modules/SimpleSendP.nc"
@@ -13340,23 +13421,6 @@ static uint32_t RandomMlcgC__Random__rand32(void )
   return mlcg;
 }
 
-# 386 "lib/modules/LinkStateP.nc"
-static void LinkStateP__LinkState__printTable(void )
-#line 386
-{
-  uint8_t i;
-
-#line 388
-  sim_log_debug(174U, ROUTING_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
-  sim_log_debug(175U, ROUTING_CHANNEL, " Dest | Next Hop | Cost\n");
-  for (i = 0; i < 20; i++) {
-
-      if (LinkStateP__routing_table[sim_node()][i].next_hop != AM_BROADCAST_ADDR && i != TOS_NODE_ID) {
-          sim_log_debug(176U, ROUTING_CHANNEL, "   %2hhu |   %4hu | %3hhu\n", i, LinkStateP__routing_table[sim_node()][i].next_hop, LinkStateP__routing_table[sim_node()][i].cost);
-        }
-    }
-}
-
 # 36 "lib/modules/FloodingP.nc"
 static void FloodingP__addSeen(uint16_t source, uint16_t seq_num)
 #line 36
@@ -13377,17 +13441,17 @@ static void FloodingP__addSeen(uint16_t source, uint16_t seq_num)
     }
 }
 
-# 93 "lib/modules/LinkStateP.nc"
+# 107 "lib/modules/LinkStateP.nc"
 static void LinkStateP__dijkstra(void )
-#line 93
+#line 107
 {
   uint32_t dist[20];
   uint16_t prev[20];
   bool visited[20];
   uint8_t i;
-#line 97
+#line 111
   uint8_t u;
-#line 97
+#line 111
   uint8_t j;
 
 
@@ -13430,11 +13494,11 @@ static void LinkStateP__dijkstra(void )
 
 
 
+          if (!visited[v] && LinkStateP__isBidirectional(u, v)) {
 
-          if (!visited[v]) {
               uint32_t alt = dist[u] + cost;
 
-#line 142
+#line 156
               if (alt < dist[v]) {
                   dist[v] = alt;
                   prev[v] = u;
@@ -13454,7 +13518,7 @@ static void LinkStateP__dijkstra(void )
           LinkStateP__routing_table[sim_node()][i].next_hop = TOS_NODE_ID;
         }
       else {
-#line 159
+#line 173
         if (dist[i] != 0xFFFFFFFF) {
 
             uint16_t curr_node = i;
@@ -13481,7 +13545,7 @@ static void LinkStateP__dijkstra(void )
                     LinkStateP__routing_table[sim_node()][i].cost = 0xFF;
                   }
                 else 
-#line 183
+#line 197
                   {
                     LinkStateP__routing_table[sim_node()][i].cost = (uint8_t )dist[i];
                   }
@@ -14232,6 +14296,41 @@ static error_t /*CommandHandlerC.PoolC.PoolP*/PoolP__0__Pool__put(/*CommandHandl
       /*CommandHandlerC.PoolC.PoolP*/PoolP__0__free[sim_node()]++;
       sim_log_debug(124U, "PoolP", "%s size is %i\n", __FUNCTION__, (int )/*CommandHandlerC.PoolC.PoolP*/PoolP__0__free[sim_node()]);
       return SUCCESS;
+    }
+}
+
+# 93 "lib/modules/LinkStateP.nc"
+static void LinkStateP__printTopology(void )
+#line 93
+{
+  uint8_t i;
+#line 94
+  uint8_t j;
+
+#line 95
+  sim_log_debug(173U, ROUTING_CHANNEL, "Node %hu Network Topology:\n", TOS_NODE_ID);
+  for (i = 0; i < 20; i++) {
+      sim_log_debug(174U, ROUTING_CHANNEL, "\nNode %2hu: ", i);
+      for (j = 0; j < LinkStateP__network_topology[sim_node()][i].num_neighbors; j++) {
+          sim_log_debug(175U, ROUTING_CHANNEL, " -> (N:%2hu, C:%hu)", LinkStateP__network_topology[sim_node()][i].links[j].neighbor, LinkStateP__network_topology[sim_node()][i].links[j].cost);
+        }
+    }
+}
+
+#line 78
+static void LinkStateP__printRoutingTable(void )
+#line 78
+{
+  uint8_t i;
+
+#line 80
+  sim_log_debug(170U, ROUTING_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
+  sim_log_debug(171U, ROUTING_CHANNEL, " Dest | Next Hop | Cost\n");
+  for (i = 0; i < 20; i++) {
+
+      if (LinkStateP__routing_table[sim_node()][i].next_hop != AM_BROADCAST_ADDR && i != TOS_NODE_ID) {
+          sim_log_debug(172U, ROUTING_CHANNEL, "   %2hhu |   %4hu | %3hhu\n", i, LinkStateP__routing_table[sim_node()][i].next_hop, LinkStateP__routing_table[sim_node()][i].cost);
+        }
     }
 }
 

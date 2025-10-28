@@ -42,12 +42,12 @@ implementation {
         } else { 
 
             // forward it 
-            dbg(ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d\n", TOS_NODE_ID, src, msg->dest);
             if (msg->TTL > 0) {
                 // ask LinkState for the next hop from this node
                 uint16_t next_hop = call LinkState.getNextHop(msg->dest);
                 memcpy(&forwardBuffer, msg, sizeof(pack));
                 forwardBuffer.TTL--;
+            dbg(ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d via next hop %d\n", TOS_NODE_ID, src, msg->dest, next_hop);
 
                 msg->TTL--; // decrement TTL
                 
