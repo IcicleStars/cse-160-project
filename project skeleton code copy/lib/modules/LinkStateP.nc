@@ -277,7 +277,7 @@ implementation {
 
         // Flood the LSA
         if (call Flooding.send(&lsaPack, AM_BROADCAST_ADDR, total_payload_length) != SUCCESS) { 
-            dbg(ROUTING_CHANNEL, "LinkState: Failed to send LSA flood packet.\n");
+            // dbg(ROUTING_CHANNEL, "LinkState: Failed to send LSA flood packet.\n");
         } else {
             // dbg(ROUTING_CHANNEL, "LinkState: Sent new LSA with sequence %hu and %hu neighbors.\n", lsaHdr->seq, activeNeighbors);
         }
@@ -300,7 +300,7 @@ implementation {
         }
 
         initialLSAPhase = TRUE;
-        call initialDijkstraTimer.startOneShot(100000); // wait 100 seconds
+        call initialDijkstraTimer.startOneShot(120000); // wait 120 seconds
 
         call lsaTimer.startPeriodic(101000); 
 

@@ -81,14 +81,17 @@ implementation{
          return msg; 
       }
 
+      if(myMsg->protocol != PROTOCOL_PING && myMsg->protocol != PROTOCOL_PINGREPLY) {
+         return msg;
+      }
+
       // Check the protocol
       if (myMsg->protocol == PROTOCOL_PINGREPLY) {
          // received reply
          dbg(GENERAL_CHANNEL, "Received PINGREPLY from Node %hu\n", myMsg->src);
-         //
+         return msg;
 
       } else if (myMsg->protocol == PROTOCOL_PING) {
-         uint16_t original_dest = myMsg->dest;
          uint8_t payload_len = strlen((char*)myMsg->payload) + 1;
          // received ping, send reply
          // print payload 
@@ -108,7 +111,7 @@ implementation{
          }
 
          makePack(&sendPackage,
-            original_dest,        // src
+            TOS_NODE_ID,        // src
             myMsg->src,        // dest
             MAX_TTL,           // TTL
             PROTOCOL_PINGREPLY, // protocol
@@ -117,11 +120,12 @@ implementation{
             payload_len // length
          );
 
-         call LinkState.printTable();
+         // call LinkState.printTable();
          
          // send it back via the IP layer
          call IP.send(&sendPackage, sendPackage.dest); 
       }
+
       return msg;
    }
 
@@ -173,19 +177,6 @@ implementation{
       memcpy(Package->payload, payload, length);
    }
 
-   // event void Flooding.receive(pack* msg, uint16_t src) {
-   //    // Access payload for printing
-   //    FloodingHdr* fh = (FloodingHdr*)msg->payload;
-   //    char* str_payload = (char*)fh->payload;
-
-   //    // Print message!
-   //    dbg(FLOODING_CHANNEL, "Flooding message received from node %u: ", src);
-   //    if(msg->protocol == PROTOCOL_PINGREPLY) { 
-   //       dbg(FLOODING_CHANNEL, "Received PINGREPLY from Node %hu\n", src);
-   //    } else { 
-   //       dbg(FLOODING_CHANNEL, "Received PING from Node %hu with payload: \"%s\"\n", src, str_payload);
-   //    }
-   // }
 
 
 }

@@ -18,13 +18,20 @@ implementation {
     command error_t IP.send(pack* msg, uint16_t dest) { 
         // get next hop 
         uint16_t next_hop = call LinkState.getNextHop(dest);
+        uint8_t i;
+
+        if(msg->protocol != PROTOCOL_PING && msg->protocol != PROTOCOL_PINGREPLY) { 
+            // dbg(ROUTING_CHANNEL, "IPP: Cannot send packet with unsupported protocol %d\n", msg->protocol);
+            return FAIL;
+        }
+
         dbg(ROUTING_CHANNEL, "IPP: Sending packet at Node %d to Node %d via Next Hop %d\n", TOS_NODE_ID, dest, next_hop);
 
         if (next_hop != AM_BROADCAST_ADDR) { 
             return call LinkLayer.send(msg, next_hop);
         }
 
-        call LinkState.printTable(); // print table upon failure
+        call LinkState.printLSA(); // print table upon failure
         return FAIL;
     }
     

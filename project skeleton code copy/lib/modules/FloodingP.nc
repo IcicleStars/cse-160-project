@@ -53,6 +53,10 @@ implementation {
         uint8_t floodingHeaderSize = sizeof(FloodingHdr);
         // dbg(FLOODING_CHANNEL, "flooding send start\n");
 
+        if(msg->protocol == PROTOCOL_PING || msg->protocol == PROTOCOL_PINGREPLY) { 
+            return FAIL;
+        }
+
         // set the contents of memory
         memset(&out, 0, sizeof(pack));
 
@@ -83,6 +87,9 @@ implementation {
         FloodingHdr* fh = (FloodingHdr*)msg->payload;
         pack reply;
         // dbg(FLOODING_CHANNEL, "FP: receive starts\n");
+        if(msg->protocol == PROTOCOL_PING || msg->protocol == PROTOCOL_PINGREPLY) { 
+            return;
+        }
 
         // Basic checks
         if (alreadySeen(fh->source, fh->seq_num)) { 
@@ -100,18 +107,6 @@ implementation {
         if(msg->dest == TOS_NODE_ID) { 
             dbg(FLOODING_CHANNEL, "Packet reached destination. Processing ping from %hu\n", fh->source);
 
-            // if(msg->protocol == PROTOCOL_PING) { 
-            //     dbg(FLOODING_CHANNEL, "PING Received from %hu. Sending PINGREPLY\n", fh->source);
-
-            //     memset(&reply, 0, sizeof(pack));
-            //     reply.dest = fh->source;
-            //     reply.src = TOS_NODE_ID;
-            //     reply.protocol = PROTOCOL_PINGREPLY;
-
-            //     call Flooding.send(&reply, reply.dest, 0);
-            // }
-
-            // signal Flooding.receive(msg, fh->source);
             return;
 
         } else { 

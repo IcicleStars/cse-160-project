@@ -56,7 +56,7 @@ implementation{
         // actually call Neighbor Discovery
         // call NeighborDiscovery.findNeighbors();
         call neighborTimer.startOneShot(100 + (call Random.rand16() % 300));
-        call qualityCheckTimer.startPeriodic(30000);
+        call qualityCheckTimer.startPeriodic(45000);
     }
    
 
@@ -124,7 +124,7 @@ implementation{
             call neighborTimer.startOneShot(100 + (call Random.rand16() %300));
 
             // quality check
-            call qualityCheckTimer.startPeriodic(30000);
+            call qualityCheckTimer.startPeriodic(45000);
 
         } else { 
             call neighborTimer.startOneShot(100 + (call Random.rand16() %300));
@@ -138,8 +138,8 @@ implementation{
         // This creates the periodic behavior
         if(err == SUCCESS){
             // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Packet successfully sent. Restarting timer.\n");
-            call neighborTimer.startOneShot(30000);
-            call qualityCheckTimer.startPeriodic(30000);
+            call neighborTimer.startOneShot(45000);
+            call qualityCheckTimer.startPeriodic(45000);
         }else {
             // dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Failed to send packet with error: %d\n", err);
         }
@@ -164,7 +164,7 @@ implementation{
                 // increment consecutive misses. Will be set back to zero if packet is sent.
                 neighbor_table[i].consecutive_misses++;
                 // Check if link quality is below the threshold OR has too many consecutive misses
-                if (neighbor_table[i].link_quality <= 25 || neighbor_table[i].consecutive_misses > 8) {
+                if (neighbor_table[i].link_quality <= 30 || neighbor_table[i].consecutive_misses > 5) {
                     // Drop the neighbor by resetting the entry
                     dbg(NEIGHBOR_CHANNEL, "Neighbor %hu dropped due to low link quality or consecutive misses (%hu%% LQ, %u consecutive misses)\n", neighbor_table[i].node_id, neighbor_table[i].link_quality, neighbor_table[i].consecutive_misses);
                     neighbor_table[i].is_active = FALSE;

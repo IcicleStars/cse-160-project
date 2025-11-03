@@ -25,17 +25,22 @@ def main():
     s.runTime(20);
 
     # After sending a ping, simulate a little to prevent collision.
-    s.runTime(500);
+    s.runTime(750);
+    # s.routeDMP(19);
+    # s.runTime(3);
     s.ping (18, 4, "Test1")
-    s.runTime(20);
+    s.runTime(45);
 
+    # s.routeDMP(5);
     s.routeDMP(5);
-    s.runTime(1);
+    s.runTime(5);
     s.moteOff(6);
+    s.runTime(750);
 
-    s.runTime(1000);
     s.ping(5, 8, "Test2");
-    s.runTime(50);
+    s.runTime(45);
+
+    s.routeDMP(10);
 
 if __name__ == '__main__':
     main()
