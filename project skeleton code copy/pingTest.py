@@ -36,6 +36,8 @@ def main():
     s.runTime(1000);
     s.ping(5, 8, "Test2");
     s.runTime(50);
+    s.routeDMP(10);
+    s.runTime(5);
 
 if __name__ == '__main__':
     main()
