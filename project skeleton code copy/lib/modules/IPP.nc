@@ -4,7 +4,7 @@
 
 module IPP{ 
     provides interface IP; 
-    provides interface Receive[uint8_t protocol_id]; // <-- ADD THIS LINE
+    provides interface Receive[uint8_t protocol_id]; 
 
     uses interface LinkState;
     uses interface LinkLayer;
@@ -38,7 +38,7 @@ implementation {
     // handle incoming IP packets
     event void LinkLayer.receive(pack* msg, uint16_t src, uint8_t len) {
 
-        if(msg->protocol != PROTOCOL_PING && msg->protocol != PROTOCOL_PINGREPLY) { 
+        if(msg->protocol != PROTOCOL_PING && msg->protocol != PROTOCOL_PINGREPLY && msg->protocol != PROTOCOL_TCP) { 
             return;
         }
 

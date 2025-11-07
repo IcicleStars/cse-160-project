@@ -13,6 +13,7 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 #include "includes/FloodingHdr.h"
+#include "includes/TCP.h"
 #include <string.h>
 
 module Node{
@@ -22,6 +23,8 @@ module Node{
    uses interface IP;
    uses interface LinkState;
    // uses interface LinkLayer;
+   
+   uses interface Transport;
    
    uses interface SplitControl as AMControl;
    uses interface Receive;
