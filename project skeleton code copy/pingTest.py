@@ -33,7 +33,7 @@ def main():
     s.runTime(1);
     s.moteOff(6);
 
-    s.runTime(200);
+    s.runTime(300);
     s.ping(5, 8, "Test2");
     s.runTime(50);
     s.routeDMP(10);

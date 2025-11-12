@@ -34,10 +34,11 @@ implementation {
         // initialize
         socket_store_t* s = &sockets[index];
         tcp_header* t_hdr = (tcp_header*)sendBuffer.payload;
+        error_t result;
 
         // fill header
         t_hdr->src_port = s->src;
-        t_hdr->dest_port = s->dest;
+        t_hdr->dest_port = s->dest.port;
         t_hdr->flags = flags;
         t_hdr->seq_num = s->lastSent;
         t_hdr->ack_num = s->nextExpected;
@@ -49,8 +50,24 @@ implementation {
         sendBuffer.protocol = PROTOCOL_TCP;
         sendBuffer.TTL = MAX_TTL;
 
+        if (flags & TCP_SYN) { 
+            dbg(TRANSPORT_CHANNEL, "send_tcp_packet: SENDING SYN to %u\n", s->dest.addr);
+        }
+        if (flags & TCP_FIN) { 
+            dbg(TRANSPORT_CHANNEL, "send_tcp_packet: SENDING FIN to %u\n", s->dest.addr);
+        }
+
+        dbg(TRANSPORT_CHANNEL, "Calling IP.send() to %u\n", s->dest.addr);
+        result = call IP.send(&sendBuffer, s->dest.addr);
+
+        if ( result != SUCCESS ) { 
+            dbg(TRANSPORT_CHANNEL, "IP Send FAILED!!!");
+        } else { 
+            dbg(TRANSPORT_CHANNEL, "IP SEND SUCCEED");
+        }
+
         // send the packet
-        return call IP.send(&sendBuffer, s->dest.addr);
+        return;
 
     }
 
@@ -63,7 +80,7 @@ implementation {
         for(i = 0; i < MAX_NUM_OF_SOCKETS; i++) { 
             if(sockets[i].state != CLOSED && 
             sockets[i].dest.addr == src_addr && 
-            sockets[i].dest == src_port && 
+            sockets[i].dest.port == src_port && 
             sockets[i].src == dest_port) { 
                 return i;
             }
@@ -216,6 +233,7 @@ implementation {
     // attempts a connection to an address
     command error_t Transport.connect(socket_t fd, socket_addr_t *dest) {
         uint8_t index;
+        error_t result;
 
         // must be valid fd
         if(fd == 0 || fd > MAX_NUM_OF_SOCKETS) { 
@@ -226,6 +244,7 @@ implementation {
 
         // bound/closed socket
         if (sockets[index].state != CLOSED || sockets[index].src == 0) { 
+            dbg(TRANSPORT_CHANNEL, "connect failed, socket is neither closed nor bound\n");
             return FAIL;
         }
 
@@ -238,8 +257,17 @@ implementation {
         // initial seq no.
         sockets[index].lastSent = 0;
 
+        result = send_tcp_packet(index, TCP_SYN, NULL, 0);
+
+        if (result != SUCCESS) { 
+            dbg(TRANSPORT_CHANNEL, "connect FAILED and send packet failed");
+            sockets[index].state = CLOSED;
+        } else { 
+            dbg(TRANSPORT_CHANNEL, "connect SUCCESS");
+        }
+
         // sent SYN packet
-        return send_tcp_packet(index, TCP_SYN, NULL, 0);
+        return result;
 
     }
 
@@ -268,6 +296,12 @@ implementation {
                 return SUCCESS;
             }
 
+        }
+
+        else if (sockets[index].state == SYN_SENT) { 
+            sockets[index].state = CLOSED;
+            memset(&sockets[index], 0, sizeof(socket_store_t));
+            return SUCCESS;
         }
 
         // send fin packet
@@ -306,6 +340,7 @@ implementation {
         pack* myMsg = (pack*)payload;
         tcp_header* t_hdr;
         uint8_t index;
+        socket_store_t* s;
         uint8_t payload_len = 0; 
 
         // 
@@ -322,7 +357,7 @@ implementation {
         }
 
         // matching socket
-        socket_store_t* s = &sockets[index];
+        s = &sockets[index];
 
         // state machine?
         switch(s->state) { 

@@ -19,7 +19,10 @@ enum socket_state{
     FIN_WAIT_1,
     FIN_WAIT_2,
     CLOSE_WAIT,
-    LAST_ACK
+    LAST_ACK,
+
+    CLOSING,
+    TIME_WAIT
 };
 
 

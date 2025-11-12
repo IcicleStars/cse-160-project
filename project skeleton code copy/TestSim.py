@@ -6,6 +6,7 @@
 import sys
 from TOSSIM import *
 from CommandMsg import *
+import struct
 
 class TestSim:
     moteids=[]
@@ -13,6 +14,11 @@ class TestSim:
     CMD_PING = 0
     CMD_NEIGHBOR_DUMP = 1
     CMD_ROUTE_DUMP=3
+    CMD_TEST_SERVER = 4
+    CMD_TEST_CLIENT = 5
+    CMD_CLIENT_CLOSE = 7
+    
+    
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -124,6 +130,30 @@ class TestSim:
 
     def routeDMP(self, destination):
         self.sendCMD(self.CMD_ROUTE_DUMP, destination, "routing command");
+    
+    # TRANSPORT FUNCTIONS START
+
+    def testServer(self, destination, port): 
+        payloadStr = "{0}".format(struct.pack('<H', port))
+        self.sendCMD(self.CMD_TEST_SERVER, destination, payloadStr)
+
+    def testClient(self, source, dest, srcPort, destPort): 
+        payloadStr = "{0}{1}{2}".format( 
+            struct.pack('<H', dest),
+            struct.pack('<H', srcPort),
+            struct.pack('<H', destPort)
+        )
+        self.sendCMD(self.CMD_TEST_CLIENT, source, payloadStr)
+
+    def clientClose(self, source, dest, srcPort, destPort): 
+        payloadStr = "{0}{1}{2}".format( 
+            struct.pack('<H', dest),
+            struct.pack('<H', srcPort),
+            struct.pack('<H', destPort)
+        )
+        self.sendCMD(self.CMD_CLIENT_CLOSE, source, payloadStr)
+ 
+    # TRANSPORT FUNCTIONS END
 
     def addChannel(self, channelName, out=sys.stdout):
         print 'Adding Channel', channelName;

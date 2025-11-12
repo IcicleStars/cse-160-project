@@ -5,7 +5,7 @@
  *
  */
 
-
+#include <stdint.h>
 #include "../../includes/CommandMsg.h"
 #include "../../includes/command.h"
 #include "../../includes/channels.h"
@@ -69,14 +69,33 @@ implementation{
                 break;
 
             case CMD_TEST_CLIENT:
+            {
+                uint16_t* p_dest = (uint16_t*)&buff[0];
+                uint16_t* p_srcPort = (uint16_t*)&buff[2];
+                uint16_t* p_destPort = (uint16_t*)&buff[4];
                 dbg(COMMAND_CHANNEL, "Command Type: Client\n");
-                signal CommandHandler.setTestClient();
+                signal CommandHandler.setTestClient(*p_dest, *p_srcPort, *p_destPort);
                 break;
+            }
 
             case CMD_TEST_SERVER:
-                dbg(COMMAND_CHANNEL, "Command Type: Client\n");
-                signal CommandHandler.setTestServer();
+            {
+                uint16_t* p_port = (uint16_t*)&buff[0];
+                dbg(COMMAND_CHANNEL, "Command Type: Server\n");
+                signal CommandHandler.setTestServer(*p_port);
                 break;
+            }
+
+            case CMD_CLIENT_CLOSE: 
+            {
+                uint16_t* p_dest = (uint16_t*)&buff[0];
+                uint16_t* p_srcPort = (uint16_t*)&buff[2];
+                uint16_t* p_destPort = (uint16_t*)&buff[4];
+                dbg(COMMAND_CHANNEL, "Command Type: Client Close\n");
+                signal CommandHandler.closeClientSocket(*p_dest, *p_srcPort, *p_destPort);
+                break;
+            }
+
 
             default:
                 dbg(COMMAND_CHANNEL, "CMD_ERROR: \"%d\" does not match any known commands.\n", msg->id);

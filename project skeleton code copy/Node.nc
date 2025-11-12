@@ -14,6 +14,7 @@
 #include "includes/channels.h"
 #include "includes/FloodingHdr.h"
 #include "includes/TCP.h"
+#include "includes/socket.h"
 #include <string.h>
 
 module Node{
@@ -32,10 +33,16 @@ module Node{
    // uses interface SimpleSend as Sender;
 
    uses interface CommandHandler;
+   uses interface Timer<TMilli> as ServerTimer;
 }
 
 implementation{
    pack sendPackage;
+   // sockets
+   socket_t listen_fd;
+   socket_t client_fd;
+   socket_t accepted_fds[MAX_NUM_OF_SOCKETS];
+   uint8_t accepted_count = 0;
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
@@ -49,6 +56,9 @@ implementation{
 
       // initialize link state
       call LinkState.initialize();
+
+      listen_fd = 0;
+      client_fd = 0;
 
    }
 
@@ -155,6 +165,23 @@ implementation{
 
    }
 
+   event void ServerTimer.fired() { 
+      socket_t new_fd;
+
+      if(listen_fd == 0) { 
+         return;
+      }
+
+      new_fd = call Transport.accept(listen_fd);
+
+      if (new_fd > 0) { 
+         if(accepted_count < MAX_NUM_OF_SOCKETS) { 
+            accepted_fds[accepted_count] = new_fd;
+            accepted_count++;
+         }
+      }
+   }
+
    event void CommandHandler.printNeighbors(){ call NeighborDiscovery.printNeighbors(); }
 
    event void CommandHandler.printRouteTable(){ call LinkState.printTable(); }
@@ -163,9 +190,74 @@ implementation{
 
    event void CommandHandler.printDistanceVector(){}
 
-   event void CommandHandler.setTestServer(){}
+   event void CommandHandler.setTestServer(uint16_t port){ 
 
-   event void CommandHandler.setTestClient(){}
+      socket_addr_t addr;
+      addr.port = (uint8_t)port;
+      addr.addr = TOS_NODE_ID;
+
+      listen_fd = call Transport.socket();
+      if(listen_fd == 0) { 
+         // failed to create socket
+         return;
+      }
+
+      if (call Transport.bind(listen_fd, &addr) != SUCCESS) { 
+         return;
+      }
+
+      if (call Transport.listen(listen_fd) != SUCCESS) { 
+         return;
+      }
+
+      call ServerTimer.startPeriodic(1000);
+
+   }
+
+   event void CommandHandler.setTestClient(uint16_t dest, uint16_t srcPort, uint16_t destPort){ 
+
+      socket_addr_t my_addr;
+      socket_addr_t dest_addr;
+
+      // set up local src addr
+      my_addr.port = (uint8_t)srcPort;
+      my_addr.addr = TOS_NODE_ID;
+
+      // set up dest server address
+      dest_addr.port = (uint8_t)destPort;
+      dest_addr.addr = dest;
+
+      client_fd = call Transport.socket();
+      if (client_fd == 0) { 
+         return;
+      }
+
+      // bind to port
+      if (call Transport.bind(client_fd, &my_addr) != SUCCESS) { 
+         dbg(TRANSPORT_CHANNEL, "FAILED to bind client socket\n");
+         return;
+      }
+
+      // connect to server
+      if (call Transport.connect(client_fd, &dest_addr) != SUCCESS) { 
+         dbg(TRANSPORT_CHANNEL, "FAILED to start connect\n");
+      }
+
+   }
+
+   event void CommandHandler.closeClientSocket(uint16_t dest, uint16_t srcPort, uint16_t destPort){ 
+      if (client_fd != 0) { 
+         dbg(TRANSPORT_CHANNEL, "Closing client socket (FD %u)\n", client_fd);
+
+         // close
+         if (call Transport.close(client_fd) == SUCCESS) { 
+            client_fd = 0;
+         } else { 
+            dbg(TRANSPORT_CHANNEL, "FAILED to close socket\n");
+         }
+
+      }
+   }
 
    event void CommandHandler.setAppServer(){}
 
