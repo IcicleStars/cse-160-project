@@ -4995,7 +4995,7 @@ message_t *
 
 IPP__Receive__default__receive(
 # 7 "lib/modules/IPP.nc"
-uint8_t arg_0x7ffffa2d66e0, 
+uint8_t arg_0x7ffffa2d76e0, 
 # 71 "/opt/tinyos-main/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -6568,10 +6568,6 @@ typedef struct LinkStateP____nesc_unnamed4359 {
 
 
 LinkStateP__topo_node_t LinkStateP__network_topology[1000][20];
-
-
-
-static inline bool LinkStateP__isBidirectional(uint16_t node1, uint16_t node2);
 #line 77
 static void LinkStateP__printRoutingTable(void );
 #line 92
@@ -6875,7 +6871,7 @@ message_t *
 
 IPP__Receive__receive(
 # 7 "lib/modules/IPP.nc"
-uint8_t arg_0x7ffffa2d66e0, 
+uint8_t arg_0x7ffffa2d76e0, 
 # 71 "/opt/tinyos-main/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -8009,13 +8005,13 @@ static inline message_t *IPP__Receive__default__receive(uint8_t protocol_id, mes
 }
 
 # 78 "/opt/tinyos-main/tos/interfaces/Receive.nc"
-inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa2d66e0, message_t * msg, void * payload, uint8_t len){
+inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa2d76e0, message_t * msg, void * payload, uint8_t len){
 #line 78
   nx_struct message_t *__nesc_result;
 #line 78
 
 #line 78
-  switch (arg_0x7ffffa2d66e0) {
+  switch (arg_0x7ffffa2d76e0) {
 #line 78
     case PROTOCOL_PING:
 #line 78
@@ -8037,7 +8033,7 @@ inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa2d66e0, mess
 #line 78
     default:
 #line 78
-      __nesc_result = IPP__Receive__default__receive(arg_0x7ffffa2d66e0, msg, payload, len);
+      __nesc_result = IPP__Receive__default__receive(arg_0x7ffffa2d76e0, msg, payload, len);
 #line 78
       break;
 #line 78
@@ -8080,9 +8076,9 @@ static inline void IPP__LinkLayer__receive(pack *msg, uint16_t src, uint8_t len)
 #line 55
           memcpy(&IPP__forwardBuffer[sim_node()], msg, sizeof(pack ));
           (__nesc_temp48 = IPP__forwardBuffer[sim_node()].TTL.nxdata, __nesc_hton_uint8(__nesc_temp48, (__nesc_temp49 = __nesc_ntoh_uint8(__nesc_temp48)) - 1), __nesc_temp49);
+          (__nesc_temp50 = msg->TTL.nxdata, __nesc_hton_uint8(__nesc_temp50, (__nesc_temp51 = __nesc_ntoh_uint8(__nesc_temp50)) - 1), __nesc_temp51);
           sim_log_debug(209U, ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d via next hop %d\n", TOS_NODE_ID, src, __nesc_ntoh_uint16(msg->dest.nxdata), next_hop);
 
-          (__nesc_temp50 = msg->TTL.nxdata, __nesc_hton_uint8(__nesc_temp50, (__nesc_temp51 = __nesc_ntoh_uint8(__nesc_temp50)) - 1), __nesc_temp51);
 
 
           if (next_hop != AM_BROADCAST_ADDR && next_hop != src) {
@@ -8493,36 +8489,6 @@ inline static void IPP__LinkState__printLSA(void ){
 #line 6
 }
 #line 6
-# 50 "lib/modules/LinkStateP.nc"
-static inline bool LinkStateP__isBidirectional(uint16_t node1, uint16_t node2)
-#line 50
-{
-  uint8_t i;
-  bool node2_sees_node1 = FALSE;
-
-
-  if (node1 >= 20 || node2 >= 20) {
-      sim_log_debug(174U, ROUTING_CHANNEL, "isBidirectional: Invalid node ID (%hu or %hu)\n", node1, node2);
-      return FALSE;
-    }
-
-
-  for (i = 0; i < LinkStateP__network_topology[sim_node()][node2].num_neighbors; i++) {
-      if (LinkStateP__network_topology[sim_node()][node2].links[i].neighbor == node1) {
-          node2_sees_node1 = TRUE;
-
-          break;
-        }
-    }
-
-
-  if (!node2_sees_node1) {
-    }
-
-
-  return node2_sees_node1;
-}
-
 # 216 "/opt/tinyos-main/tos/lib/tossim/TossimActiveMessageC.nc"
 static inline message_t *TossimActiveMessageC__Snoop__default__receive(am_id_t id, message_t *msg, void *payload, uint8_t len)
 #line 216
@@ -14298,8 +14264,8 @@ static void LinkStateP__dijkstra(void )
 
 
 
-          if (!visited[v] && LinkStateP__isBidirectional(u, v)) {
 
+          if (!visited[v]) {
               uint32_t alt = dist[u] + cost;
 
 #line 155

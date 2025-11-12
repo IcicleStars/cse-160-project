@@ -149,8 +149,8 @@ implementation {
 
                 // check for bidirectional link
                 // check if neighbor has been visited
-                if (!visited[v] && isBidirectional(u, v)) { 
-                // if (!visited[v]) {
+                // if (!visited[v] && isBidirectional(u, v)) { 
+                if (!visited[v]) {
                     uint32_t alt = dist[u] + cost;
                     if (alt < dist[v]) { 
                         dist[v] = alt;

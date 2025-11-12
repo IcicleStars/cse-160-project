@@ -54,9 +54,9 @@ implementation {
                 uint16_t next_hop = call LinkState.getNextHop(msg->dest);
                 memcpy(&forwardBuffer, msg, sizeof(pack));
                 forwardBuffer.TTL--;
-            dbg(ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d via next hop %d\n", TOS_NODE_ID, src, msg->dest, next_hop);
-
                 msg->TTL--; // decrement TTL
+                dbg(ROUTING_CHANNEL, "IPP: Forwarding packet at Node %d from Node %d to Node %d via next hop %d\n", TOS_NODE_ID, src, msg->dest, next_hop);
+
                 
                 // Forward the packet if next_hop is valid and not the source
                 if (next_hop != AM_BROADCAST_ADDR && next_hop != src) {
