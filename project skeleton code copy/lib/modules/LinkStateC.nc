@@ -18,9 +18,7 @@ implementation{
 
     // Use Timer
     components new TimerMilliC() as initialDijkstraTimer;
-    components new TimerMilliC() as lsaTimer;
     LinkStateP.initialDijkstraTimer -> initialDijkstraTimer;
-    LinkStateP.lsaTimer -> lsaTimer;
 
 
 }

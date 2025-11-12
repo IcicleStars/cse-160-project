@@ -25,7 +25,7 @@ def main():
     s.runTime(20);
 
     # After sending a ping, simulate a little to prevent collision.
-    s.runTime(500);
+    s.runTime(200);
     s.ping (18, 4, "Test1")
     s.runTime(20);
 
@@ -33,7 +33,7 @@ def main():
     s.runTime(1);
     s.moteOff(6);
 
-    s.runTime(1000);
+    s.runTime(200);
     s.ping(5, 8, "Test2");
     s.runTime(50);
     s.routeDMP(10);

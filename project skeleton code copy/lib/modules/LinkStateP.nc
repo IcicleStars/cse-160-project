@@ -9,7 +9,6 @@ module LinkStateP{
     uses interface Flooding;
     uses interface NeighborDiscovery;
     uses interface Timer<TMilli> as initialDijkstraTimer;
-    uses interface Timer<TMilli> as lsaTimer;
 }
 
 implementation { 
@@ -211,7 +210,6 @@ implementation {
     }
 
         // sends the Link State Advertisement to all its neighbors
-        // IMPLEMENTATION OF "Then Floods new LSA"
     task void sendLSA() { 
         pack lsaPack;
         LSAHdr* lsaHdr;
@@ -302,7 +300,6 @@ implementation {
         initialLSAPhase = TRUE;
         call initialDijkstraTimer.startOneShot(120000); // wait 120 seconds
 
-        call lsaTimer.startPeriodic(101000); 
 
     }
 
@@ -379,11 +376,6 @@ implementation {
             // dbg(ROUTING_CHANNEL, "LinkState: Initial LSA phase over. Running first Dijkstra.\n");
             dijkstra();
         }
-    }
-
-    event void lsaTimer.fired() { 
-        // dbg(ROUTING_CHANNEL, "LinkState: Periodic LSA timer fired. Posting LSA flood.\n");
-        post sendLSA();
     }
 
     //- Create and send LSA (Link State Advertisement) to all neighbors (Command)

@@ -280,7 +280,7 @@ implementation{
                     neighbor_table[i].total_packets_received = 0;
                     neighbor_table[i].last_seq_num_heard = nd_payload->sequence_num - 1;
 
-                    // signal NeighborDiscovery.neighborTableUpdated();
+                    signal NeighborDiscovery.neighborTableUpdated();
                     dbg(NEIGHBOR_CHANNEL, "NeighborDiscoveryP: Added new neighbor %u\n", received_pack->src);
                     break;
                 }
