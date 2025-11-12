@@ -94,7 +94,7 @@ implementation{
          return msg; 
       }
 
-      if(myMsg->protocol != PROTOCOL_PING && myMsg->protocol != PROTOCOL_PINGREPLY) {
+      if(myMsg->protocol != PROTOCOL_PING && myMsg->protocol != PROTOCOL_PINGREPLY && myMsg->protocol != PROTOCOL_TCP) {
          return msg;
       }
 

@@ -67,7 +67,7 @@ implementation {
         }
 
         // send the packet
-        return;
+        return result;
 
     }
 

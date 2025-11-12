@@ -17,12 +17,16 @@ def main():
     #add channels
     s.addChannel(s.COMMAND_CHANNEL, sys.stdout)
     s.addChannel(s.GENERAL_CHANNEL, sys.stdout)
+    s.addChannel(s.ROUTING_CHANNEL, sys.stdout)
     s.addChannel(s.TRANSPORT_CHANNEL, sys.stdout)
 
     # let neighbors discover each other
-    s.runTime(2000)
+    s.runTime(300)
 
     # start tcp 
+    s.routeDMP(5)
+    s.ping(5, 19, "test")
+
     s.testServer(1, 80)
 
     s.runTime(100)

@@ -20,7 +20,7 @@ implementation {
         uint16_t next_hop = call LinkState.getNextHop(dest);
         uint8_t i;
 
-        if(msg->protocol != PROTOCOL_PING && msg->protocol != PROTOCOL_PINGREPLY) { 
+        if(msg->protocol != PROTOCOL_PING && msg->protocol != PROTOCOL_PINGREPLY && msg->protocol != PROTOCOL_TCP) { 
             // dbg(ROUTING_CHANNEL, "IPP: Cannot send packet with unsupported protocol %d\n", msg->protocol);
             return FAIL;
         }

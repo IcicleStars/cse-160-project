@@ -3900,7 +3900,10 @@ enum socket_state {
   FIN_WAIT_1, 
   FIN_WAIT_2, 
   CLOSE_WAIT, 
-  LAST_ACK
+  LAST_ACK, 
+
+  CLOSING, 
+  TIME_WAIT
 };
 
 
@@ -3911,7 +3914,7 @@ typedef uint8_t socket_port_t;
 
 
 
-#line 30
+#line 33
 typedef nx_struct socket_addr_t {
   nx_socket_port_t port;
   nx_uint16_t addr;
@@ -3920,8 +3923,8 @@ typedef nx_struct socket_addr_t {
 
 
 typedef uint8_t socket_t;
-#line 60
-#line 40
+#line 63
+#line 43
 typedef struct socket_store_t {
   uint8_t flag;
   enum socket_state state;
@@ -4768,15 +4771,15 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__TimerFrom__f
 #line 83
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa548950);
+uint8_t arg_0x7ffffa547950);
 # 92 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 static bool /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__isRunning(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa548950);
+uint8_t arg_0x7ffffa547950);
 # 64 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__startPeriodic(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa548950, 
+uint8_t arg_0x7ffffa547950, 
 # 64 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 uint32_t dt);
 
@@ -4789,7 +4792,7 @@ uint32_t dt);
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__startOneShot(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa548950, 
+uint8_t arg_0x7ffffa547950, 
 # 73 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
 uint32_t dt);
 # 82 "/opt/tinyos-main/tos/lib/timer/Counter.nc"
@@ -4824,7 +4827,7 @@ error_t error);
 # 110 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__sendDone(
 # 48 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x7ffffa48d4d0, 
+am_id_t arg_0x7ffffa48c4d0, 
 # 103 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 message_t * msg, 
 
@@ -4837,7 +4840,7 @@ error_t error);
 # 75 "/opt/tinyos-main/tos/interfaces/Send.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__send(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa48f2a0, 
+uint8_t arg_0x7ffffa48e2a0, 
 # 67 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4851,7 +4854,7 @@ uint8_t len);
 #line 100
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa48f2a0, 
+uint8_t arg_0x7ffffa48e2a0, 
 # 96 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4992,7 +4995,7 @@ message_t *
 
 IPP__Receive__default__receive(
 # 7 "lib/modules/IPP.nc"
-uint8_t arg_0x7ffffa2d76e0, 
+uint8_t arg_0x7ffffa2d66e0, 
 # 71 "/opt/tinyos-main/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -6273,7 +6276,7 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__TimerFrom__s
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(
 # 48 "/opt/tinyos-main/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x7ffffa548950);
+uint8_t arg_0x7ffffa547950);
 #line 71
 enum /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0____nesc_unnamed4350 {
 #line 71
@@ -6414,7 +6417,7 @@ static inline void /*NeighborDiscoveryC.AmSend.SenderC.AMQueueEntryP*/AMQueueEnt
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(
 # 48 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x7ffffa48d4d0, 
+am_id_t arg_0x7ffffa48c4d0, 
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
 am_addr_t addr, 
 #line 71
@@ -6431,7 +6434,7 @@ uint8_t len);
 # 100 "/opt/tinyos-main/tos/interfaces/Send.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(
 # 46 "/opt/tinyos-main/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x7ffffa48f2a0, 
+uint8_t arg_0x7ffffa48e2a0, 
 # 96 "/opt/tinyos-main/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -6872,7 +6875,7 @@ message_t *
 
 IPP__Receive__receive(
 # 7 "lib/modules/IPP.nc"
-uint8_t arg_0x7ffffa2d76e0, 
+uint8_t arg_0x7ffffa2d66e0, 
 # 71 "/opt/tinyos-main/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -8006,13 +8009,13 @@ static inline message_t *IPP__Receive__default__receive(uint8_t protocol_id, mes
 }
 
 # 78 "/opt/tinyos-main/tos/interfaces/Receive.nc"
-inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa2d76e0, message_t * msg, void * payload, uint8_t len){
+inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa2d66e0, message_t * msg, void * payload, uint8_t len){
 #line 78
   nx_struct message_t *__nesc_result;
 #line 78
 
 #line 78
-  switch (arg_0x7ffffa2d76e0) {
+  switch (arg_0x7ffffa2d66e0) {
 #line 78
     case PROTOCOL_PING:
 #line 78
@@ -8034,7 +8037,7 @@ inline static message_t * IPP__Receive__receive(uint8_t arg_0x7ffffa2d76e0, mess
 #line 78
     default:
 #line 78
-      __nesc_result = IPP__Receive__default__receive(arg_0x7ffffa2d76e0, msg, payload, len);
+      __nesc_result = IPP__Receive__default__receive(arg_0x7ffffa2d66e0, msg, payload, len);
 #line 78
       break;
 #line 78
@@ -9853,9 +9856,9 @@ static inline void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__send
 }
 
 # 100 "/opt/tinyos-main/tos/interfaces/Send.nc"
-inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint8_t arg_0x7ffffa48f2a0, message_t * msg, error_t error){
+inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint8_t arg_0x7ffffa48e2a0, message_t * msg, error_t error){
 #line 100
-  switch (arg_0x7ffffa48f2a0) {
+  switch (arg_0x7ffffa48e2a0) {
 #line 100
     case 0U:
 #line 100
@@ -9871,7 +9874,7 @@ inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__sendDone(uint
 #line 100
     default:
 #line 100
-      /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(arg_0x7ffffa48f2a0, msg, error);
+      /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__Send__default__sendDone(arg_0x7ffffa48e2a0, msg, error);
 #line 100
       break;
 #line 100
@@ -10487,13 +10490,13 @@ inline static am_addr_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMPacket__dest
 }
 #line 78
 # 80 "/opt/tinyos-main/tos/interfaces/AMSend.nc"
-inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(am_id_t arg_0x7ffffa48d4d0, am_addr_t addr, message_t * msg, uint8_t len){
+inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP__0__AMSend__send(am_id_t arg_0x7ffffa48c4d0, am_addr_t addr, message_t * msg, uint8_t len){
 #line 80
   unsigned char __nesc_result;
 #line 80
 
 #line 80
-  __nesc_result = TossimActiveMessageC__AMSend__send(arg_0x7ffffa48d4d0, addr, msg, len);
+  __nesc_result = TossimActiveMessageC__AMSend__send(arg_0x7ffffa48c4d0, addr, msg, len);
 #line 80
 
 #line 80
@@ -11444,9 +11447,9 @@ static inline void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
 }
 
 # 83 "/opt/tinyos-main/tos/lib/timer/Timer.nc"
-inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(uint8_t arg_0x7ffffa548950){
+inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__fired(uint8_t arg_0x7ffffa547950){
 #line 83
-  switch (arg_0x7ffffa548950) {
+  switch (arg_0x7ffffa547950) {
 #line 83
     case 0U:
 #line 83
@@ -11480,7 +11483,7 @@ inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer
 #line 83
     default:
 #line 83
-      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(arg_0x7ffffa548950);
+      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__Timer__default__fired(arg_0x7ffffa547950);
 #line 83
       break;
 #line 83
@@ -13799,7 +13802,7 @@ static error_t TransportP__send_tcp_packet(uint8_t index, uint8_t flags, uint8_t
     }
 
 
-  return;
+  return result;
 }
 
 # 18 "lib/modules/IPP.nc"
@@ -13810,7 +13813,7 @@ static error_t IPP__IP__send(pack *msg, uint16_t dest)
   uint16_t next_hop = IPP__LinkState__getNextHop(dest);
   uint8_t i;
 
-  if (__nesc_ntoh_uint8(msg->protocol.nxdata) != PROTOCOL_PING && __nesc_ntoh_uint8(msg->protocol.nxdata) != PROTOCOL_PINGREPLY) {
+  if (__nesc_ntoh_uint8(msg->protocol.nxdata) != PROTOCOL_PING && __nesc_ntoh_uint8(msg->protocol.nxdata) != PROTOCOL_PINGREPLY && __nesc_ntoh_uint8(msg->protocol.nxdata) != PROTOCOL_TCP) {
 
       return FAIL;
     }
@@ -14160,7 +14163,7 @@ static message_t *Node__Receive__receive(message_t *msg, void *payload, uint8_t 
       return msg;
     }
 
-  if (__nesc_ntoh_uint8(myMsg->protocol.nxdata) != PROTOCOL_PING && __nesc_ntoh_uint8(myMsg->protocol.nxdata) != PROTOCOL_PINGREPLY) {
+  if (__nesc_ntoh_uint8(myMsg->protocol.nxdata) != PROTOCOL_PING && __nesc_ntoh_uint8(myMsg->protocol.nxdata) != PROTOCOL_PINGREPLY && __nesc_ntoh_uint8(myMsg->protocol.nxdata) != PROTOCOL_TCP) {
       return msg;
     }
 
