@@ -14,8 +14,8 @@ class TestSim:
     CMD_PING = 0
     CMD_NEIGHBOR_DUMP = 1
     CMD_ROUTE_DUMP=3
-    CMD_TEST_SERVER = 4
     CMD_TEST_CLIENT = 5
+    CMD_TEST_SERVER = 4
     CMD_CLIENT_CLOSE = 7
     
     
@@ -133,25 +133,32 @@ class TestSim:
     
     # TRANSPORT FUNCTIONS START
 
-    def testServer(self, destination, port): 
+    def testServer(self, destination): 
+        port = 80
         payloadStr = "{0}".format(struct.pack('<H', port))
         self.sendCMD(self.CMD_TEST_SERVER, destination, payloadStr)
 
-    def testClient(self, source, dest, srcPort, destPort): 
+    def testClient(self, destination): 
+        dest = 1
+        srcPort = 40
+        destPort = 80
         payloadStr = "{0}{1}{2}".format( 
             struct.pack('<H', dest),
             struct.pack('<H', srcPort),
             struct.pack('<H', destPort)
         )
-        self.sendCMD(self.CMD_TEST_CLIENT, source, payloadStr)
+        self.sendCMD(self.CMD_TEST_CLIENT, destination, payloadStr)
 
-    def clientClose(self, source, dest, srcPort, destPort): 
+    def clientClose(self, destination): 
+        dest = 1
+        srcPort = 40
+        destPort = 80
         payloadStr = "{0}{1}{2}".format( 
             struct.pack('<H', dest),
             struct.pack('<H', srcPort),
             struct.pack('<H', destPort)
         )
-        self.sendCMD(self.CMD_CLIENT_CLOSE, source, payloadStr)
+        self.sendCMD(self.CMD_CLIENT_CLOSE, destination, payloadStr)
  
     # TRANSPORT FUNCTIONS END
 

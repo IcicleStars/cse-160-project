@@ -234,26 +234,26 @@ implementation{
 
       // bind to port
       if (call Transport.bind(client_fd, &my_addr) != SUCCESS) { 
-         dbg(TRANSPORT_CHANNEL, "FAILED to bind client socket\n");
+         dbg(TRANSPORT_CHANNEL, "Node (Transport): FAILED to bind client socket\n");
          return;
       }
 
       // connect to server
       if (call Transport.connect(client_fd, &dest_addr) != SUCCESS) { 
-         dbg(TRANSPORT_CHANNEL, "FAILED to start connect\n");
+         dbg(TRANSPORT_CHANNEL, "Node (Transport): FAILED to start connect\n");
       }
 
    }
 
    event void CommandHandler.closeClientSocket(uint16_t dest, uint16_t srcPort, uint16_t destPort){ 
       if (client_fd != 0) { 
-         dbg(TRANSPORT_CHANNEL, "Closing client socket (FD %u)\n", client_fd);
+         dbg(TRANSPORT_CHANNEL, "Node (Transport): Closing client socket (FD %u)\n", client_fd);
 
          // close
          if (call Transport.close(client_fd) == SUCCESS) { 
             client_fd = 0;
          } else { 
-            dbg(TRANSPORT_CHANNEL, "FAILED to close socket\n");
+            dbg(TRANSPORT_CHANNEL, "Node (Transport): FAILED to close socket\n");
          }
 
       }

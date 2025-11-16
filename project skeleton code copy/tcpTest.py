@@ -24,19 +24,19 @@ def main():
     s.runTime(300)
 
     # start tcp 
-    s.routeDMP(5)
-    s.ping(5, 19, "test")
 
-    s.testServer(1, 80)
+    s.testServer(1)
 
     s.runTime(100)
+    # s.routeDMP(5)
+    # s.ping(5, 19, "test")
 
     # Node 5 starts client, connect to 1:80 from :40
-    s.testClient(5, 1, 40, 80)
+    s.testClient(5)
 
     s.runTime(100)
 
-    s.clientClose(5, 1, 40, 80)
+    s.clientClose(5)
 
     s.runTime(100)
 

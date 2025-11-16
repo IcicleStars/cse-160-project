@@ -51,19 +51,19 @@ implementation {
         sendBuffer.TTL = MAX_TTL;
 
         if (flags & TCP_SYN) { 
-            dbg(TRANSPORT_CHANNEL, "send_tcp_packet: SENDING SYN to %u\n", s->dest.addr);
+            dbg(TRANSPORT_CHANNEL, "TransportP: SENDING SYN to %u\n", s->dest.addr);
         }
         if (flags & TCP_FIN) { 
-            dbg(TRANSPORT_CHANNEL, "send_tcp_packet: SENDING FIN to %u\n", s->dest.addr);
+            dbg(TRANSPORT_CHANNEL, "TransportP: SENDING FIN to %u\n", s->dest.addr);
         }
 
-        dbg(TRANSPORT_CHANNEL, "Calling IP.send() to %u\n", s->dest.addr);
+        dbg(TRANSPORT_CHANNEL, "TransportP: Calling IP.send() to %u\n", s->dest.addr);
         result = call IP.send(&sendBuffer, s->dest.addr);
 
         if ( result != SUCCESS ) { 
-            dbg(TRANSPORT_CHANNEL, "IP Send FAILED!!!");
+            dbg(TRANSPORT_CHANNEL, "TransportP: IP Send FAILED!!!\n");
         } else { 
-            dbg(TRANSPORT_CHANNEL, "IP SEND SUCCEED");
+            dbg(TRANSPORT_CHANNEL, "TransportP: IP SEND SUCCEEDED\n");
         }
 
         // send the packet
@@ -193,7 +193,7 @@ implementation {
 
         // stop and wait
         if(s->lastSent > s->lastAck) { 
-            dbg(TRANSPORT_CHANNEL, "Transport: Waiting for ACK\n");
+            dbg(TRANSPORT_CHANNEL, "TransportP: Waiting for ACK\n");
             return 0;
         }
 
@@ -244,7 +244,7 @@ implementation {
 
         // bound/closed socket
         if (sockets[index].state != CLOSED || sockets[index].src == 0) { 
-            dbg(TRANSPORT_CHANNEL, "connect failed, socket is neither closed nor bound\n");
+            dbg(TRANSPORT_CHANNEL, "TransportP: connect failed, socket is neither closed nor bound\n");
             return FAIL;
         }
 
@@ -260,10 +260,10 @@ implementation {
         result = send_tcp_packet(index, TCP_SYN, NULL, 0);
 
         if (result != SUCCESS) { 
-            dbg(TRANSPORT_CHANNEL, "connect FAILED and send packet failed");
+            dbg(TRANSPORT_CHANNEL, "TransportP: connect FAILED and send packet failed\n");
             sockets[index].state = CLOSED;
         } else { 
-            dbg(TRANSPORT_CHANNEL, "connect SUCCESS");
+            dbg(TRANSPORT_CHANNEL, "TransportP: connect SUCCESS\n");
         }
 
         // sent SYN packet
@@ -441,6 +441,7 @@ implementation {
             // handles fin
             case FIN_WAIT_2: 
                 if (t_hdr->flags & TCP_FIN) { 
+                    dbg(TRANSPORT_CHANNEL, "\n");
                     s->state = CLOSED;
                     s->nextExpected = t_hdr->seq_num + 1;
                     send_tcp_packet(index, TCP_ACK, NULL, 0);
@@ -458,6 +459,7 @@ implementation {
             // waiting for final ack
             case LAST_ACK: 
                 if(t_hdr->flags & TCP_ACK) { 
+                    dbg(TRANSPORT_CHANNEL, "\n");
                     s->state = CLOSED;
                     // clear socket
                     memset(s, 0, sizeof(socket_store_t));

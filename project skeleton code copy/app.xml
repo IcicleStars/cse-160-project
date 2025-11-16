@@ -618,7 +618,7 @@
     </component>
     <component qname="SimpleSendC" loc="3:lib/modules/SimpleSendC.nc" abstract="">
       <parameters>
-        <constant name="channel" ref="0x7ffffa34e160" loc="3:lib/modules/SimpleSendC.nc">
+        <constant name="channel" ref="0x7ffffa355160" loc="3:lib/modules/SimpleSendC.nc">
           <component-ref qname="SimpleSendC"/>
           <type-int cname="int" size="I:4" alignment="I:4"></type-int>
         </constant>
@@ -838,7 +838,7 @@
   </interfaces>
   <interfacedefs>
     <interfacedef qname="SimpleSend" loc="3:lib/interfaces/SimpleSend.nc">
-      <function command="" provided="0" name="send" ref="0x7ffffa368cf0" loc="4:lib/interfaces/SimpleSend.nc">
+      <function command="" provided="0" name="send" ref="0x7ffffa36c020" loc="4:lib/interfaces/SimpleSend.nc">
         <interfacedef-ref qname="SimpleSend"/>
         <type-function size="I:1" alignment="I:1">
           <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
@@ -856,14 +856,14 @@
           </function-parameters>
         </type-function>
         <parameters>
-          <variable name="msg" ref="0x7ffffa368710" loc="4:lib/interfaces/SimpleSend.nc">
+          <variable name="msg" ref="0x7ffffa36f970" loc="4:lib/interfaces/SimpleSend.nc">
             <type-pointer size="I:8" alignment="I:8">
               <type-tag size="I:28" alignment="I:1"><nx_struct-ref name="pack" ref="0x7ffffad7a080"/>
                 <typename><typedef-ref name="pack" ref="0x7ffffad79570"/></typename>
               </type-tag>
             </type-pointer>
           </variable>
-          <variable name="dest" ref="0x7ffffa368a60" loc="4:lib/interfaces/SimpleSend.nc">
+          <variable name="dest" ref="0x7ffffa36fcc0" loc="4:lib/interfaces/SimpleSend.nc">
             <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
               <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
             </type-int>
@@ -2320,7 +2320,7 @@
       </function>
     </interfacedef>
     <interfacedef qname="LinkLayer" loc="1:lib/interfaces/LinkLayer.nc">
-      <function command="" provided="0" name="send" ref="0x7ffffa398cc0" loc="2:lib/interfaces/LinkLayer.nc">
+      <function command="" provided="0" name="send" ref="0x7ffffa39c3a0" loc="2:lib/interfaces/LinkLayer.nc">
         <interfacedef-ref qname="LinkLayer"/>
         <type-function size="I:1" alignment="I:1">
           <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
@@ -2338,21 +2338,21 @@
           </function-parameters>
         </type-function>
         <parameters>
-          <variable name="msg" ref="0x7ffffa3986e0" loc="2:lib/interfaces/LinkLayer.nc">
+          <variable name="msg" ref="0x7ffffa39fd60" loc="2:lib/interfaces/LinkLayer.nc">
             <type-pointer size="I:8" alignment="I:8">
               <type-tag size="I:28" alignment="I:1"><nx_struct-ref name="pack" ref="0x7ffffad7a080"/>
                 <typename><typedef-ref name="pack" ref="0x7ffffad79570"/></typename>
               </type-tag>
             </type-pointer>
           </variable>
-          <variable name="dest" ref="0x7ffffa398a30" loc="2:lib/interfaces/LinkLayer.nc">
+          <variable name="dest" ref="0x7ffffa39c110" loc="2:lib/interfaces/LinkLayer.nc">
             <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
               <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
             </type-int>
           </variable>
         </parameters>
       </function>
-      <function event="" provided="0" name="receive" ref="0x7ffffa395cb0" loc="3:lib/interfaces/LinkLayer.nc">
+      <function event="" provided="0" name="receive" ref="0x7ffffa39b3b0" loc="3:lib/interfaces/LinkLayer.nc">
         <interfacedef-ref qname="LinkLayer"/>
         <type-function size="I:1" alignment="I:1">
           <type-void size="I:1" alignment="I:1"></type-void>
@@ -2371,19 +2371,19 @@
           </function-parameters>
         </type-function>
         <parameters>
-          <variable name="msg" ref="0x7ffffa3953a0" loc="3:lib/interfaces/LinkLayer.nc">
+          <variable name="msg" ref="0x7ffffa39ca50" loc="3:lib/interfaces/LinkLayer.nc">
             <type-pointer size="I:8" alignment="I:8">
               <type-tag size="I:28" alignment="I:1"><nx_struct-ref name="pack" ref="0x7ffffad7a080"/>
                 <typename><typedef-ref name="pack" ref="0x7ffffad79570"/></typename>
               </type-tag>
             </type-pointer>
           </variable>
-          <variable name="src" ref="0x7ffffa3956e0" loc="3:lib/interfaces/LinkLayer.nc">
+          <variable name="src" ref="0x7ffffa39cd90" loc="3:lib/interfaces/LinkLayer.nc">
             <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
               <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
             </type-int>
           </variable>
-          <variable name="len" ref="0x7ffffa395a10" loc="3:lib/interfaces/LinkLayer.nc">
+          <variable name="len" ref="0x7ffffa39b110" loc="3:lib/interfaces/LinkLayer.nc">
             <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
               <typename><typedef-ref name="uint8_t" ref="0x7ffffb67f920"/></typename>
             </type-int>
@@ -6365,18 +6365,18 @@
         <type-int cname="long" size="I:8" alignment="I:8"></type-int>
       </field>
     </struct>
-    <struct name="LinkLayerHdr" loc="4:lib/modules/../../includes/LinkLayerHdr.h" ref="0x7ffffa36c4f0" defined="" size="I:4" alignment="I:2">
-      <field name="source" ref="0x7ffffa36ce90" bit-offset="I:0" size="I:2">
+    <struct name="LinkLayerHdr" loc="4:lib/modules/../../includes/LinkLayerHdr.h" ref="0x7ffffa3737a0" defined="" size="I:4" alignment="I:2">
+      <field name="source" ref="0x7ffffa370180" bit-offset="I:0" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="am_addr_t" ref="0x7ffffae05020"/></typename>
         </type-int>
       </field>
-      <field name="destination" ref="0x7ffffa36cf40" bit-offset="I:16" size="I:2">
+      <field name="destination" ref="0x7ffffa370230" bit-offset="I:16" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="am_addr_t" ref="0x7ffffae05020"/></typename>
         </type-int>
       </field>
-      <field name="payload" ref="0x7ffffa369020" bit-offset="I:32" size="I:0">
+      <field name="payload" ref="0x7ffffa3702e0" bit-offset="I:32" size="I:0">
         <type-array elements="I:0" size="I:0" alignment="I:1">
           <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
             <typename><typedef-ref name="uint8_t" ref="0x7ffffb67f920"/></typename>
@@ -7321,7 +7321,7 @@
         </type-pointer>
       </field>
     </struct>
-    <enum loc="213:lib/modules/LinkStateP.nc" ref="0x7ffffa419d90" defined="" scoped="" size="I:4" alignment="I:4">
+    <enum loc="213:lib/modules/LinkStateP.nc" ref="0x7ffffa418350" defined="" scoped="" size="I:4" alignment="I:4">
       <component-ref qname="LinkStateP"/>
       <type-int cname="int" size="I:4" alignment="I:4"></type-int>
     </enum>
@@ -7371,20 +7371,20 @@
         </type-int>
       </field>
     </struct>
-    <struct name="seen" loc="17:lib/modules/FloodingP.nc" ref="0x7ffffa396960" defined="" scoped="" size="I:4" alignment="I:2">
+    <struct name="seen" loc="17:lib/modules/FloodingP.nc" ref="0x7ffffa39ee80" defined="" scoped="" size="I:4" alignment="I:2">
       <component-ref qname="FloodingP"/>
-      <field name="source" ref="0x7ffffa393020" bit-offset="I:0" size="I:2">
+      <field name="source" ref="0x7ffffa39a500" bit-offset="I:0" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
-      <field name="seq_num" ref="0x7ffffa3930d0" bit-offset="I:16" size="I:2">
+      <field name="seq_num" ref="0x7ffffa39a5b0" bit-offset="I:16" size="I:2">
         <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
           <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
         </type-int>
       </field>
     </struct>
-    <enum loc="79:lib/modules/SimpleSendP.nc" ref="0x7ffffa31b420" defined="" scoped="" size="U:" alignment="U:">
+    <enum loc="79:lib/modules/SimpleSendP.nc" ref="0x7ffffa322420" defined="" scoped="" size="U:" alignment="U:">
       <component-ref qname="SimpleSendP"/>
       <type-int cname="unknown int" size="U:" alignment="U:"></type-int>
     </enum>
@@ -7472,7 +7472,7 @@
       </type-array>
     </variable>
     <variable name="outputs" ref="0x7ffffb0eb9a0" loc="67:/opt/tinyos-main/tos/lib/tossim/sim_log.c">
-      <type-array elements="I:219" size="I:3504" alignment="I:8">
+      <type-array elements="I:220" size="I:3520" alignment="I:8">
         <type-tag size="I:16" alignment="I:8"><struct-ref name="sim_log_output" ref="0x7ffffb0efd90"/>
           <typename><typedef-ref name="sim_log_output_t" ref="0x7ffffb0ed650"/></typename>
         </type-tag>
@@ -8396,55 +8396,55 @@
         </type-tag>
       </type-array>
     </variable>
-    <variable name="seen" ref="0x7ffffa393350" loc="20:lib/modules/FloodingP.nc">
+    <variable name="seen" ref="0x7ffffa39a830" loc="20:lib/modules/FloodingP.nc">
       <component-ref qname="FloodingP"/>
       <type-array elements="I:20" size="I:80" alignment="I:2">
-        <type-tag size="I:4" alignment="I:2"><struct-ref name="seen" scoped="" ref="0x7ffffa396960"/></type-tag>
+        <type-tag size="I:4" alignment="I:2"><struct-ref name="seen" scoped="" ref="0x7ffffa39ee80"/></type-tag>
       </type-array>
     </variable>
-    <variable name="floodingForwardBuffer" ref="0x7ffffa397b50" loc="12:lib/modules/FloodingP.nc">
+    <variable name="floodingForwardBuffer" ref="0x7ffffa39e1b0" loc="12:lib/modules/FloodingP.nc">
       <component-ref qname="FloodingP"/>
       <type-tag size="I:28" alignment="I:1"><nx_struct-ref name="pack" ref="0x7ffffad7a080"/>
         <typename><typedef-ref name="pack" ref="0x7ffffad79570"/></typename>
       </type-tag>
     </variable>
-    <variable name="seenCount" ref="0x7ffffa396020" loc="13:lib/modules/FloodingP.nc">
+    <variable name="seenCount" ref="0x7ffffa39e540" loc="13:lib/modules/FloodingP.nc">
       <component-ref qname="FloodingP"/>
       <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
         <typename><typedef-ref name="uint8_t" ref="0x7ffffb67f920"/></typename>
       </type-int>
     </variable>
-    <variable name="localSeq" ref="0x7ffffa396540" loc="14:lib/modules/FloodingP.nc">
+    <variable name="localSeq" ref="0x7ffffa39ea60" loc="14:lib/modules/FloodingP.nc">
       <component-ref qname="FloodingP"/>
       <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
         <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
       </type-int>
     </variable>
-    <variable name="sequenceNum" ref="0x7ffffa338600" loc="30:lib/modules/SimpleSendP.nc">
+    <variable name="sequenceNum" ref="0x7ffffa33f600" loc="30:lib/modules/SimpleSendP.nc">
       <component-ref qname="SimpleSendP"/>
       <type-int cname="unsigned short" unsigned="" size="I:2" alignment="I:2">
         <typename><typedef-ref name="uint16_t" ref="0x7ffffb67fd20"/></typename>
       </type-int>
     </variable>
-    <variable name="pkt" ref="0x7ffffa337020" loc="32:lib/modules/SimpleSendP.nc">
+    <variable name="pkt" ref="0x7ffffa33e020" loc="32:lib/modules/SimpleSendP.nc">
       <component-ref qname="SimpleSendP"/>
       <type-tag size="I:48" alignment="I:1"><nx_struct-ref name="message_t" ref="0x7ffffadf2e00"/>
         <typename><typedef-ref name="message_t" ref="0x7ffffadf0450"/></typename>
       </type-tag>
     </variable>
-    <variable name="busy" ref="0x7ffffa338a80" loc="31:lib/modules/SimpleSendP.nc">
+    <variable name="busy" ref="0x7ffffa33fa80" loc="31:lib/modules/SimpleSendP.nc">
       <component-ref qname="SimpleSendP"/>
       <type-int cname="unsigned char" unsigned="" size="I:1" alignment="I:1">
         <typename><typedef-ref name="bool" ref="0x7ffffb124020"/></typename>
       </type-int>
     </variable>
-    <variable name="forwardBuffer" ref="0x7ffffa2d4780" loc="15:lib/modules/IPP.nc">
+    <variable name="forwardBuffer" ref="0x7ffffa2dc780" loc="15:lib/modules/IPP.nc">
       <component-ref qname="IPP"/>
       <type-tag size="I:28" alignment="I:1"><nx_struct-ref name="pack" ref="0x7ffffad7a080"/>
         <typename><typedef-ref name="pack" ref="0x7ffffad79570"/></typename>
       </type-tag>
     </variable>
-    <variable name="sockets" ref="0x7ffffa2b6b50" loc="14:lib/modules/TransportP.nc">
+    <variable name="sockets" ref="0x7ffffa2bdb50" loc="14:lib/modules/TransportP.nc">
       <component-ref qname="TransportP"/>
       <type-array elements="I:10" size="I:2800" alignment="I:4">
         <type-tag size="I:280" alignment="I:4"><struct-ref name="socket_store_t" ref="0x7ffffa91f840"/>
@@ -8452,7 +8452,7 @@
         </type-tag>
       </type-array>
     </variable>
-    <variable name="sendBuffer" ref="0x7ffffa2b4020" loc="16:lib/modules/TransportP.nc">
+    <variable name="sendBuffer" ref="0x7ffffa2bc020" loc="16:lib/modules/TransportP.nc">
       <component-ref qname="TransportP"/>
       <type-tag size="I:28" alignment="I:1"><nx_struct-ref name="pack" ref="0x7ffffad7a080"/>
         <typename><typedef-ref name="pack" ref="0x7ffffad79570"/></typename>
@@ -10806,7 +10806,7 @@
     <constant cst="I:2147483648" name="CC2420_INVALID_TIMESTAMP" ref="0x7ffffac67bc0" loc="403:/opt/tinyos-main/tos/chips/cc2420/sim/CC2420.h">
       <type-int cname="int" size="I:4" alignment="I:4"></type-int>
     </constant>
-    <constant cst="I:219" name="SIM_LOG_OUTPUT_COUNT" ref="0x7ffffb0eb3d0" loc="64:/opt/tinyos-main/tos/lib/tossim/sim_log.c">
+    <constant cst="I:220" name="SIM_LOG_OUTPUT_COUNT" ref="0x7ffffb0eb3d0" loc="64:/opt/tinyos-main/tos/lib/tossim/sim_log.c">
       <type-int cname="int" size="I:4" alignment="I:4"></type-int>
     </constant>
     <constant cst="I:0" name="SPI2X" ref="0x7ffffad1a020" loc="970:/opt/tinyos-main/tos/chips/atm128/sim/atm128_sim.h">
@@ -11592,11 +11592,11 @@
       <component-ref qname="AMQueueImplP"/>
       <type-int cname="int" size="I:4" alignment="I:4"></type-int>
     </constant>
-    <constant cst="I:11" name="sendLSA" ref="0x7ffffa419aa0" loc="213:lib/modules/LinkStateP.nc">
+    <constant cst="I:11" name="sendLSA" ref="0x7ffffa418160" loc="213:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
       <type-int cname="int" size="I:4" alignment="I:4"></type-int>
     </constant>
-    <constant cst="U:" name="sendBufferTask" ref="0x7ffffa31b230" loc="79:lib/modules/SimpleSendP.nc">
+    <constant cst="U:" name="sendBufferTask" ref="0x7ffffa322230" loc="79:lib/modules/SimpleSendP.nc">
       <component-ref qname="SimpleSendP"/>
       <type-int cname="int" size="I:4" alignment="I:4"></type-int>
     </constant>
@@ -12610,9 +12610,9 @@
         <typename><typedef-ref name="snr_lqi_t" ref="0x7ffffaad6020"/></typename>
       </type-tag>
     </typedef>
-    <typedef name="LinkLayerHdr" ref="0x7ffffa369180" loc="9:lib/modules/../../includes/LinkLayerHdr.h">
-      <type-tag size="I:4" alignment="I:2"><struct-ref name="LinkLayerHdr" ref="0x7ffffa36c4f0"/>
-        <typename><typedef-ref name="LinkLayerHdr" ref="0x7ffffa369180"/></typename>
+    <typedef name="LinkLayerHdr" ref="0x7ffffa370440" loc="9:lib/modules/../../includes/LinkLayerHdr.h">
+      <type-tag size="I:4" alignment="I:2"><struct-ref name="LinkLayerHdr" ref="0x7ffffa3737a0"/>
+        <typename><typedef-ref name="LinkLayerHdr" ref="0x7ffffa370440"/></typename>
       </type-tag>
     </typedef>
     <typedef name="__key_t" ref="0x7ffffb486850" loc="144:/usr/include/x86_64-linux-gnu/bits/types.h">
@@ -13326,13 +13326,13 @@
         <typename><typedef-ref name="link_t" scoped="" ref="0x7ffffa40b6d0"/></typename>
       </type-tag>
     </typedef>
-    <typedef name="__nesc_sillytask_sendLSA" ref="0x7ffffa418190" loc="213:lib/modules/LinkStateP.nc">
+    <typedef name="__nesc_sillytask_sendLSA" ref="0x7ffffa418700" loc="213:lib/modules/LinkStateP.nc">
       <component-ref qname="LinkStateP"/>
       <type-array elements="I:11" size="I:44" alignment="I:4">
         <type-int cname="int" size="I:4" alignment="I:4"></type-int>
       </type-array>
     </typedef>
-    <typedef name="__nesc_sillytask_sendBufferTask" ref="0x7ffffa31b7d0" loc="79:lib/modules/SimpleSendP.nc">
+    <typedef name="__nesc_sillytask_sendBufferTask" ref="0x7ffffa3227d0" loc="79:lib/modules/SimpleSendP.nc">
       <component-ref qname="SimpleSendP"/>
       <type-array elements="U:" size="U:" alignment="I:4">
         <type-int cname="int" size="I:4" alignment="I:4"></type-int>
