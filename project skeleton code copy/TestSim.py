@@ -133,15 +133,11 @@ class TestSim:
     
     # TRANSPORT FUNCTIONS START
 
-    def testServer(self, destination): 
-        port = 80
+    def testServer(self, destination, port): 
         payloadStr = "{0}".format(struct.pack('<H', port))
         self.sendCMD(self.CMD_TEST_SERVER, destination, payloadStr)
 
-    def testClient(self, destination): 
-        dest = 1
-        srcPort = 40
-        destPort = 80
+    def testClient(self, destination, dest, srcPort, destPort): 
         payloadStr = "{0}{1}{2}".format( 
             struct.pack('<H', dest),
             struct.pack('<H', srcPort),
@@ -149,10 +145,7 @@ class TestSim:
         )
         self.sendCMD(self.CMD_TEST_CLIENT, destination, payloadStr)
 
-    def clientClose(self, destination): 
-        dest = 1
-        srcPort = 40
-        destPort = 80
+    def clientClose(self, destination, dest, srcPort, destPort): 
         payloadStr = "{0}{1}{2}".format( 
             struct.pack('<H', dest),
             struct.pack('<H', srcPort),

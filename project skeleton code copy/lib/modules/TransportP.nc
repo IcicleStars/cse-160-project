@@ -359,10 +359,10 @@ implementation {
         // matching socket
         s = &sockets[index];
 
-        // state machine?
+        // state machine
         switch(s->state) { 
             case LISTEN: 
-            // handle new connection
+            // handle and accept new connection
             if (t_hdr->flags & TCP_SYN) { 
                 socket_t new_fd = get_free_socket();
                 if (new_fd > 0) { 
@@ -383,7 +383,7 @@ implementation {
             }
             break;
 
-            // handle established connection
+            // completes client side of 3-way handshake
             case SYN_SENT:
                 if (t_hdr->flags == (TCP_SYN | TCP_ACK)) { 
                     s->state = ESTABLISHED;
@@ -395,7 +395,7 @@ implementation {
                 }
                 break;
             
-            // handle final ACK
+            // handle final ACK (server side of 3-way handshake)
             case SYN_RCVD:
                 if (t_hdr->flags & TCP_ACK) { 
                     s->state = ESTABLISHED;
@@ -407,13 +407,13 @@ implementation {
             // handles incoming data
             case ESTABLISHED:
                 if (t_hdr->flags & TCP_ACK) { 
-                    // unblocj transport.write
+                    // unblocj transport.write if received an ack
                     if (t_hdr->ack_num > s->lastAck) { 
                         s->lastAck = t_hdr->ack_num;
                     }
                 }
 
-                // the actual process of handling data
+                // the actual process of handling data 
                 if (!(t_hdr->flags & TCP_SYN) && !(t_hdr->flags & TCP_FIN)) { 
                     // send ACK
                     s->nextExpected = t_hdr->seq_num + 1; 
@@ -434,14 +434,15 @@ implementation {
             // handles ack for fin
             case FIN_WAIT_1:
                 if (t_hdr->flags & TCP_ACK) { 
+                    dbg(TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2")
                     s->state = FIN_WAIT_2;
                 }
                 break;
 
-            // handles fin
+            // handles fin for closing
             case FIN_WAIT_2: 
                 if (t_hdr->flags & TCP_FIN) { 
-                    dbg(TRANSPORT_CHANNEL, "\n");
+                    dbg(TRANSPORT_CHANNEL, "Received ACK, sending ACK, closing\n");
                     s->state = CLOSED;
                     s->nextExpected = t_hdr->seq_num + 1;
                     send_tcp_packet(index, TCP_ACK, NULL, 0);
@@ -459,7 +460,7 @@ implementation {
             // waiting for final ack
             case LAST_ACK: 
                 if(t_hdr->flags & TCP_ACK) { 
-                    dbg(TRANSPORT_CHANNEL, "\n");
+                    dbg(TRANSPORT_CHANNEL, "closing\n");
                     s->state = CLOSED;
                     // clear socket
                     memset(s, 0, sizeof(socket_store_t));
@@ -507,5 +508,26 @@ WHAT WE NEED TO DO FOR MID-REVIEW:
 
 -> ACK stuff
 
+
+// AFTER MID-REVIEW
+
+-> Sliding Window
+    (Sender Side)
+    - Implement timers for timeouts 
+    - resend packets upon timeout 
+    (Receiver Side)
+    - Implement buffer for potential out of order packets
+    - handle incoming data packets in state machine 
+    - make sure ACK sends data for last received and next expected 
+
+// IF ENOUGH TIME: 
+
+-> Congestion Control 
+    - slow start 
+    - congestion window 
+    - duplicate ACK counter 
+    - congestion states 
+    - Congestion events
+    
 
 */
