@@ -434,7 +434,7 @@ implementation {
             // handles ack for fin
             case FIN_WAIT_1:
                 if (t_hdr->flags & TCP_ACK) { 
-                    dbg(TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2")
+                    dbg(TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2");
                     s->state = FIN_WAIT_2;
                 }
                 break;
@@ -515,7 +515,7 @@ WHAT WE NEED TO DO FOR MID-REVIEW:
     (Sender Side)
     - Implement timers for timeouts 
     - resend packets upon timeout 
-    (Receiver Side)
+    (Receiver Side) (Me)
     - Implement buffer for potential out of order packets
     - handle incoming data packets in state machine 
     - make sure ACK sends data for last received and next expected 

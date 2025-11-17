@@ -31,7 +31,7 @@ def main():
     # s.routeDMP(5)
     # s.ping(5, 19, "test")
 
-    # Node 5 starts client, connect to 1:80 from :40
+    
     s.testClient(5, 1, 60000, 80)
 
     s.runTime(100)
