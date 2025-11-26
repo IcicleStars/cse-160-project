@@ -346,7 +346,9 @@ implementation {
         if (sockets[index].state == ESTABLISHED) { 
             // active close
             if(send_tcp_packet(index, TCP_FIN, NULL, 0) == SUCCESS) { 
+                dbg(TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering FIN_WAIT_1\n");
                 sockets[index].state = FIN_WAIT_1;
+                call TCPTimer.startOneShot(TIMEOUT_MS);
                 return SUCCESS;
             }
 
@@ -354,7 +356,9 @@ implementation {
         else if (sockets[index].state == CLOSE_WAIT) { 
             // passive close
             if(send_tcp_packet(index, TCP_FIN, NULL, 0) == SUCCESS) { 
+                dbg(TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering LAST_ACK\n");
                 sockets[index].state = LAST_ACK;
+                call TCPTimer.startOneShot(TIMEOUT_MS);
                 return SUCCESS;
             }
 
@@ -624,9 +628,7 @@ implementation {
                             s->rcvdBuff[(s->lastRcvd + i) % SOCKET_BUFFER_SIZE] = ((uint8_t*)(t_hdr+1))[i];
                         }
                         // update buffer tail pointer
-                        // s->lastRcvd += payload_len;
-
-
+                        s->lastRcvd += payload_len;
                         
 
                         // update next expected
@@ -640,9 +642,12 @@ implementation {
                     } 
                     // out of order packets
                     else if (seq_num > s->nextExpected) { 
-
+                        uint16_t i;
                         // buffer packet 
-                        memcpy(&s->rcvdBuff[seq_num % SOCKET_BUFFER_SIZE], t_hdr + 1, payload_len);
+                        // memcpy(&s->rcvdBuff[seq_num % SOCKET_BUFFER_SIZE], t_hdr + 1, payload_len);
+                        for(i = 0; i < payload_len; i++) { 
+                            s->rcvdBuff[(seq_num + i) % SOCKET_BUFFER_SIZE] = ((uint8_t*)(t_hdr + 1))[i];
+                        }
 
                         // send duplicate ACK for packet we're still waiting for
                         send_tcp_packet(index, TCP_ACK, NULL, 0);
@@ -659,6 +664,7 @@ implementation {
 
                 // handle teardown reqest
                 if (t_hdr->flags & TCP_FIN) { 
+                    dbg(TRANSPORT_CHANNEL, "TransportP: Received FIN, sending ACK, Entering CLOSE_WAIT\n");
                     s->state = CLOSE_WAIT; 
                     s->nextExpected = t_hdr->seq_num + 1; // ack fin
 
@@ -671,8 +677,9 @@ implementation {
             // handles ack for fin
             case FIN_WAIT_1:
                 if (t_hdr->flags & TCP_ACK) { 
-                    dbg(TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2");
+                    dbg(TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2\n");
                     s->state = FIN_WAIT_2;
+                    call TCPTimer.stop();
                 }
                 break;
 
@@ -700,6 +707,7 @@ implementation {
                     dbg(TRANSPORT_CHANNEL, "closing\n");
                     s->state = CLOSED;
                     // clear socket
+                    call TCPTimer.stop();
                     memset(s, 0, sizeof(socket_store_t));
                 }
                 break;
@@ -734,6 +742,18 @@ implementation {
                     break; // handle one timeout
                 }
             }
+            else if (s->state == FIN_WAIT_1) { 
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1 socket %u\n", (unsigned int)(i+1));
+                call TCPTimer.stop();
+                handle_timeout(i);
+                break;
+            }
+            else if (s->state == LAST_ACK) { 
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int)(i+1));
+                call TCPTimer.stop();
+                handle_timeout(i);
+                break;
+            }
         }
     // If no timer was started for this TCP_TIMER_ID, the fired event will typically not be called.
     // If a timer was started, we restart it if we are still waiting for an ACK.
@@ -758,6 +778,13 @@ implementation {
             // go back
             s->lastSent = s->lastAck;
             try_send_next(index);
+
+        }
+        else if (s->state == FIN_WAIT_1 || s->state == LAST_ACK) { 
+
+            dbg(TRANSPORT_CHANNEL, "TransportP: Retransmitting FIN for socket %u\n", (unsigned int)(index+1));
+            send_tcp_packet(index, TCP_FIN, NULL, 0);
+            call TCPTimer.startOneShot(TIMEOUT_MS);
 
         }
         // ... other states (e.g., FIN_WAIT_1) would need similar logic for FIN retransmission

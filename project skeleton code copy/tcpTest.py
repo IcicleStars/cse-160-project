@@ -17,13 +17,10 @@ def main():
     #add channels
     s.addChannel(s.COMMAND_CHANNEL, sys.stdout)
     s.addChannel(s.GENERAL_CHANNEL, sys.stdout)
-    # s.addChannel(s.ROUTING_CHANNEL, sys.stdout)
     s.addChannel(s.TRANSPORT_CHANNEL, sys.stdout)
 
     # let neighbors discover each other
-    s.runTime(2400)
-
-    # start tcp 
+    s.runTime(300)
 
     s.testServer(1, 80)
 
@@ -32,11 +29,11 @@ def main():
     
     s.testClient(5, 1, 60000, 80)
 
-    s.runTime(20000)
+    s.runTime(500)
 
     s.clientClose(5, 1, 60000, 80)
 
-    s.runTime(100)
+    s.runTime(500)
 
 if __name__ == '__main__': 
     main()

@@ -76,8 +76,8 @@ implementation {
 
     void printRoutingTable() {
         uint8_t i;
-        dbg(GENERAL_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
-        dbg(GENERAL_CHANNEL, " Dest | Next Hop | Cost\n");
+        dbg(ROUTING_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
+        dbg(ROUTING_CHANNEL, " Dest | Next Hop | Cost\n");
         for (i = 0; i < NODES; i++) {
             // Only print if there's a valid next hop
             if (routing_table[i].next_hop != AM_BROADCAST_ADDR && i != TOS_NODE_ID) {

@@ -1258,7 +1258,7 @@ typedef struct sim_log_channel {
 } sim_log_channel_t;
 
 enum __nesc_unnamed4272 {
-  SIM_LOG_OUTPUT_COUNT = 230U
+  SIM_LOG_OUTPUT_COUNT = 236U
 };
 
 sim_log_output_t outputs[SIM_LOG_OUTPUT_COUNT];
@@ -6981,15 +6981,15 @@ static inline uint16_t TransportP__Transport__write(socket_t fd, uint8_t *buff, 
 static inline error_t TransportP__Transport__connect(socket_t fd, socket_addr_t *dest);
 #line 337
 static inline error_t TransportP__Transport__close(socket_t fd);
-#line 381
+#line 385
 static inline error_t TransportP__Transport__listen(socket_t fd);
-#line 401
+#line 405
 static inline uint16_t TransportP__Transport__read(socket_t fd, uint8_t *buff, uint16_t bufflen);
-#line 448
+#line 452
 static inline message_t *TransportP__Receive__receive(message_t *msg, void *payload, uint8_t len);
-#line 715
+#line 723
 static inline void TransportP__TCPTimer__fired(void );
-#line 742
+#line 762
 static void TransportP__handle_timeout(uint8_t index);
 # 80 "/opt/tinyos-main/tos/lib/tossim/heap.c"
 static inline void init_heap(heap_t *heap)
@@ -7945,9 +7945,9 @@ static inline uint8_t TransportP__find_socket_index(uint16_t src_addr, uint8_t s
   return MAX_NUM_OF_SOCKETS;
 }
 
-#line 448
+#line 452
 static inline message_t *TransportP__Receive__receive(message_t *msg, void *payload, uint8_t len)
-#line 448
+#line 452
 {
   pack *myMsg = (pack *)payload;
   tcp_header *t_hdr;
@@ -7962,7 +7962,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
   t_hdr = (tcp_header *)myMsg->payload;
   index = TransportP__find_socket_index(__nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint8(t_hdr->src_port.nxdata), __nesc_ntoh_uint8(t_hdr->dest_port.nxdata));
-#line 476
+#line 480
   if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & (TCP_SYN | TCP_FIN)) {
       payload_len = 0;
 
@@ -7972,14 +7972,14 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
         }
     }
   else {
-#line 484
+#line 488
     if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) == TCP_ACK) {
 
         if (__nesc_ntoh_uint8(t_hdr->window.nxdata) <= PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header )) {
             payload_len = __nesc_ntoh_uint8(t_hdr->window.nxdata);
           }
         else 
-#line 488
+#line 492
           {
             payload_len = 0;
 
@@ -8010,7 +8010,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_SYN) {
             socket_t new_fd = TransportP__get_free_socket();
 
-#line 517
+#line 521
             if (new_fd > 0) {
 
                 uint8_t new_index = new_fd - 1;
@@ -8028,7 +8028,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
                 TransportP__send_tcp_packet(new_index, TCP_SYN | TCP_ACK, (void *)0, 0);
 
-                sim_log_debug(219U, TRANSPORT_CHANNEL, "TransportP, New SYN received. Sending SYN-ACK\n");
+                sim_log_debug(221U, TRANSPORT_CHANNEL, "TransportP, New SYN received. Sending SYN-ACK\n");
               }
           }
 
@@ -8074,10 +8074,10 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
           if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_SYN) {
               TransportP__send_tcp_packet(index, TCP_SYN | TCP_ACK, (void *)0, 0);
-              sim_log_debug(220U, TRANSPORT_CHANNEL, "TransportP: Dupe SYN received. Resnding SYN-ACK\n");
+              sim_log_debug(222U, TRANSPORT_CHANNEL, "TransportP: Dupe SYN received. Resnding SYN-ACK\n");
             }
           }
-#line 582
+#line 586
       break;
 
 
@@ -8086,7 +8086,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
             if (__nesc_ntoh_uint16(t_hdr->ack_num.nxdata) > s->lastAck) {
 
-                sim_log_debug(221U, TRANSPORT_CHANNEL, "TransportP: New Ack received: %hu\n", __nesc_ntoh_uint16(t_hdr->ack_num.nxdata));
+                sim_log_debug(223U, TRANSPORT_CHANNEL, "TransportP: New Ack received: %hu\n", __nesc_ntoh_uint16(t_hdr->ack_num.nxdata));
 
                 s->lastAck = __nesc_ntoh_uint16(t_hdr->ack_num.nxdata);
                 s->dupAckCount = 0;
@@ -8097,7 +8097,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
                     TransportP__TCPTimer__stop();
                   }
                 else 
-#line 599
+#line 603
                   {
                     TransportP__TCPTimer__startOneShot(2000UL);
                   }
@@ -8126,15 +8126,13 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
                   s->rcvdBuff[(s->lastRcvd + i) % SOCKET_BUFFER_SIZE] = ((uint8_t *)(t_hdr + 1))[i];
                 }
 
-
-
-
+              s->lastRcvd += payload_len;
 
 
 
               s->nextExpected += payload_len;
 
-              sim_log_debug(222U, TRANSPORT_CHANNEL, "TransportP: Received %hu bytes. Next expected: %hu\n", payload_len, s->nextExpected);
+              sim_log_debug(224U, TRANSPORT_CHANNEL, "TransportP: Received %hu bytes. Next expected: %hu\n", payload_len, s->nextExpected);
 
 
               TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -8142,9 +8140,12 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
           else {
 
             if (seq_num > s->nextExpected) {
+                uint16_t i;
 
 
-                memcpy(&s->rcvdBuff[seq_num % SOCKET_BUFFER_SIZE], t_hdr + 1, payload_len);
+                for (i = 0; i < payload_len; i++) {
+                    s->rcvdBuff[(seq_num + i) % SOCKET_BUFFER_SIZE] = ((uint8_t *)(t_hdr + 1))[i];
+                  }
 
 
                 TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -8161,6 +8162,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
 
       if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_FIN) {
+          sim_log_debug(225U, TRANSPORT_CHANNEL, "TransportP: Received FIN, sending ACK, Entering CLOSE_WAIT\n");
           s->state = CLOSE_WAIT;
           s->nextExpected = __nesc_ntoh_uint16(t_hdr->seq_num.nxdata) + 1;
 
@@ -8173,15 +8175,16 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
       case FIN_WAIT_1: 
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_ACK) {
-            sim_log_debug(223U, TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2");
+            sim_log_debug(226U, TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2\n");
             s->state = FIN_WAIT_2;
+            TransportP__TCPTimer__stop();
           }
       break;
 
 
       case FIN_WAIT_2: 
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_FIN) {
-            sim_log_debug(224U, TRANSPORT_CHANNEL, "Received FIN, sending ACK, closing\n");
+            sim_log_debug(227U, TRANSPORT_CHANNEL, "Received FIN, sending ACK, closing\n");
             s->state = CLOSED;
             s->nextExpected = __nesc_ntoh_uint16(t_hdr->seq_num.nxdata) + 1;
             TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -8199,9 +8202,10 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
       case LAST_ACK: 
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_ACK) {
-            sim_log_debug(225U, TRANSPORT_CHANNEL, "closing\n");
+            sim_log_debug(228U, TRANSPORT_CHANNEL, "closing\n");
             s->state = CLOSED;
 
+            TransportP__TCPTimer__stop();
             memset(s, 0, sizeof(socket_store_t ));
           }
       break;
@@ -9078,7 +9082,9 @@ static inline error_t TransportP__Transport__close(socket_t fd)
   if (TransportP__sockets[sim_node()][index].state == ESTABLISHED) {
 
       if (TransportP__send_tcp_packet(index, TCP_FIN, (void *)0, 0) == SUCCESS) {
+          sim_log_debug(218U, TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering FIN_WAIT_1\n");
           TransportP__sockets[sim_node()][index].state = FIN_WAIT_1;
+          TransportP__TCPTimer__startOneShot(2000UL);
           return SUCCESS;
         }
     }
@@ -9086,7 +9092,9 @@ static inline error_t TransportP__Transport__close(socket_t fd)
     if (TransportP__sockets[sim_node()][index].state == CLOSE_WAIT) {
 
         if (TransportP__send_tcp_packet(index, TCP_FIN, (void *)0, 0) == SUCCESS) {
+            sim_log_debug(219U, TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering LAST_ACK\n");
             TransportP__sockets[sim_node()][index].state = LAST_ACK;
+            TransportP__TCPTimer__startOneShot(2000UL);
             return SUCCESS;
           }
       }
@@ -9152,9 +9160,9 @@ inline static void Node__ServerTimer__startPeriodic(uint32_t dt){
 #line 64
 }
 #line 64
-# 381 "lib/modules/TransportP.nc"
+# 385 "lib/modules/TransportP.nc"
 static inline error_t TransportP__Transport__listen(socket_t fd)
-#line 381
+#line 385
 {
   uint8_t index;
 
@@ -11581,9 +11589,9 @@ static inline void LinkStateP__initialDijkstraTimer__fired(void )
     }
 }
 
-# 715 "lib/modules/TransportP.nc"
+# 723 "lib/modules/TransportP.nc"
 static inline void TransportP__TCPTimer__fired(void )
-#line 715
+#line 723
 {
   uint8_t i;
 
@@ -11592,7 +11600,7 @@ static inline void TransportP__TCPTimer__fired(void )
 
 
       if (s->state == SYN_SENT) {
-          sim_log_debug(226U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for SYN_SENT socket %u\n", (unsigned int )(i + 1));
+          sim_log_debug(229U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for SYN_SENT socket %u\n", (unsigned int )(i + 1));
           TransportP__TCPTimer__stop();
           TransportP__handle_timeout(i);
           break;
@@ -11600,19 +11608,37 @@ static inline void TransportP__TCPTimer__fired(void )
       else {
         if (s->state == ESTABLISHED) {
             if (s->lastSent > s->lastAck) {
-                sim_log_debug(227U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for ESTABLISHED socket %u\n", (unsigned int )(i + 1));
+                sim_log_debug(230U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for ESTABLISHED socket %u\n", (unsigned int )(i + 1));
                 TransportP__TCPTimer__stop();
                 TransportP__handle_timeout(i);
                 break;
               }
           }
+        else {
+#line 745
+          if (s->state == FIN_WAIT_1) {
+              sim_log_debug(231U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1 socket %u\n", (unsigned int )(i + 1));
+              TransportP__TCPTimer__stop();
+              TransportP__handle_timeout(i);
+              break;
+            }
+          else {
+#line 751
+            if (s->state == LAST_ACK) {
+                sim_log_debug(232U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int )(i + 1));
+                TransportP__TCPTimer__stop();
+                TransportP__handle_timeout(i);
+                break;
+              }
+            }
+          }
         }
     }
 }
 
-#line 401
+#line 405
 static inline uint16_t TransportP__Transport__read(socket_t fd, uint8_t *buff, uint16_t bufflen)
-#line 401
+#line 405
 {
   uint8_t index;
   socket_store_t *s;
@@ -11627,7 +11653,7 @@ static inline uint16_t TransportP__Transport__read(socket_t fd, uint8_t *buff, u
   s = &TransportP__sockets[sim_node()][index];
 
   if (s->state != ESTABLISHED && s->state != CLOSE_WAIT) {
-#line 414
+#line 418
       return 0;
     }
 
@@ -11647,7 +11673,7 @@ static inline uint16_t TransportP__Transport__read(socket_t fd, uint8_t *buff, u
 
   s->lastRead += bytesToCopy;
 
-  sim_log_debug(218U, TRANSPORT_CHANNEL, "TransportP: App read %hu bytes. Sending ACK for %hu\n", bytesToCopy, s->nextExpected);
+  sim_log_debug(220U, TRANSPORT_CHANNEL, "TransportP: App read %hu bytes. Sending ACK for %hu\n", bytesToCopy, s->nextExpected);
 
 
   TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -14564,8 +14590,8 @@ static void LinkStateP__printRoutingTable(void )
   uint8_t i;
 
 #line 79
-  sim_log_debug(179U, GENERAL_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
-  sim_log_debug(180U, GENERAL_CHANNEL, " Dest | Next Hop | Cost\n");
+  sim_log_debug(179U, ROUTING_CHANNEL, "Node %hu Routing Table (Reachable):\n", TOS_NODE_ID);
+  sim_log_debug(180U, ROUTING_CHANNEL, " Dest | Next Hop | Cost\n");
   for (i = 0; i < 20; i++) {
 
       if (LinkStateP__routing_table[sim_node()][i].next_hop != AM_BROADCAST_ADDR && i != TOS_NODE_ID) {
@@ -15338,15 +15364,15 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__fireTimers(u
   /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__updateFromTimer__postTask();
 }
 
-# 742 "lib/modules/TransportP.nc"
+# 762 "lib/modules/TransportP.nc"
 static void TransportP__handle_timeout(uint8_t index)
-#line 742
+#line 762
 {
   socket_store_t *s = &TransportP__sockets[sim_node()][index];
 
   if (s->state == SYN_SENT) {
 
-      sim_log_debug(228U, TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN for socket %u\n", (unsigned int )(index + 1));
+      sim_log_debug(233U, TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN for socket %u\n", (unsigned int )(index + 1));
 
       s->lastSent = 0;
       TransportP__send_tcp_packet(index, TCP_SYN, (void *)0, 0);
@@ -15354,14 +15380,22 @@ static void TransportP__handle_timeout(uint8_t index)
       TransportP__TCPTimer__startOneShot(2000UL);
     }
   else {
-#line 754
+#line 774
     if (s->state == ESTABLISHED) {
 
-        sim_log_debug(229U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT. Going Back-N\n");
+        sim_log_debug(234U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT. Going Back-N\n");
 
 
         s->lastSent = s->lastAck;
         TransportP__try_send_next(index);
+      }
+    else {
+      if (s->state == FIN_WAIT_1 || s->state == LAST_ACK) {
+
+          sim_log_debug(235U, TRANSPORT_CHANNEL, "TransportP: Retransmitting FIN for socket %u\n", (unsigned int )(index + 1));
+          TransportP__send_tcp_packet(index, TCP_FIN, (void *)0, 0);
+          TransportP__TCPTimer__startOneShot(2000UL);
+        }
       }
     }
 }
