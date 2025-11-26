@@ -23,16 +23,11 @@ def main():
     # let neighbors discover each other
     s.runTime(2400)
 
-    s.routeDMP(5)
-    s.runTime(60)
-
     # start tcp 
 
     s.testServer(1, 80)
 
     s.runTime(100)
-    # s.routeDMP(5)
-    # s.ping(5, 19, "test")
 
     
     s.testClient(5, 1, 60000, 80)

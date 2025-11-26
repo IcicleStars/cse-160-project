@@ -574,6 +574,10 @@ implementation {
                     // s->ssthresh = 32;
                     // s->dupAckCount = 0;
                     // s->congState = SLOW_START;
+                } 
+                else if (t_hdr->flags & TCP_SYN) { 
+                    send_tcp_packet(index, TCP_SYN | TCP_ACK, NULL, 0);
+                    dbg(TRANSPORT_CHANNEL, "TransportP: Dupe SYN received. Resnding SYN-ACK\n");
                 }
                 break;
 
@@ -742,7 +746,9 @@ implementation {
             // Retransmit SYN packet (part of the 3-way handshake)
             dbg(TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN for socket %u\n", (unsigned int)(index + 1));
             // Original SYN packet has no payload
+            s->lastSent = 0;
             send_tcp_packet(index, TCP_SYN, NULL, 0); 
+            s->lastSent = 1;
             call TCPTimer.startOneShot(TIMEOUT_MS); // Restart timer
         } 
         else if (s->state == ESTABLISHED) {
