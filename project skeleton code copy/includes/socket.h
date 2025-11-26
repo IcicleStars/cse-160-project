@@ -63,9 +63,9 @@ typedef struct socket_store_t{
     uint16_t RTT;
     uint8_t effectiveWindow;
 
-    // CONGESTION CONTROL
-    uint16_t cwnd; // congestion window
-    uint16_t ssthresh; // slow start threshhold
+    // CONGESTION CONTROL (command window,  slow start threshhold, duplicate ack counter)
+    uint16_t cwnd; 
+    uint16_t ssthresh; 
     uint8_t dupAckCount; 
 
     // track current congestion phase

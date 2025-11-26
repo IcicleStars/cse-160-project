@@ -149,7 +149,7 @@ implementation {
                     data_to_send = payload_len;
                 }
 
-                dbg(TRANSPORT_CHANNEL, "TransportP: Window open; Sending bytes\n");
+                // dbg(TRANSPORT_CHANNEL, "TransportP: Window open; Sending bytes\n");
 
                 for (i = 0; i < data_to_send; i++) { 
                     payload[i] = s->sendBuff[(s->lastSent + i) % SOCKET_BUFFER_SIZE];                
@@ -434,7 +434,7 @@ implementation {
         // move read pointer 
         s->lastRead += bytesToCopy;
 
-        dbg(TRANSPORT_CHANNEL, "TransportP: App read %hu bytes. Sending ACK for %hu\n", bytesToCopy, s->nextExpected);
+        // dbg(TRANSPORT_CHANNEL, "TransportP: App read %hu bytes. Sending ACK for %hu\n", bytesToCopy, s->nextExpected);
 
         // send ACK with new advertised window
         send_tcp_packet(index, TCP_ACK, NULL, 0);
@@ -535,7 +535,7 @@ implementation {
                     // send syn and ack
                     send_tcp_packet(new_index, TCP_SYN | TCP_ACK, NULL, 0);
 
-                    dbg(TRANSPORT_CHANNEL, "TransportP, New SYN received. Sending SYN-ACK\n");
+                    // dbg(TRANSPORT_CHANNEL, "TransportP, New SYN received. Sending SYN-ACK\n");
 
                 }
             }
@@ -551,14 +551,15 @@ implementation {
                     s->lastWritten = t_hdr->ack_num;
                     s->effectiveWindow = t_hdr->window;
 
-                    // send final ACK (3way handshake)
+                    // send final ACK
                     send_tcp_packet(index, TCP_ACK, NULL, 0);
 
-                    // CONGESTION CONTROL 
+                    // CONGESTION CONTROL
+
 
                     // set congestion state and events
                     s->cwnd = MAX_TCP_DATA;
-                    s->ssthresh = 64;
+                    s->ssthresh = 64 * MAX_TCP_DATA;
                     s->dupAckCount = 0;
                     s->congState = SLOW_START;
 
@@ -572,10 +573,9 @@ implementation {
                     s->lastAck = t_hdr->ack_num;
 
                     // CONGESTION CONTROL 
-
                     // set congestion state and events
                     s->cwnd = MAX_TCP_DATA;
-                    s->ssthresh = 64;
+                    s->ssthresh = 64 * MAX_TCP_DATA;
                     s->dupAckCount = 0;
                     s->congState = SLOW_START;
                 } 
@@ -591,7 +591,7 @@ implementation {
                     // unblocj transport.write if received an ack
                     if (t_hdr->ack_num > s->lastAck) { 
 
-                        dbg(TRANSPORT_CHANNEL, "TransportP: New Ack received: %hu\n", t_hdr->ack_num);
+                        // dbg(TRANSPORT_CHANNEL, "TransportP: New Ack received: %hu\n", t_hdr->ack_num);
 
                         s->lastAck = t_hdr->ack_num;
                         s->dupAckCount = 0; 
@@ -602,14 +602,19 @@ implementation {
                         // CONGESTION WINDOW STATES
                         switch (s->congState) { 
                             case SLOW_START: 
+                                // For each ACK received, add 1 to cwnd (or 1 segment size)
                                 s->cwnd += MAX_TCP_DATA;
-                                if(s->cwnd >= s->ssthresh) { 
+                                dbg(TRANSPORT_CHANNEL, "TransportP: SLOW_START ACK. cwnd increased to %u\n", s->cwnd);
+                                
+                                // Check if cwnd has reached ssthresh
+                                if (s->cwnd >= s->ssthresh) { 
                                     s->congState = CONG_AVOIDANCE;
+                                    dbg(TRANSPORT_CHANNEL, "TransportP: cwnd reached ssthresh. Switching to CONG_AVOIDANCE.\n");
                                 }
 
                                 break;
-
                             case CONG_AVOIDANCE: 
+                                
                                 s->cwnd += (MAX_TCP_DATA * MAX_TCP_DATA) / s->cwnd;
 
                                 break;
@@ -636,9 +641,9 @@ implementation {
                             s->cwnd = s->ssthresh;
                             s->congState = CONG_AVOIDANCE;
 
-                            // retransmit 
                             s->lastSent = s->lastAck;
                             try_send_next(index);
+                            
 
                         }
 
@@ -666,7 +671,7 @@ implementation {
                         // update next expected
                         s->nextExpected += payload_len;
 
-                        dbg(TRANSPORT_CHANNEL, "TransportP: Received %hu bytes. Next expected: %hu\n", payload_len, s->nextExpected);
+                        // dbg(TRANSPORT_CHANNEL, "TransportP: Received %hu bytes. Next expected: %hu\n", payload_len, s->nextExpected);
 
                         // send ACK for data 
                         send_tcp_packet(index, TCP_ACK, NULL, 0);
@@ -805,16 +810,28 @@ implementation {
         } 
         else if (s->state == ESTABLISHED) {
             
-            dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT. Going Back-N\n");
-
-            // CONGESTION CONTROL
-            // major congestion event
+            dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT Going Back-N\n");
+        
+            // CONGESTION CONTROL (Reacting to loss timeout)
+            
+            // 1. Set ssthresh = cwnd / 2
             s->ssthresh = s->cwnd / 2;
+            // Ensure ssthresh is at least 2 segments (safety check)
+            if (s->ssthresh < 2 * MAX_TCP_DATA) {
+                s->ssthresh = 2 * MAX_TCP_DATA;
+            }
+            
+            // 2. Reset cwnd to 1 segment
             s->cwnd = MAX_TCP_DATA;
+            
+            // 3. Switch back to SLOW_START
             s->congState = SLOW_START;
             s->dupAckCount = 0;
+            
+            dbg(TRANSPORT_CHANNEL, "TransportP: Loss detected. ssthresh set to %u, cwnd reset to %u.\n", s->ssthresh, s->cwnd);
 
-            // go back
+            // Go-Back-N Retransmission: re-send all packets starting from the oldest unacknowledged one.
+            // Reset lastSent pointer to the last acknowledged sequence number.
             s->lastSent = s->lastAck;
             try_send_next(index);
 

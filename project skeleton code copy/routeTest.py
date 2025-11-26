@@ -26,10 +26,10 @@ def main():
 
     # After sending a ping, simulate a little to prevent collision.
     s.runTime(120);
-    # s.ping(2, 3, "Hello, World");
+    s.ping(2, 3, "Hello, World");
     s.runTime(20);
 
-    # s.ping(1, 10, "Hi!");
+    s.ping(1, 10, "Hi!");
     s.runTime(120);
 
     s.moteOff(6);
