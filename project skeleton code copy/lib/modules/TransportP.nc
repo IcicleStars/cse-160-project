@@ -557,10 +557,10 @@ implementation {
                     // CONGESTION CONTROL 
 
                     // set congestion state and events
-                    s->cwnd = 64;
-                    // s->ssthresh = 32;
-                    // s->dupAckCount = 0;
-                    // s->congState = SLOW_START;
+                    s->cwnd = MAX_TCP_DATA;
+                    s->ssthresh = 64;
+                    s->dupAckCount = 0;
+                    s->congState = SLOW_START;
 
                 }
                 break;
@@ -574,10 +574,10 @@ implementation {
                     // CONGESTION CONTROL 
 
                     // set congestion state and events
-                    s->cwnd = 64;
-                    // s->ssthresh = 32;
-                    // s->dupAckCount = 0;
-                    // s->congState = SLOW_START;
+                    s->cwnd = MAX_TCP_DATA;
+                    s->ssthresh = 64;
+                    s->dupAckCount = 0;
+                    s->congState = SLOW_START;
                 } 
                 else if (t_hdr->flags & TCP_SYN) { 
                     send_tcp_packet(index, TCP_SYN | TCP_ACK, NULL, 0);
@@ -598,6 +598,23 @@ implementation {
 
                         s->effectiveWindow = t_hdr->window;
 
+                        // CONGESTION CONTROL
+                        // CONGESTION WINDOW STATES
+                        switch (s->congState) { 
+                            case SLOW_START: 
+                                s->cwnd += MAX_TCP_DATA;
+                                if(s->cwnd >= s->ssthresh) { 
+                                    s->congState = CONG_AVOIDANCE;
+                                }
+
+                                break;
+
+                            case CONG_AVOIDANCE: 
+                                s->cwnd += (MAX_TCP_DATA * MAX_TCP_DATA) / s->cwnd;
+
+                                break;
+                        }
+
                         if (s->lastAck == s->lastSent) { 
                             call TCPTimer.stop();
                         } else { 
@@ -607,9 +624,24 @@ implementation {
                         // window moved, try to send more
                         try_send_next(index);
 
-                        // Duplicate Ack
+                        // duplicate Ack
                     } else if (t_hdr->ack_num == s->lastAck) { 
                         s->dupAckCount++;
+
+                        // CONGESTION CONTROL
+                        if (s->dupAckCount == 3) { 
+                            
+                            // mult. decrease
+                            s->ssthresh = s->cwnd / 2;
+                            s->cwnd = s->ssthresh;
+                            s->congState = CONG_AVOIDANCE;
+
+                            // retransmit 
+                            s->lastSent = s->lastAck;
+                            try_send_next(index);
+
+                        }
+
                     }
                 }
 
@@ -774,6 +806,13 @@ implementation {
         else if (s->state == ESTABLISHED) {
             
             dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT. Going Back-N\n");
+
+            // CONGESTION CONTROL
+            // major congestion event
+            s->ssthresh = s->cwnd / 2;
+            s->cwnd = MAX_TCP_DATA;
+            s->congState = SLOW_START;
+            s->dupAckCount = 0;
 
             // go back
             s->lastSent = s->lastAck;

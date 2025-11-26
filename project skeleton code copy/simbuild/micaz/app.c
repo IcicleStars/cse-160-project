@@ -6987,9 +6987,9 @@ static inline error_t TransportP__Transport__listen(socket_t fd);
 static inline uint16_t TransportP__Transport__read(socket_t fd, uint8_t *buff, uint16_t bufflen);
 #line 452
 static inline message_t *TransportP__Receive__receive(message_t *msg, void *payload, uint8_t len);
-#line 723
+#line 755
 static inline void TransportP__TCPTimer__fired(void );
-#line 762
+#line 794
 static void TransportP__handle_timeout(uint8_t index);
 # 80 "/opt/tinyos-main/tos/lib/tossim/heap.c"
 static inline void init_heap(heap_t *heap)
@@ -8050,11 +8050,11 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
 
 
-            s->cwnd = 64;
+            s->cwnd = PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header );
+            s->ssthresh = 64;
+            s->dupAckCount = 0;
+            s->congState = SLOW_START;
           }
-
-
-
 
       break;
 
@@ -8067,11 +8067,13 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
 
 
-            s->cwnd = 64;
+            s->cwnd = PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header );
+            s->ssthresh = 64;
+            s->dupAckCount = 0;
+            s->congState = SLOW_START;
           }
         else {
-
-
+#line 582
           if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_SYN) {
               TransportP__send_tcp_packet(index, TCP_SYN | TCP_ACK, (void *)0, 0);
               sim_log_debug(222U, TRANSPORT_CHANNEL, "TransportP: Dupe SYN received. Resnding SYN-ACK\n");
@@ -8093,11 +8095,28 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
                 s->effectiveWindow = __nesc_ntoh_uint8(t_hdr->window.nxdata);
 
+
+
+                switch (s->congState) {
+                    case SLOW_START: 
+                      s->cwnd += PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header );
+                    if (s->cwnd >= s->ssthresh) {
+                        s->congState = CONG_AVOIDANCE;
+                      }
+
+                    break;
+
+                    case CONG_AVOIDANCE: 
+                      s->cwnd += (PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header )) * (PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header )) / s->cwnd;
+
+                    break;
+                  }
+
                 if (s->lastAck == s->lastSent) {
                     TransportP__TCPTimer__stop();
                   }
                 else 
-#line 603
+#line 620
                   {
                     TransportP__TCPTimer__startOneShot(2000UL);
                   }
@@ -8108,9 +8127,24 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
             else {
               if (__nesc_ntoh_uint16(t_hdr->ack_num.nxdata) == s->lastAck) {
                   s->dupAckCount++;
+
+
+                  if (s->dupAckCount == 3) {
+
+
+                      s->ssthresh = s->cwnd / 2;
+                      s->cwnd = s->ssthresh;
+                      s->congState = CONG_AVOIDANCE;
+
+
+                      s->lastSent = s->lastAck;
+                      TransportP__try_send_next(index);
+                    }
                 }
               }
           }
+
+
 
       if (!(__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_SYN) && !(__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_FIN) && payload_len > 0) {
           uint16_t seq_num = __nesc_ntoh_uint16(t_hdr->seq_num.nxdata);
@@ -11589,9 +11623,9 @@ static inline void LinkStateP__initialDijkstraTimer__fired(void )
     }
 }
 
-# 723 "lib/modules/TransportP.nc"
+# 755 "lib/modules/TransportP.nc"
 static inline void TransportP__TCPTimer__fired(void )
-#line 723
+#line 755
 {
   uint8_t i;
 
@@ -11615,7 +11649,7 @@ static inline void TransportP__TCPTimer__fired(void )
               }
           }
         else {
-#line 745
+#line 777
           if (s->state == FIN_WAIT_1) {
               sim_log_debug(231U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1 socket %u\n", (unsigned int )(i + 1));
               TransportP__TCPTimer__stop();
@@ -11623,7 +11657,7 @@ static inline void TransportP__TCPTimer__fired(void )
               break;
             }
           else {
-#line 751
+#line 783
             if (s->state == LAST_ACK) {
                 sim_log_debug(232U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int )(i + 1));
                 TransportP__TCPTimer__stop();
@@ -15364,9 +15398,9 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__fireTimers(u
   /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC__0__updateFromTimer__postTask();
 }
 
-# 762 "lib/modules/TransportP.nc"
+# 794 "lib/modules/TransportP.nc"
 static void TransportP__handle_timeout(uint8_t index)
-#line 762
+#line 794
 {
   socket_store_t *s = &TransportP__sockets[sim_node()][index];
 
@@ -15380,10 +15414,17 @@ static void TransportP__handle_timeout(uint8_t index)
       TransportP__TCPTimer__startOneShot(2000UL);
     }
   else {
-#line 774
+#line 806
     if (s->state == ESTABLISHED) {
 
         sim_log_debug(234U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT. Going Back-N\n");
+
+
+
+        s->ssthresh = s->cwnd / 2;
+        s->cwnd = PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header );
+        s->congState = SLOW_START;
+        s->dupAckCount = 0;
 
 
         s->lastSent = s->lastAck;
