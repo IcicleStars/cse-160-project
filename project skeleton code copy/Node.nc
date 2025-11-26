@@ -33,6 +33,7 @@ module Node{
    // uses interface SimpleSend as Sender;
 
    uses interface CommandHandler;
+   uses interface Timer<TMilli> as ClientTimer;
    uses interface Timer<TMilli> as ServerTimer;
 }
 
@@ -43,6 +44,14 @@ implementation{
    socket_t client_fd;
    socket_t accepted_fds[MAX_NUM_OF_SOCKETS];
    uint8_t accepted_count = 0;
+
+   #define MAX_TCP_DATA (PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header))
+   // data transfer informaiton
+   uint16_t data_sent_count = 0;
+   uint16_t total_data_to_send = 1000;
+   uint8_t write_buffer[MAX_TCP_DATA];
+   uint8_t read_buffer[SOCKET_BUFFER_SIZE];
+
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
@@ -167,6 +176,7 @@ implementation{
 
    event void ServerTimer.fired() { 
       socket_t new_fd;
+      uint8_t i;
 
       if(listen_fd == 0) { 
          return;
@@ -175,11 +185,56 @@ implementation{
       new_fd = call Transport.accept(listen_fd);
 
       if (new_fd > 0) { 
-         if(accepted_count < MAX_NUM_OF_SOCKETS) { 
+         if(accepted_count < MAX_NUM_OF_SOCKETS) 
+         { 
+            dbg(TRANSPORT_CHANNEL, "Node: Server accepted new connection\n");
             accepted_fds[accepted_count] = new_fd;
             accepted_count++;
          }
       }
+
+      // read from all exisitng connections 
+      for(i = 0; i < accepted_count; i++) { 
+         uint16_t bytes_read = call Transport.read(accepted_fds[i], read_buffer, SOCKET_BUFFER_SIZE);
+
+         if (bytes_read > 0) { 
+            dbg(TRANSPORT_CHANNEL, "Node: Server READ %u bytes from FD %u\n", bytes_read, accepted_fds[i]);
+
+         }
+      }
+
+   }
+
+   event void ClientTimer.fired() { 
+      uint16_t bytes_to_send;
+      uint16_t i;
+
+      if(client_fd == 0) { return; }
+
+      if(data_sent_count >= total_data_to_send) { 
+         call ClientTimer.stop();
+         dbg(TRANSPORT_CHANNEL, "Node: CLient done sending %u bytes\n", total_data_to_send);
+
+         return;
+      }
+
+      bytes_to_send = total_data_to_send - data_sent_count;
+
+      if(bytes_to_send > MAX_TCP_DATA) { 
+         bytes_to_send = MAX_TCP_DATA;
+      }
+
+      for(i = 0; i < bytes_to_send; i++) { 
+         write_buffer[i] = (data_sent_count + i) % 256;
+      }
+
+      if (call Transport.write(client_fd, write_buffer, bytes_to_send) > 0) { 
+         data_sent_count += bytes_to_send;
+         dbg(TRANSPORT_CHANNEL, "Node: Client wrote %hu bytes, total sent is %hu\n", bytes_to_send, data_sent_count);
+      } else { 
+         dbg(TRANSPORT_CHANNEL, "Node: CLient write buffer is full, trying again\n");
+      }
+
    }
 
    event void CommandHandler.printNeighbors(){ call NeighborDiscovery.printNeighbors(); }
@@ -242,6 +297,9 @@ implementation{
       if (call Transport.connect(client_fd, &dest_addr) != SUCCESS) { 
          dbg(TRANSPORT_CHANNEL, "Node (Transport): FAILED to start connect\n");
       }
+
+      // begin client timer to send data
+      call ClientTimer.startPeriodic(5000);
 
    }
 

@@ -164,7 +164,7 @@ implementation{
                 // increment consecutive misses. Will be set back to zero if packet is sent.
                 neighbor_table[i].consecutive_misses++;
                 // Check if link quality is below the threshold OR has too many consecutive misses
-                if (neighbor_table[i].link_quality <= 30 || neighbor_table[i].consecutive_misses > 5) {
+                if (neighbor_table[i].link_quality <= 25 || neighbor_table[i].consecutive_misses > 7) {
                     // Drop the neighbor by resetting the entry
                     dbg(NEIGHBOR_CHANNEL, "Neighbor %hu dropped due to low link quality or consecutive misses (%hu%% LQ, %u consecutive misses)\n", neighbor_table[i].node_id, neighbor_table[i].link_quality, neighbor_table[i].consecutive_misses);
                     neighbor_table[i].is_active = FALSE;

@@ -6,6 +6,7 @@ enum{
     ROOT_SOCKET_ADDR = 255,
     ROOT_SOCKET_PORT = 255,
     SOCKET_BUFFER_SIZE = 128,
+    TCP_TIMER_ID = 0
 };
 
 enum socket_state{
@@ -48,18 +49,34 @@ typedef struct socket_store_t{
 
     // This is the sender portion.
     uint8_t sendBuff[SOCKET_BUFFER_SIZE];
-    uint8_t lastWritten;
-    uint8_t lastAck;
-    uint8_t lastSent;
+    uint16_t lastWritten;
+    uint16_t lastAck;
+    uint16_t lastSent;
+    uint8_t last_sent_len;
 
     // This is the receiver portion
     uint8_t rcvdBuff[SOCKET_BUFFER_SIZE];
-    uint8_t lastRead;
-    uint8_t lastRcvd;
-    uint8_t nextExpected;
+    uint16_t lastRead;
+    uint16_t lastRcvd;
+    uint16_t nextExpected;
 
     uint16_t RTT;
     uint8_t effectiveWindow;
+
+    // CONGESTION CONTROL
+    uint16_t cwnd; // congestion window
+    uint16_t ssthresh; // slow start threshhold
+    uint8_t dupAckCount; 
+
+    // track current congestion phase
+    enum { 
+        SLOW_START,
+        CONG_AVOIDANCE
+    } congState;
+    
+
 }socket_store_t;
+
+
 
 #endif

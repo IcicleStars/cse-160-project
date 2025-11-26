@@ -9,7 +9,7 @@ def main():
     s.loadTopo("circle.topo")
 
     # add noise model
-    s.loadNoise("some_noise.txt")
+    s.loadNoise("no_noise.txt")
 
     # turn on nodes
     s.bootAll()
@@ -21,10 +21,8 @@ def main():
     s.addChannel(s.TRANSPORT_CHANNEL, sys.stdout)
 
     # let neighbors discover each other
-    s.runTime(2400)
-
-    s.routeDMP(5)
-    s.runTime(60)
+    s.runTime(2000)
+    s.runTime(120)
 
     # start tcp 
 
@@ -37,7 +35,7 @@ def main():
     
     s.testClient(5, 1, 60000, 80)
 
-    s.runTime(20000)
+    s.runTime(2400)
 
     s.clientClose(5, 1, 60000, 80)
 

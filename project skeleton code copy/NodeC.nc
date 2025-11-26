@@ -53,6 +53,8 @@ implementation {
     Node.Transport -> TransportC;
 
     components new TimerMilliC() as ServerTimer;
+    components new TimerMilliC() as ClientTimer;
+    Node.ClientTimer -> ClientTimer;
     Node.ServerTimer -> ServerTimer;
 
 
