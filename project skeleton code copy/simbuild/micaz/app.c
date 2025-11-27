@@ -1258,7 +1258,7 @@ typedef struct sim_log_channel {
 } sim_log_channel_t;
 
 enum __nesc_unnamed4272 {
-  SIM_LOG_OUTPUT_COUNT = 239U
+  SIM_LOG_OUTPUT_COUNT = 234U
 };
 
 sim_log_output_t outputs[SIM_LOG_OUTPUT_COUNT];
@@ -8027,10 +8027,10 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
 
                 TransportP__send_tcp_packet(new_index, TCP_SYN | TCP_ACK, (void *)0, 0);
-
-                sim_log_debug(221U, TRANSPORT_CHANNEL, "TransportP, New SYN received. Sending SYN-ACK\n");
               }
           }
+
+
 
       break;
 
@@ -8076,7 +8076,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 #line 582
           if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_SYN) {
               TransportP__send_tcp_packet(index, TCP_SYN | TCP_ACK, (void *)0, 0);
-              sim_log_debug(222U, TRANSPORT_CHANNEL, "TransportP: Dupe SYN received. Resnding SYN-ACK\n");
+              sim_log_debug(219U, TRANSPORT_CHANNEL, "TransportP: Dupe SYN received. Resnding SYN-ACK\n");
             }
           }
 #line 586
@@ -8088,7 +8088,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
             if (__nesc_ntoh_uint16(t_hdr->ack_num.nxdata) > s->lastAck) {
 
-                sim_log_debug(223U, TRANSPORT_CHANNEL, "TransportP: New Ack received: %hu\n", __nesc_ntoh_uint16(t_hdr->ack_num.nxdata));
+
 
                 s->lastAck = __nesc_ntoh_uint16(t_hdr->ack_num.nxdata);
                 s->dupAckCount = 0;
@@ -8101,12 +8101,12 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
                     case SLOW_START: 
 
                       s->cwnd += PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header );
-                    sim_log_debug(224U, TRANSPORT_CHANNEL, "TransportP: SLOW_START ACK. cwnd increased to %u\n", s->cwnd);
+                    sim_log_debug(220U, TRANSPORT_CHANNEL, "TransportP: SLOW_START ACK. cwnd increased to %u\n", s->cwnd);
 
 
                     if (s->cwnd >= s->ssthresh) {
                         s->congState = CONG_AVOIDANCE;
-                        sim_log_debug(225U, TRANSPORT_CHANNEL, "TransportP: cwnd reached ssthresh. Switching to CONG_AVOIDANCE.\n");
+                        sim_log_debug(221U, TRANSPORT_CHANNEL, "TransportP: cwnd reached ssthresh. Switching to CONG_AVOIDANCE.\n");
                       }
 
                     break;
@@ -8171,7 +8171,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
               s->nextExpected += payload_len;
 
-              sim_log_debug(226U, TRANSPORT_CHANNEL, "TransportP: Received %hu bytes. Next expected: %hu\n", payload_len, s->nextExpected);
+
 
 
               TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -8201,7 +8201,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
 
       if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_FIN) {
-          sim_log_debug(227U, TRANSPORT_CHANNEL, "TransportP: Received FIN, sending ACK, Entering CLOSE_WAIT\n");
+          sim_log_debug(222U, TRANSPORT_CHANNEL, "TransportP: Received FIN, sending ACK, Entering CLOSE_WAIT\n");
           s->state = CLOSE_WAIT;
           s->nextExpected = __nesc_ntoh_uint16(t_hdr->seq_num.nxdata) + 1;
 
@@ -8214,7 +8214,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
       case FIN_WAIT_1: 
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_ACK) {
-            sim_log_debug(228U, TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2\n");
+            sim_log_debug(223U, TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2\n");
             s->state = FIN_WAIT_2;
             TransportP__TCPTimer__stop();
           }
@@ -8223,7 +8223,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
       case FIN_WAIT_2: 
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_FIN) {
-            sim_log_debug(229U, TRANSPORT_CHANNEL, "Received FIN, sending ACK, closing\n");
+            sim_log_debug(224U, TRANSPORT_CHANNEL, "Received FIN, sending ACK, closing\n");
             s->state = CLOSED;
             s->nextExpected = __nesc_ntoh_uint16(t_hdr->seq_num.nxdata) + 1;
             TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -8241,7 +8241,7 @@ static inline message_t *TransportP__Receive__receive(message_t *msg, void *payl
 
       case LAST_ACK: 
         if (__nesc_ntoh_uint8(t_hdr->flags.nxdata) & TCP_ACK) {
-            sim_log_debug(230U, TRANSPORT_CHANNEL, "closing\n");
+            sim_log_debug(225U, TRANSPORT_CHANNEL, "closing\n");
             s->state = CLOSED;
 
             TransportP__TCPTimer__stop();
@@ -9121,7 +9121,7 @@ static inline error_t TransportP__Transport__close(socket_t fd)
   if (TransportP__sockets[sim_node()][index].state == ESTABLISHED) {
 
       if (TransportP__send_tcp_packet(index, TCP_FIN, (void *)0, 0) == SUCCESS) {
-          sim_log_debug(218U, TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering FIN_WAIT_1\n");
+          sim_log_debug(217U, TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering FIN_WAIT_1\n");
           TransportP__sockets[sim_node()][index].state = FIN_WAIT_1;
           TransportP__TCPTimer__startOneShot(2000UL);
           return SUCCESS;
@@ -9131,7 +9131,7 @@ static inline error_t TransportP__Transport__close(socket_t fd)
     if (TransportP__sockets[sim_node()][index].state == CLOSE_WAIT) {
 
         if (TransportP__send_tcp_packet(index, TCP_FIN, (void *)0, 0) == SUCCESS) {
-            sim_log_debug(219U, TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering LAST_ACK\n");
+            sim_log_debug(218U, TRANSPORT_CHANNEL, "TransportP: Sending FIN, Entering LAST_ACK\n");
             TransportP__sockets[sim_node()][index].state = LAST_ACK;
             TransportP__TCPTimer__startOneShot(2000UL);
             return SUCCESS;
@@ -9324,7 +9324,7 @@ static inline error_t TransportP__Transport__connect(socket_t fd, socket_addr_t 
 
 
   if (TransportP__sockets[sim_node()][index].state != CLOSED || TransportP__sockets[sim_node()][index].src == 0) {
-      sim_log_debug(215U, TRANSPORT_CHANNEL, "TransportP: connect failed, socket is neither closed nor bound\n");
+      sim_log_debug(214U, TRANSPORT_CHANNEL, "TransportP: connect failed, socket is neither closed nor bound\n");
       return FAIL;
     }
 
@@ -9343,12 +9343,12 @@ static inline error_t TransportP__Transport__connect(socket_t fd, socket_addr_t 
 
       TransportP__sockets[sim_node()][index].lastSent = 1;
       TransportP__TCPTimer__startOneShot(2000UL);
-      sim_log_debug(216U, TRANSPORT_CHANNEL, "TransportP: connect SUCCESS\n");
+      sim_log_debug(215U, TRANSPORT_CHANNEL, "TransportP: connect SUCCESS\n");
     }
   else 
 #line 326
     {
-      sim_log_debug(217U, TRANSPORT_CHANNEL, "TransportP: connect FAILED and send packet failed\n");
+      sim_log_debug(216U, TRANSPORT_CHANNEL, "TransportP: connect FAILED and send packet failed\n");
       TransportP__sockets[sim_node()][index].state = CLOSED;
     }
 
@@ -11639,7 +11639,7 @@ static inline void TransportP__TCPTimer__fired(void )
 
 
       if (s->state == SYN_SENT) {
-          sim_log_debug(231U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for SYN_SENT socket %u\n", (unsigned int )(i + 1));
+          sim_log_debug(226U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for SYN_SENT socket %u\n", (unsigned int )(i + 1));
           TransportP__TCPTimer__stop();
           TransportP__handle_timeout(i);
           break;
@@ -11647,7 +11647,7 @@ static inline void TransportP__TCPTimer__fired(void )
       else {
         if (s->state == ESTABLISHED) {
             if (s->lastSent > s->lastAck) {
-                sim_log_debug(232U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for ESTABLISHED socket %u\n", (unsigned int )(i + 1));
+                sim_log_debug(227U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for ESTABLISHED socket %u\n", (unsigned int )(i + 1));
                 TransportP__TCPTimer__stop();
                 TransportP__handle_timeout(i);
                 break;
@@ -11656,7 +11656,7 @@ static inline void TransportP__TCPTimer__fired(void )
         else {
 #line 782
           if (s->state == FIN_WAIT_1) {
-              sim_log_debug(233U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1 socket %u\n", (unsigned int )(i + 1));
+              sim_log_debug(228U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1 socket %u\n", (unsigned int )(i + 1));
               TransportP__TCPTimer__stop();
               TransportP__handle_timeout(i);
               break;
@@ -11664,7 +11664,7 @@ static inline void TransportP__TCPTimer__fired(void )
           else {
 #line 788
             if (s->state == LAST_ACK) {
-                sim_log_debug(234U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int )(i + 1));
+                sim_log_debug(229U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int )(i + 1));
                 TransportP__TCPTimer__stop();
                 TransportP__handle_timeout(i);
                 break;
@@ -11712,7 +11712,7 @@ static inline uint16_t TransportP__Transport__read(socket_t fd, uint8_t *buff, u
 
   s->lastRead += bytesToCopy;
 
-  sim_log_debug(220U, TRANSPORT_CHANNEL, "TransportP: App read %hu bytes. Sending ACK for %hu\n", bytesToCopy, s->nextExpected);
+
 
 
   TransportP__send_tcp_packet(index, TCP_ACK, (void *)0, 0);
@@ -14678,7 +14678,7 @@ static void TransportP__try_send_next(uint8_t index)
               data_to_send = payload_len;
             }
 
-          sim_log_debug(214U, TRANSPORT_CHANNEL, "TransportP: Window open; Sending bytes\n");
+
 
           for (i = 0; i < data_to_send; i++) {
               payload[i] = s->sendBuff[(s->lastSent + i) % SOCKET_BUFFER_SIZE];
@@ -15411,7 +15411,7 @@ static void TransportP__handle_timeout(uint8_t index)
 
   if (s->state == SYN_SENT) {
 
-      sim_log_debug(235U, TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN for socket %u\n", (unsigned int )(index + 1));
+      sim_log_debug(230U, TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN for socket %u\n", (unsigned int )(index + 1));
 
       s->lastSent = 0;
       TransportP__send_tcp_packet(index, TCP_SYN, (void *)0, 0);
@@ -15422,7 +15422,7 @@ static void TransportP__handle_timeout(uint8_t index)
 #line 811
     if (s->state == ESTABLISHED) {
 
-        sim_log_debug(236U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT Going Back-N\n");
+        sim_log_debug(231U, TRANSPORT_CHANNEL, "TransportP: TIMEOUT Going Back-N\n");
 
 
 
@@ -15440,7 +15440,7 @@ static void TransportP__handle_timeout(uint8_t index)
         s->congState = SLOW_START;
         s->dupAckCount = 0;
 
-        sim_log_debug(237U, TRANSPORT_CHANNEL, "TransportP: Loss detected. ssthresh set to %u, cwnd reset to %u.\n", s->ssthresh, s->cwnd);
+        sim_log_debug(232U, TRANSPORT_CHANNEL, "TransportP: Loss detected. ssthresh set to %u, cwnd reset to %u.\n", s->ssthresh, s->cwnd);
 
 
 
@@ -15450,7 +15450,7 @@ static void TransportP__handle_timeout(uint8_t index)
     else {
       if (s->state == FIN_WAIT_1 || s->state == LAST_ACK) {
 
-          sim_log_debug(238U, TRANSPORT_CHANNEL, "TransportP: Retransmitting FIN for socket %u\n", (unsigned int )(index + 1));
+          sim_log_debug(233U, TRANSPORT_CHANNEL, "TransportP: Retransmitting FIN for socket %u\n", (unsigned int )(index + 1));
           TransportP__send_tcp_packet(index, TCP_FIN, (void *)0, 0);
           TransportP__TCPTimer__startOneShot(2000UL);
         }
