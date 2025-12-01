@@ -20,7 +20,7 @@ def main():
     s.addChannel(s.TRANSPORT_CHANNEL, sys.stdout)
 
     # let neighbors discover each other
-    s.runTime(300)
+    s.runTime(240)
 
     s.testServer(1, 80)
 

@@ -17,7 +17,7 @@ implementation {
     pack sendBuffer;
 
     // timer ID and timeout value
-    #define TIMEOUT_MS 2000UL // 2 seconds timeout
+    #define TIMEOUT_MS 10000UL // 2 seconds timeout
     #define MAX_TCP_DATA (PACKET_MAX_PAYLOAD_SIZE - sizeof(tcp_header))
 
     // prototypes
@@ -559,7 +559,7 @@ implementation {
 
                     // set congestion state and events
                     s->cwnd = MAX_TCP_DATA;
-                    s->ssthresh = 64 * MAX_TCP_DATA;
+                    s->ssthresh = 0xffff;
                     s->dupAckCount = 0;
                     s->congState = SLOW_START;
 
@@ -575,7 +575,7 @@ implementation {
                     // CONGESTION CONTROL 
                     // set congestion state and events
                     s->cwnd = MAX_TCP_DATA;
-                    s->ssthresh = 64 * MAX_TCP_DATA;
+                    s->ssthresh = 0xffff;
                     s->dupAckCount = 0;
                     s->congState = SLOW_START;
                 } 
@@ -717,6 +717,11 @@ implementation {
                     dbg(TRANSPORT_CHANNEL, "Received ACK, entering FIN_WAIT_2\n");
                     s->state = FIN_WAIT_2;
                     call TCPTimer.stop();
+                } else if (t_hdr->flags & TCP_FIN) { 
+                    dbg(TRANSPORT_CHANNEL, "Received FIN in FIN_WAIT_1, entering CLOSING\n");
+                    s->state = CLOSING;
+                    s->nextExpected = t_hdr->seq_num + 1;
+                    send_tcp_packet(index, TCP_ACK, NULL, 0);
                 }
                 break;
 
@@ -736,6 +741,11 @@ implementation {
             // wait for other side to send FIN and call Transport.close()
             case CLOSE_WAIT: 
                 // ignore incoming packets
+                if(t_hdr->flags & TCP_FIN) { 
+                    dbg(TRANSPORT_CHANNEL, "Received dupe FIN, resending ACK\n");
+                    send_tcp_packet(index, TCP_ACK, NULL, 0);
+                }
+
                 break;
 
             // waiting for final ack
@@ -749,11 +759,32 @@ implementation {
                 }
                 break;
 
+            case CLOSING: 
+                if (t_hdr->flags & TCP_ACK) { 
+                    dbg(TRANSPORT_CHANNEL, "Received ACK in CLOSING, enterimg TIME_WAIT\n");
+                    s->state = TIME_WAIT;
+                    call TCPTimer.startOneShot(TIMEOUT_MS);
+                }
+                break;
+
+            case TIME_WAIT: 
+                break;
+
 
 
         }
 
         return msg;
+    }
+
+    command enum socket_state Transport.getState(socket_t fd) { 
+        uint8_t index; 
+        if (fd == 0 || fd > MAX_NUM_OF_SOCKETS) { 
+            return CLOSED;
+        }
+
+        index = fd - 1;
+        return sockets[index].state;
     }
 
 
@@ -789,6 +820,12 @@ implementation {
                 dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int)(i+1));
                 call TCPTimer.stop();
                 handle_timeout(i);
+                break;
+            }
+            else if (s->state == TIME_WAIT) { 
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIME_WAIT expired for socket %u. CLosing\n");
+                call TCPTimer.stop();
+                memset(s, 0, sizeof(socket_store_t));
                 break;
             }
         }

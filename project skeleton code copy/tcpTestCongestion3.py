@@ -9,7 +9,7 @@ def main():
     s.loadTopo("circle.topo")
 
     # add noise model
-    s.loadNoise("no_noise.txt")
+    s.loadNoise("light_noise.txt")
 
     # turn on nodes
     s.bootAll()
@@ -36,9 +36,7 @@ def main():
     s.runTime(1000)
 
     s.clientClose(5, 1, 60000, 80)
-    s.runTime(10)
     s.clientClose(7, 1, 60001, 80)
-    s.runTime(10)
     s.clientClose(17, 1, 60002, 80)
 
     s.runTime(700)

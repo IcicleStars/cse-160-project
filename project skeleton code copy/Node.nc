@@ -194,13 +194,35 @@ implementation{
       }
 
       // read from all exisitng connections 
-      for(i = 0; i < accepted_count; i++) { 
+      i = 0;
+      while (i < accepted_count) { 
+
          uint16_t bytes_read = call Transport.read(accepted_fds[i], read_buffer, SOCKET_BUFFER_SIZE);
 
          if (bytes_read > 0) { 
-            dbg(TRANSPORT_CHANNEL, "Node: Server READ %u bytes from FD %u\n", bytes_read, accepted_fds[i]);
+            // data received
+            dbg(TRANSPORT_CHANNEL, "Server read %u bytes from FD %u\n", bytes_read, accepted_fds[i]);
+            i++;
+         } else { 
+            // closed connection
 
+            if (call Transport.getState(accepted_fds[i]) == CLOSE_WAIT) { 
+               uint8_t j;
+               dbg(TRANSPORT_CHANNEL, "Node: Client on %u closed. Closing server side\n", accepted_fds[i]);
+
+               call Transport.close(accepted_fds[i]);
+               for(j = i; j < accepted_count - 1; j++) { 
+                  accepted_fds[j] = accepted_fds[j+1];
+               }
+
+               accepted_count--;
+            } else { 
+               // no new data
+               i++;
+            }
+            
          }
+
       }
 
    }
@@ -210,6 +232,11 @@ implementation{
       uint16_t i;
 
       if(client_fd == 0) { return; }
+
+      if(call Transport.getState(client_fd) != ESTABLISHED) { 
+         dbg(TRANSPORT_CHANNEL, "not yet established, will not write\n");
+         return;
+      }
 
       if(data_sent_count >= total_data_to_send) { 
          call ClientTimer.stop();
@@ -296,6 +323,7 @@ implementation{
       // connect to server
       if (call Transport.connect(client_fd, &dest_addr) != SUCCESS) { 
          dbg(TRANSPORT_CHANNEL, "Node (Transport): FAILED to start connect\n");
+         return;
       }
 
       // begin client timer to send data
