@@ -1,0 +1,24 @@
+﻿DISCUSSION QUESTIONS: 
+1. When establishing a new connection, your transport protocol implementation picks an initial sequence number. This might be 1, or it could be a random value. Which is better, and why? The TCP standard mandates that the ISN should be determined using a 32-bit counter that is incremented approximately every 4 microseconds and is initialized randomly when the system starts. This ensures that ISNs are pseudorandom and also increment over time, which helps in managing sequence numbers globally for the host.
+
+
+
+
+2. Your transport protocol implementation picks the buffer size for received data used as part of flow control. How large should this buffer be, and why? 
+
+
+The theoretical minimum size should be determined by the Bandwidth-Delay Product (BDP), which represents the total amount of data that can be in flight on the network. If the buffer (which defines the advertised window) is smaller than the BDP, the sender will be artificially limited, leading to under-utilized bandwidth and lower throughput. Practically, the buffer must be at least twice the Maximum Segment Size. Setting the buffer size too small reduces performance, while setting it unnecessarily large wastes host memory resources.
+
+
+
+
+3. Our connection setup protocol is vulnerable to the following attack. The attacker sends a large number of connection requests (SYN) packets to a particular node but never sends any data. (This is called a SYN flood.) What would happen to your implementation if it were attacked in this way? How might you have designed the initial handshake protocol (or the protocol implementation) differently to be more robust to this attack?
+
+
+If an attacker were to send a large number of connection requests to a specific node without data, this would start but never complete the three-way handshake for our current implementation. Our Receive event would identify the packets for a listening socket and then get allocated to one of the sockets, and since we never get a final ACK, we will be indefinitely stuck in the SYN_RCVD state. Since they do this several times, this would get most if not all of our free sockets, not allowing actual connections to occur. We can prevent this by potentially checking for SYN_RCVD timeouts in our timers and forcibly close and release a socket.
+
+
+4. What happens in your implementation when a sender transfers data but never closes a connection? (This is called a FIN attack.) How might we design the protocol differently to better manage this case?
+
+
+When a sender transfers data but never closes a connection, the connection remains established but never closes. This forces the slot to remain used and unable to open up to another connection. We can try to adjust for this by creating another timer that forcibly closes the socket if we have not received a message of a long time.

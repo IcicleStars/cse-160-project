@@ -174,6 +174,19 @@ implementation{
 
    }
 
+   void print_buffer(uint8_t* buff, uint16_t len) { 
+      uint16_t i;
+
+      dbg(TRANSPORT_CHANNEL, "Reading Data: ");
+      for (i = 0; i < len; i++) { 
+         if (i == len - 1) { 
+            dbg_clear(TRANSPORT_CHANNEL, "%u\n", buff[i]);
+         } else { 
+            dbg_clear(TRANSPORT_CHANNEL, "%u ", buff[i]);
+         }
+      }
+   }
+
    event void ServerTimer.fired() { 
       socket_t new_fd;
       uint8_t i;
@@ -201,7 +214,8 @@ implementation{
 
          if (bytes_read > 0) { 
             // data received
-            dbg(TRANSPORT_CHANNEL, "Server read %u bytes from FD %u\n", bytes_read, accepted_fds[i]);
+            // dbg(TRANSPORT_CHANNEL, "Server read %u bytes from FD %u\n", bytes_read, accepted_fds[i]);
+            print_buffer(read_buffer, bytes_read);
             i++;
          } else { 
             // closed connection

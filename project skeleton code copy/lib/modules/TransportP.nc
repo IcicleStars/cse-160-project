@@ -757,6 +757,10 @@ implementation {
                     call TCPTimer.stop();
                     memset(s, 0, sizeof(socket_store_t));
                 }
+                else if (t_hdr->flags & TCP_FIN) { 
+                    // ack lost, resend fin
+                    send_tcp_packet(index, TCP_FIN, NULL, 0);
+                }
                 break;
 
             case CLOSING: 
@@ -796,7 +800,7 @@ implementation {
 
             // check for SYN_SENT timeout
             if (s->state == SYN_SENT) {
-                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for SYN_SENT socket %u\n", (unsigned int)(i + 1));
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for SYN_SENT\n", (unsigned int)(i + 1));
                 call TCPTimer.stop();
                 handle_timeout(i);
                 break; // handle one timeout
@@ -804,26 +808,26 @@ implementation {
             // check for ESTABLISHED timeout
             else if (s->state == ESTABLISHED) {
                 if (s->lastSent > s->lastAck) { // check for un-ACK'd data
-                    dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for ESTABLISHED socket %u\n", (unsigned int)(i + 1));
+                    dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for ESTABLISHED\n", (unsigned int)(i + 1));
                     call TCPTimer.stop();
                     handle_timeout(i);
                     break; // handle one timeout
                 }
             }
             else if (s->state == FIN_WAIT_1) { 
-                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1 socket %u\n", (unsigned int)(i+1));
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for FIN_WAIT_1\n", (unsigned int)(i+1));
                 call TCPTimer.stop();
                 handle_timeout(i);
                 break;
             }
             else if (s->state == LAST_ACK) { 
-                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK socket %u\n", (unsigned int)(i+1));
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIMEOUT detected for LAST_ACK\n", (unsigned int)(i+1));
                 call TCPTimer.stop();
                 handle_timeout(i);
                 break;
             }
             else if (s->state == TIME_WAIT) { 
-                dbg(TRANSPORT_CHANNEL, "TransportP: TIME_WAIT expired for socket %u. CLosing\n");
+                dbg(TRANSPORT_CHANNEL, "TransportP: TIME_WAIT expired. CLosing\n");
                 call TCPTimer.stop();
                 memset(s, 0, sizeof(socket_store_t));
                 break;
@@ -838,7 +842,7 @@ implementation {
 
         if (s->state == SYN_SENT) {
             // Retransmit SYN packet (part of the 3-way handshake)
-            dbg(TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN for socket %u\n", (unsigned int)(index + 1));
+            dbg(TRANSPORT_CHANNEL, "TransportP: Retransmitting SYN\n", (unsigned int)(index + 1));
             // Original SYN packet has no payload
             s->lastSent = 0;
             send_tcp_packet(index, TCP_SYN, NULL, 0); 
@@ -873,9 +877,9 @@ implementation {
             try_send_next(index);
 
         }
-        else if (s->state == FIN_WAIT_1 || s->state == LAST_ACK) { 
+        else if (s->state == FIN_WAIT_1 || s->state == LAST_ACK || s->state == CLOSING) { 
 
-            dbg(TRANSPORT_CHANNEL, "TransportP: Retransmitting FIN for socket %u\n", (unsigned int)(index+1));
+            dbg(TRANSPORT_CHANNEL, "TransportP: Retransmitting FIN\n", (unsigned int)(index+1));
             send_tcp_packet(index, TCP_FIN, NULL, 0);
             call TCPTimer.startOneShot(TIMEOUT_MS);
 
