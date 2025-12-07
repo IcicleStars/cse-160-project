@@ -9,7 +9,7 @@ def main():
     s.loadTopo("circle.topo")
 
     # add noise model
-    s.loadNoise("some_noise.txt")
+    s.loadNoise("meyer-heavy.txt")
 
     # turn on nodes
     s.bootAll()

@@ -1,5 +1,7 @@
-﻿DISCUSSION QUESTIONS: 
-1. When establishing a new connection, your transport protocol implementation picks an initial sequence number. This might be 1, or it could be a random value. Which is better, and why? The TCP standard mandates that the ISN should be determined using a 32-bit counter that is incremented approximately every 4 microseconds and is initialized randomly when the system starts. This ensures that ISNs are pseudorandom and also increment over time, which helps in managing sequence numbers globally for the host.
+DISCUSSION QUESTIONS: 
+1. When establishing a new connection, your transport protocol implementation picks an initial sequence number. This might be 1, or it could be a random value. Which is better, and why? 
+
+The TCP standard mandates that the ISN should be determined using a 32-bit counter that is incremented approximately every 4 microseconds and is initialized randomly when the system starts. This ensures that ISNs are pseudorandom and also increment over time, which helps in managing sequence numbers globally for the host.
 
 
 

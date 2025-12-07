@@ -62,7 +62,21 @@ implementation{
                 dbg(COMMAND_CHANNEL, "Command Type: Link State Dump\n");
                 signal CommandHandler.printLinkState();
                 break;
-
+            case CMD_HELLO:
+{
+                // buff[0] is the destination (Node ID), usually ignored for fixed server
+                uint16_t* p_dest = (uint16_t*)&buff[0]; 
+                // buff[2] is the client port (as a 16-bit value)
+                uint16_t* p_srcPort = (uint16_t*)&buff[2]; 
+                // buff[4] is the start of the username string
+                uint8_t* p_username = &buff[4]; 
+    
+                dbg(COMMAND_CHANNEL, "Command Type: Hello\n");
+                // Destination is used here to match the interface, but the destination
+                // is fixed at 1 in Node.nc. We use buff[2] for the clientPort.
+                signal CommandHandler.hello(*p_dest, *p_srcPort, p_username);
+                break;
+}
             case CMD_ROUTETABLE_DUMP:
                 dbg(COMMAND_CHANNEL, "Command Type: Route Table Dump\n");
                 signal CommandHandler.printRouteTable();
@@ -86,17 +100,6 @@ implementation{
                 break;
             }
 
-            case CMD_HELLO: 
-            {
-                uint16_t* p_dest = (uint16_t*)&buff[0];
-                uint16_t* p_srcPort = (uint16_t*)&buff[2];
-                uint8_t* p_username = &buff[4];
-
-                dbg(COMMAND_CHANNEL, "Command Type: Hello\n");
-                signal CommandHandler.hello(*p_dest, *p_srcPort, p_username);
-                break;
-            }
-
             case CMD_CLIENT_CLOSE: 
             {
                 uint16_t* p_dest = (uint16_t*)&buff[0];
@@ -106,25 +109,6 @@ implementation{
                 signal CommandHandler.closeClientSocket(*p_dest, *p_srcPort, *p_destPort);
                 break;
             }
-
-            case CMD_BROADCAST_MSG: 
-                dbg(COMMAND_CHANNEL, "Command Type: Broadcast Message\n");
-                signal CommandHandler.broadcastMessage(&buff[0]);
-                break;
-
-            case CMD_UNICAST_MSG: 
-            {
-                uint8_t* user = &buff[0];
-                uint8_t* msg_ptr = &buff[strlen((char*)user) + 1];
-                dbg(COMMAND_CHANNEL, "Command Type: Unicast Message\n");
-                signal CommandHandler.unicastMessage(user, msg_ptr);
-                break;
-            }
-
-            case CMD_LIST_USERS: 
-                dbg(COMMAND_CHANNEL, "Command Type: List Users\n");
-                signal CommandHandler.listUsers();
-                break;
 
 
             default:

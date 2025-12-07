@@ -17,6 +17,11 @@ class TestSim:
     CMD_TEST_CLIENT = 5
     CMD_TEST_SERVER = 4
     CMD_CLIENT_CLOSE = 7
+
+    CMD_HELLO = 8
+    CMD_BROADCAST_MESSAGE = 10
+    CMD_UNICAST_MESSAGE = 11
+    CMD_LIST_USERS = 12
     
     
 
@@ -155,9 +160,27 @@ class TestSim:
  
     # TRANSPORT FUNCTIONS END
 
+    # APPLICATION FUNCTIONS
+    def hello(self, source, server_addr, client_port, username): 
+        payload = struct.pack('<HH', server_addr, client_port) + username + '\0'
+        self.sendCMD(self.CMD_HELLO, source, payload)
+
+    def broadcast_message(self, source, message): 
+        self.sendCMD(self.CMD_BROADCAST_MESSAGE, source, message)
+
+    def unicast_message(self, source, target_username, message):
+        payload = "{0}\0{1}\0".format(target_username, message)
+        self.sendCMD(self.CMD_UNICAST_MESSAGE, source, payload)
+
     def addChannel(self, channelName, out=sys.stdout):
         print 'Adding Channel', channelName;
         self.t.addChannel(channelName, out);
+
+    def listUsers(self, source):
+        self.sendCMD(self.CMD_LIST_USERS, source, "getList"); 
+    
+
+
 
 def main():
     s = TestSim();

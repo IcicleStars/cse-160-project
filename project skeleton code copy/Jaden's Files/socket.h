@@ -3,6 +3,8 @@
 
 #define MAX_USERNAME_LEN 16
 
+
+
 enum{
     MAX_NUM_OF_SOCKETS = 10,
     ROOT_SOCKET_ADDR = 255,
@@ -34,21 +36,20 @@ typedef uint8_t socket_port_t;
 // File descripter id. Each id is associated with a socket_store_t
 typedef uint8_t socket_t;
 
-// user list struct
-typedef struct { 
-    uint8_t used;
-    uint16_t addr;
-    uint8_t port;
-    socket_t fd;
-    char username[MAX_USERNAME_LEN];
-} user_entry_t;
-
 // socket_addr_t is a simplified version of an IP connection.
 typedef nx_struct socket_addr_t{
     nx_socket_port_t port;
     nx_uint16_t addr;
 }socket_addr_t;
 
+// user list struct 
+typedef struct {
+    uint8_t used;
+    uint16_t addr;      // Client Node ID (e.g., 2, 3, etc.)
+    uint8_t port;       // Client Port (The clientPort from the hello command)
+    socket_t fd;        // The accepted socket descriptor (for sending data)
+    char username[MAX_USERNAME_LEN];
+} user_entry_t;
 
 
 // State of a socket. 
@@ -78,6 +79,8 @@ typedef struct socket_store_t{
     uint16_t cwnd; 
     uint16_t ssthresh; 
     uint8_t dupAckCount; 
+
+
 
     // track current congestion phase
     enum { 

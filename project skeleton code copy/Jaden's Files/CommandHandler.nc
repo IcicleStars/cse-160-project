@@ -11,7 +11,4 @@ interface CommandHandler{
    event void setAppServer();
    event void setAppClient();
    event void hello(uint16_t destination, uint16_t clientPort, uint8_t *username);
-   event void broadcastMessage(uint8_t *payload);
-   event void unicastMessage(uint8_t *username, uint8_t *message);
-   event void listUsers();
 }
